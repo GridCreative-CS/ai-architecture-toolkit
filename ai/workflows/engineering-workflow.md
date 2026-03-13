@@ -1,7 +1,10 @@
-# Engineering Workflow
+# Engineering Workflow — v2
 
 1. Delivery Planning
-2. Plan Decomposition
-3. TDD Execution
-4. Specialist Agent Support
-5. Integration Review
+2. Feature Specification
+3. Architecture Compliance Check
+4. Plan Decomposition
+5. TDD Execution
+6. Specialist Agent Support
+7. AI Testing
+8. Integration Review

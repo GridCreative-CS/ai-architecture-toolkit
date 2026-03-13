@@ -9,6 +9,16 @@ Inputs:
 - `architecture/architecture-final.md`
 - `architecture/adr/*.md`
 
+Objectives:
+
+1. identify major subsystems
+2. identify vertical slices
+3. define milestones
+4. define dependencies
+5. identify high-risk areas
+6. define an implementation order
+7. produce a plan consumable by the plan-decomposer skill
+
 Output sections:
 
 1. System Overview
@@ -20,6 +30,3 @@ Output sections:
 7. High Risk Areas
 8. Implementation Strategy
 9. Ready for Decomposition
-
-End with:
-“This delivery plan is ready to be consumed by the plan-decomposer skill.”

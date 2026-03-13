@@ -1,4 +1,4 @@
-# Copilot Instructions
+# Copilot Instructions — v2
 
 When generating architecture, plans, or code in this repository:
 
@@ -8,3 +8,5 @@ When generating architecture, plans, or code in this repository:
 4. Prefer modular monolith unless explicitly justified otherwise
 5. Treat prototype repositories as **reference behavior, not reference architecture**
 6. Respect TDD and decomposition/execution skills
+7. Use feature specifications before decomposition when available
+8. Run architecture compliance checks before approving major implementation changes

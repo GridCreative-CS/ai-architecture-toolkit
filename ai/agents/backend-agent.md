@@ -7,6 +7,7 @@ Implement backend functionality according to:
 - architecture
 - ADRs
 - delivery plan
+- feature specs
 - orchestrator assignment
 
 Responsibilities:
