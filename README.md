@@ -1038,3 +1038,63 @@ If you are unsure where to start, use this rule:
 - prototype + architecture doc available → use **Prototype Plus Existing Architecture Document** mode
 
 If you are unsure whether the architecture document is trustworthy, still use the second mode and validate it rather than assuming it is correct.
+
+---
+
+# v4 Baseline Notes
+
+This v4 baseline is the normalized merged package that combines:
+
+- the full prototype-to-product architecture toolkit
+- the v3.1 improvement pack
+- the operational README additions
+
+## What this v4 baseline is for
+
+Use this as the stable starting point for real projects.
+
+It is intended to be the version you:
+
+- keep as the central master toolkit repo
+- reuse across multiple project repositories
+- improve over time based on actual project usage
+
+## Included improvements
+
+This baseline includes:
+
+- project context template
+- compliance report template
+- golden dataset JSON template
+- sharpened agent contracts
+- definition of ready / done
+- split workflows for both architecture entry modes
+- operational quick start guidance
+- example compliance report
+- example feature spec outline
+- example golden dataset case
+
+## Recommended usage model
+
+### Central toolkit repo
+
+Keep the full toolkit centrally and maintain it there.
+
+### Project repo
+
+Keep generated outputs and project-specific overrides in the project repo, including:
+
+- architecture outputs
+- ADR outputs
+- delivery plan
+- feature specs
+- golden datasets
+- decomposition output
+- project context
+- local Copilot instructions
+
+## Suggested next evolution after v4
+
+Use this baseline on at least one real project before making a v4.1 or v5.
+
+The best next improvements should come from real friction observed during usage, not from theoretical expansion alone.
