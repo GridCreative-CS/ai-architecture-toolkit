@@ -52,3 +52,41 @@ Agents:
 - `ai/agents/ai-testing-agent.md`
 - `ai/agents/devops-agent.md`
 - `ai/agents/integration-reviewer.md`
+
+
+## Alternative Input Mode — Prototype + Existing Architecture Document
+
+When both a prototype and an architecture document already exist, use this path.
+
+### Phase 1 — Evidence and Document Review
+
+Prompts:
+
+- `ai/prompts/prototype-analyzer.md`
+- `ai/prompts/existing-architecture-reviewer.md`
+- `ai/prompts/prototype-architecture-alignment.md`
+
+Outputs:
+
+- `architecture/prototype-analysis.md`
+- `architecture/existing-architecture-review.md`
+- `architecture/prototype-architecture-alignment.md`
+
+### Phase 2 — Reconciliation
+
+Prompt:
+
+- `ai/prompts/architecture-gap-reconciler.md`
+
+Output:
+
+- `architecture/architecture-final.md`
+
+Then continue with:
+
+- ADR generation
+- delivery planning
+- feature specs
+- compliance
+- decomposition
+- execution

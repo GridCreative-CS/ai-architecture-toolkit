@@ -519,3 +519,106 @@ Then for each new product/project:
 - copy in only the local files you need
 - keep the generated outputs in the project repo
 - keep the master prompts/templates/workflows centrally maintained
+
+---
+
+## v3 Extension — Support for Prototype + Existing Architecture Document
+
+The earlier versions primarily assumed:
+
+```text
+Prototype
+   ↓
+Architecture generation
+```
+
+v3 also supports a second input mode:
+
+```text
+Prototype + existing architecture document
+   ↓
+Existing Architecture Review
+   ↓
+Prototype vs Architecture Alignment
+   ↓
+Architecture Gap Reconciliation
+   ↓
+Final Architecture
+```
+
+### Why this matters
+
+In real projects you may already have:
+
+- a prototype
+- an architecture draft
+- stakeholder notes
+- partial design decisions
+
+In that case the toolkit should not always regenerate architecture from scratch.
+
+Instead it should:
+
+- assess the quality of the existing architecture
+- compare it with prototype reality
+- identify gaps and inconsistencies
+- reconcile them into a stronger final architecture
+
+### New prompts in v3
+
+- `ai/prompts/existing-architecture-reviewer.md`
+- `ai/prompts/prototype-architecture-alignment.md`
+- `ai/prompts/architecture-gap-reconciler.md`
+
+### Additional output files in v3
+
+- `architecture/existing-architecture-review.md`
+- `architecture/prototype-architecture-alignment.md`
+
+### Recommended modes
+
+#### Mode A — Prototype only
+
+Use:
+
+1. prototype analyzer
+2. architecture designer
+3. architecture reviewer
+4. architecture reconciler
+5. ADR generator
+
+#### Mode B — Prototype + existing architecture document
+
+Use:
+
+1. prototype analyzer
+2. existing architecture reviewer
+3. prototype vs architecture alignment
+4. architecture gap reconciler
+5. ADR generator
+
+### Example Claude usage for Mode B
+
+```text
+Use ai/prompts/prototype-analyzer.md.
+
+Analyze the repository as a prototype and write the result to architecture/prototype-analysis.md.
+```
+
+```text
+Use ai/prompts/existing-architecture-reviewer.md.
+
+Review the provided architecture document and write the result to architecture/existing-architecture-review.md.
+```
+
+```text
+Use ai/prompts/prototype-architecture-alignment.md.
+
+Compare architecture/prototype-analysis.md with the existing architecture document and write the alignment report to architecture/prototype-architecture-alignment.md.
+```
+
+```text
+Use ai/prompts/architecture-gap-reconciler.md.
+
+Use the existing architecture document, architecture/existing-architecture-review.md, and architecture/prototype-architecture-alignment.md to generate architecture/architecture-final.md.
+```
