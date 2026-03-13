@@ -1,0 +1,29 @@
+{
+  "scenario_id": "GD-001",
+  "name": "HighRiskBoundaryCase",
+  "description": "Reference scenario used to validate a critical decision path.",
+  "scope": {
+    "feature": "Recommendation",
+    "slice": "RecommendationAssessment"
+  },
+  "input": {
+    "example_field": "replace-me",
+    "score": 79,
+    "flags": [
+      "example"
+    ]
+  },
+  "expected_output": {
+    "decision": "MediumRisk",
+    "explanation_required": true
+  },
+  "source_of_truth": {
+    "type": "prototype_run",
+    "reference": "prototype commit or analysis note",
+    "validated_by": "domain expert or architecture review"
+  },
+  "notes": [
+    "Replace example values with project-specific data.",
+    "Keep this file small, explicit, and deterministic."
+  ]
+}

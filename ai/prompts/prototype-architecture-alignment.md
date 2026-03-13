@@ -3,7 +3,6 @@
 Act as a **Systems Architect and Architecture Alignment Reviewer**.
 
 Your job is to compare:
-
 - the prototype repository (or prototype analysis)
 - the existing architecture document
 
@@ -19,13 +18,10 @@ Treat the architecture document as a **proposed design hypothesis to be validate
 4. identify inconsistencies that must be reconciled before implementation starts
 
 ## Output Structure
-
 Write to:
-
 - `architecture/prototype-architecture-alignment.md`
 
 Use these sections:
-
 1. Alignment Summary
 2. Confirmed Matches
 3. Gaps in the Architecture Document
@@ -34,7 +30,6 @@ Use these sections:
 6. Recommended Reconciliation Actions
 
 ## Rules
-
 - be explicit about whether a finding comes from prototype evidence or architecture text
 - do not rewrite the architecture in this step
 - focus on alignment and gaps

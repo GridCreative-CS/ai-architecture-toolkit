@@ -3,7 +3,6 @@
 Use this file for the output of `ai/prompts/existing-architecture-reviewer.md`.
 
 ## Required Sections
-
 1. Architecture Summary
 2. Strengths
 3. Weaknesses

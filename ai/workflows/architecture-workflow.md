@@ -6,6 +6,7 @@
 4. Architecture Reconciliation
 5. ADR Generation
 
+
 ## Alternative Mode — Prototype + Existing Architecture Document
 
 1. Prototype Analysis

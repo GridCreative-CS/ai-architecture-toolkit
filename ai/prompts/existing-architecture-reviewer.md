@@ -9,7 +9,6 @@ Treat the architecture document as a **proposed design hypothesis**.
 Do not assume it is complete, correct, or aligned with the prototype.
 
 ## Inputs
-
 - existing architecture document
 - optional prototype repository or prototype analysis
 - optional ADRs or supporting notes
@@ -24,9 +23,7 @@ Do not assume it is complete, correct, or aligned with the prototype.
 6. assess whether the architecture document is strong enough to guide implementation
 
 ## Review Focus
-
 Evaluate:
-
 - clarity of system boundaries
 - module and service boundaries
 - data architecture
@@ -37,13 +34,10 @@ Evaluate:
 - consistency of architectural decisions
 
 ## Output Structure
-
 Write to:
-
 - `architecture/existing-architecture-review.md`
 
 Use these sections:
-
 1. Architecture Summary
 2. Strengths
 3. Weaknesses

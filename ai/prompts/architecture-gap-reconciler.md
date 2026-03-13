@@ -3,7 +3,6 @@
 Act as the **Lead Enterprise Architect responsible for producing the final architecture specification**.
 
 Inputs:
-
 - existing architecture document
 - existing architecture review report
 - prototype analysis
@@ -11,7 +10,6 @@ Inputs:
 - ADRs if already present
 
 Your job is to:
-
 - reconcile conflicts between the prototype evidence and the architecture document
 - resolve architectural gaps
 - strengthen weak assumptions
@@ -23,13 +21,10 @@ Do not merely merge text.
 Architect the result.
 
 ## Output
-
 Write to:
-
 - `architecture/architecture-final.md`
 
 ## Required Behavior
-
 - preserve valid existing architecture content where appropriate
 - incorporate prototype-derived behavior where necessary
 - make decisions explicit

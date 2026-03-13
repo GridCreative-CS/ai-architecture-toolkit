@@ -1,0 +1,27 @@
+{
+  "scenario_id": "GD-001",
+  "name": "RecommendationHighRiskBoundary",
+  "description": "Boundary case used to verify a critical recommendation path.",
+  "scope": {
+    "feature": "Recommendation",
+    "slice": "RecommendationAssessment"
+  },
+  "input": {
+    "score": 79,
+    "previous_incidents": 2,
+    "manual_override": false
+  },
+  "expected_output": {
+    "risk_level": "HIGH",
+    "requires_explanation": true
+  },
+  "source_of_truth": {
+    "type": "prototype_analysis",
+    "reference": "prototype-analysis note or approved rule set",
+    "validated_by": "domain review"
+  },
+  "notes": [
+    "This is a deterministic validation scenario.",
+    "Adjust field names to match the project contract."
+  ]
+}

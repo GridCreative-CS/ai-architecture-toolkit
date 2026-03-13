@@ -1,0 +1,79 @@
+# Definition of Ready and Definition of Done
+
+## Purpose
+
+This document defines when a slice, feature specification, or implementation
+part is ready to move forward and when it can be considered done.
+
+---
+
+## Definition of Ready
+
+A slice or feature is ready when all of the following are true:
+
+### Architecture readiness
+
+- The final architecture exists.
+- Relevant ADRs exist or the need for them is explicitly known.
+- The slice fits inside approved architectural boundaries.
+- Known architecture risks are documented.
+
+### Delivery readiness
+
+- The slice appears in the delivery plan.
+- Dependencies are identified.
+- A preferred implementation order is known.
+- Cross-slice impacts are understood.
+
+### Specification readiness
+
+- A feature specification exists or the scope is otherwise explicit.
+- Scope in and scope out are defined.
+- Acceptance criteria are defined.
+- Security and observability requirements are identified.
+- Test implications are identified.
+
+### Execution readiness
+
+- The target files or modules are known.
+- The decomposition target is small enough to be executed safely.
+- Verification strategy is known.
+- Open questions are either resolved or explicitly recorded.
+
+---
+
+## Definition of Done
+
+A slice, feature, or part is done when all of the following are true:
+
+### Implementation completeness
+
+- The intended behavior is implemented.
+- The implementation respects architecture and ADRs.
+- No unauthorized architectural drift was introduced.
+
+### Testing completeness
+
+- Required automated tests are added or updated.
+- TDD expectations are satisfied where applicable.
+- Regression risk is addressed.
+- Golden scenario validation is completed where relevant.
+
+### Quality completeness
+
+- Acceptance criteria are met.
+- Verification commands pass.
+- No partial refactors are left behind.
+- No hidden TODO hacks are introduced.
+
+### Review completeness
+
+- Architecture compliance is checked for significant changes.
+- Integration review is completed where cross-slice interaction exists.
+- Outstanding issues are either fixed or explicitly accepted.
+
+### Operational completeness
+
+- Required logging, metrics, tracing, or monitoring hooks are present.
+- Security and authorization constraints are respected.
+- Deployment or configuration implications are documented when relevant.
