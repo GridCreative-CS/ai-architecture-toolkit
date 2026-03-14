@@ -1233,3 +1233,44 @@ Then per project repo, keep only:
 - project context
 - local Copilot instructions
 - local overrides where needed
+
+---
+
+# Feature Spec Usage Clarification
+
+Feature specifications are not optional documentation artifacts with no downstream role.
+When a feature spec exists for a selected slice, it should be treated as a primary
+implementation-shaping input for that slice.
+
+## Correct downstream flow
+
+```text
+Architecture Final
+→ ADRs
+→ Delivery Plan
+→ Feature Spec for Selected Slice
+→ Architecture Compliance Check
+→ Plan-Decomposer
+→ Part-Executor (TDD)
+```
+
+## Practical rule
+
+If a feature spec exists for the selected slice, use it together with:
+
+- `architecture/architecture-final.md`
+- `architecture/adr/*.md`
+- `architecture/delivery-plan.md`
+
+In practice, the feature spec should guide decomposition for that slice more
+precisely than the broader delivery plan.
+
+## Recommended per-slice sequence
+
+1. Generate the delivery plan.
+2. Select the next slice.
+3. Generate one feature spec for that slice.
+4. Optionally run architecture compliance.
+5. Decompose that slice.
+6. Execute one Part at a time with TDD.
+7. Repeat for the next slice.

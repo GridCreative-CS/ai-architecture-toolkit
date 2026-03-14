@@ -23,6 +23,28 @@ When the user provides an implementation plan, you will:
    - a **Status line** (machine-scannable)
    - strict, parseable `PART_SPEC` JSON (file-based handoff contract)
 
+
+## Feature Spec Awareness  ⬅ NEW
+
+This skill may also receive a **slice-level feature specification** in addition to
+the broader implementation or delivery plan.
+
+If a feature spec exists for the selected slice, treat it as a primary input for
+that slice together with:
+
+- `architecture/architecture-final.md`
+- `architecture/adr/*.md`
+- `architecture/delivery-plan.md`
+
+### Priority rule
+For the selected slice, prefer the feature spec over vague or broader delivery-plan
+wording when defining scope, acceptance criteria, contracts, test implications, and
+touch points.
+
+### Typical feature spec location
+- `architecture/feature-specs/<slice-name>.md`
+
+
 ---
 
 ## Reasoning Mode & Agent Scope  ⬅ NEW
@@ -64,6 +86,7 @@ And apply the agent according to the rules above.
   - verification commands
   - rollback steps
 - Parts must be **small** and **ordered**.
+- If a feature spec exists for the selected slice, use it to tighten decomposition scope.
 - No scope creep: unclear items go under **Open Questions / Assumptions** in the overview.
 
 ---
@@ -86,6 +109,10 @@ Before writing any Part files:
    - referenced files/modules that don’t exist
    - stack mismatches
    - missing prerequisites
+3) If a slice-level feature spec is provided, compare it against:
+   - the delivery plan
+   - relevant architecture constraints
+   - repo reality and touch points
 
 Then write preflight results into:
 - `./ai-parts/OVERVIEW.md` (in the Preflight section)
@@ -262,6 +289,7 @@ Use this exact structure in `./ai-parts/OVERVIEW.md`:
 ## How to Execute
 - Use the `part-executor-tdd` skill.
 - Provide this OVERVIEW.md as input.
+- Use the selected slice feature spec if it exists.
 - The executor will iterate Parts in order, open each referenced file, and execute it strictly using TDD.
 
 ---
@@ -270,3 +298,23 @@ Use this exact structure in `./ai-parts/OVERVIEW.md`:
 - Structured Markdown
 - Short bullets, checklists
 - Be precise and file-path oriented
+
+
+## When a Feature Spec Is Provided  ⬅ NEW
+
+If a slice-level feature spec is provided, the decomposition must reflect it.
+
+### Required behavior
+- Decompose only the selected slice described by the feature spec.
+- Use feature-spec acceptance criteria to shape Part acceptance criteria.
+- Use feature-spec test implications to strengthen `tests_first`.
+- Use feature-spec API, data, security, and observability notes to avoid vague Parts.
+- Keep Parts aligned with both the feature spec and the broader architecture.
+
+### Practical input set
+For slice-level decomposition, the preferred input set is:
+
+- `architecture/feature-specs/<slice-name>.md`
+- `architecture/delivery-plan.md`
+- `architecture/architecture-final.md`
+- `architecture/adr/*.md`
