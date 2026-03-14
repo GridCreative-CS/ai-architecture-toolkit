@@ -1,12 +1,10 @@
 # Final Architecture Specification
 
-## Status
+This is the authoritative architecture after review and reconciliation.
 
-Authoritative
-
-This document becomes the main architectural source of truth for:
-
+Use this document as the source of truth for:
+- ADR generation
 - delivery planning
-- orchestration
-- implementation
-- integration review
+- feature specifications
+- architecture compliance
+- decomposition and implementation

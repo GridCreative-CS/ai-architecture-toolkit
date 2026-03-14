@@ -2,24 +2,15 @@
 
 Act as a **Product Engineer, Solution Architect, and Delivery Spec Author**.
 
-Your job is to generate a concrete feature specification for one slice or capability derived from:
-
-- the final architecture
+Generate a feature specification for one slice or capability from:
+- final architecture
 - ADRs
-- the delivery plan
-
-## Purpose
-
-Turn a slice into an implementation-ready specification before decomposition.
-
-## Output location
+- delivery plan
 
 Write each feature spec under:
-
 - `architecture/feature-specs/`
 
-## Required Output Structure
-
+Required sections:
 1. Feature Name
 2. Purpose
 3. Scope In
@@ -33,10 +24,3 @@ Write each feature spec under:
 11. Acceptance Criteria
 12. Test Implications
 13. Open Questions / Assumptions
-
-## Rules
-
-- do not invent architecture outside the approved design
-- keep scope crisp
-- prefer one meaningful slice per feature spec
-- make the result suitable for plan decomposition

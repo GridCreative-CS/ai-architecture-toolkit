@@ -1098,3 +1098,138 @@ Keep generated outputs and project-specific overrides in the project repo, inclu
 Use this baseline on at least one real project before making a v4.1 or v5.
 
 The best next improvements should come from real friction observed during usage, not from theoretical expansion alone.
+
+---
+
+# v4.1 Unified Entry Modes
+
+This unified toolkit supports **three architecture entry modes**.
+
+## Mode A — Prototype Only
+
+Use this mode when:
+
+- you have a prototype
+- you do not have a useful architecture document
+- you want the toolkit to generate the architecture from prototype behavior
+
+Workflow file:
+
+- `ai/workflows/architecture-workflow-prototype-only.md`
+
+Typical sequence:
+
+```text
+Prototype
+  ↓
+Prototype Analyzer
+  ↓
+Architecture Designer
+  ↓
+Architecture Reviewer
+  ↓
+Architecture Reconciler
+  ↓
+ADR Generator
+```
+
+## Mode B — Prototype Plus Existing Architecture Document
+
+Use this mode when:
+
+- you have both a prototype and an architecture document
+- you want to validate the document against prototype reality
+- you want to reconcile gaps between implementation evidence and documented design
+
+Workflow file:
+
+- `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md`
+
+Typical sequence:
+
+```text
+Prototype
++ Existing Architecture Document
+  ↓
+Prototype Analyzer
+  ↓
+Existing Architecture Reviewer
+  ↓
+Prototype-Architecture Alignment
+  ↓
+Architecture Gap Reconciler
+  ↓
+ADR Generator
+```
+
+## Mode C — Architecture Document Only
+
+Use this mode when:
+
+- you have an architecture document
+- you do not have a prototype
+- you want to assess and strengthen the architecture before implementation begins
+
+Workflow file:
+
+- `ai/workflows/architecture-workflow-architecture-doc-only.md`
+
+Typical sequence:
+
+```text
+Existing Architecture Document
+        ↓
+Existing Architecture Reviewer
+        ↓
+Architecture Gap Reconciler
+        ↓
+Final Architecture
+        ↓
+ADR Generator
+        ↓
+Delivery Planner
+        ↓
+Feature Spec Generator
+        ↓
+Architecture Compliance
+        ↓
+Plan-Decomposer
+        ↓
+Part-Executor (TDD)
+```
+
+## Unified rule of thumb
+
+Choose the mode based on the strongest available input:
+
+- only prototype available → use **Prototype Only**
+- prototype + architecture document available → use **Prototype Plus Existing Architecture Document**
+- only architecture document available → use **Architecture Document Only**
+
+## Additional files included for doc-first mode
+
+### Prompts
+- `ai/prompts/existing-architecture-reviewer.md`
+- `ai/prompts/architecture-gap-reconciler.md`
+
+### Workflow
+- `ai/workflows/architecture-workflow-architecture-doc-only.md`
+
+### Starter architecture files
+- `architecture/existing-architecture-review.md`
+
+## Recommended central toolkit strategy
+
+Use this unified v4.1 package as the **single master toolkit**.
+
+Then per project repo, keep only:
+
+- architecture outputs
+- ADRs
+- delivery plan
+- feature specs
+- golden datasets
+- decomposition output
+- project context
+- local Copilot instructions
+- local overrides where needed

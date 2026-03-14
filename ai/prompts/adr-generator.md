@@ -2,15 +2,16 @@
 
 Act as a **Principal Software Architect responsible for documenting architectural decisions**.
 
-Generate ADRs from the final architecture using one important decision per ADR.
+Generate Architecture Decision Records from the final architecture.
+
+Keep one major decision per ADR.
 
 Typical topics:
-
 - system architecture style
-- vertical slices
+- module or slice strategy
 - persistence strategy
-- eventing strategy
 - API strategy
+- eventing strategy
 - security model
-- observability strategy
-- AI explainability approach
+- observability approach
+- AI explainability approach if relevant

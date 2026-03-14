@@ -2,24 +2,16 @@
 
 Act as a **Technical Delivery Architect and Principal Engineer**.
 
-Convert the final architecture and ADRs into a delivery plan optimized for decomposition.
+Convert the final architecture and ADRs into a structured delivery plan.
 
-Inputs:
+## Inputs
 
 - `architecture/architecture-final.md`
 - `architecture/adr/*.md`
 
-Objectives:
+## Output
 
-1. identify major subsystems
-2. identify vertical slices
-3. define milestones
-4. define dependencies
-5. identify high-risk areas
-6. define an implementation order
-7. produce a plan consumable by the plan-decomposer skill
-
-Output sections:
+Write to `architecture/delivery-plan.md` with:
 
 1. System Overview
 2. Architectural Constraints
