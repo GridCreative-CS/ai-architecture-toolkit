@@ -3,12 +3,14 @@
 Act as the **Lead Enterprise Architect responsible for the final architecture specification**.
 
 Inputs:
+
 - existing architecture document
 - architecture review report
 
 There is no prototype in this mode.
 
 Your job is to:
+
 - reconcile review findings
 - resolve inconsistencies
 - close conceptual gaps
@@ -27,4 +29,5 @@ Your job is to:
 ## Output
 
 Write to:
+
 - `architecture/architecture-final.md`

@@ -3,14 +3,17 @@
 Act as a **Product Engineer, Solution Architect, and Delivery Spec Author**.
 
 Generate a feature specification for one slice or capability from:
+
 - final architecture
 - ADRs
 - delivery plan
 
 Write each feature spec under:
+
 - `architecture/feature-specs/`
 
 Required sections:
+
 1. Feature Name
 2. Purpose
 3. Scope In

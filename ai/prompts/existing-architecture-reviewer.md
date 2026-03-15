@@ -10,6 +10,7 @@ Treat the architecture document as the current design hypothesis.
 ## Review goals
 
 Evaluate:
+
 - architectural integrity
 - completeness
 - scalability
