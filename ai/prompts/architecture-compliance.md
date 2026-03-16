@@ -17,3 +17,7 @@ Verify that a proposed implementation plan, feature spec, part definition, or co
 4. Risks Introduced
 5. Required Corrections
 6. Approval Status
+7. Verticality Assessment — Does the slice include the human workflow required
+   by the architecture? If the architecture requires human-in-the-loop and the
+   slice omits UI, this is a compliance violation. Reference
+   `ai/guides/vertical-slice-definition.md` for the verticality test.

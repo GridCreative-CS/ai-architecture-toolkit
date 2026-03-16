@@ -19,6 +19,7 @@ Required sections:
 3. Scope In
 4. Scope Out
 5. User / System Flows
+5b. Human Workflow Surfaces
 6. Domain Rules
 7. API / Contract Expectations
 8. Data Requirements
@@ -27,3 +28,10 @@ Required sections:
 11. Acceptance Criteria
 12. Test Implications
 13. Open Questions / Assumptions
+
+## Section 5b Instructions
+
+Section 5b (Human Workflow Surfaces) is **mandatory**. If the architecture
+defines human interaction for this capability and the spec omits a UI surface,
+flag it as a gap. If the slice is purely automated with no human interaction,
+cite the architecture or ADR that confirms this.

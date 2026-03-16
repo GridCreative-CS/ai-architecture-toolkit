@@ -24,6 +24,9 @@ A slice or feature is ready when all of the following are true:
 - Dependencies are identified.
 - A preferred implementation order is known.
 - Cross-slice impacts are understood.
+- The slice passes the verticality test: it includes the minimal human workflow
+  surface if the architecture specifies human interaction for this capability
+  (see `ai/guides/vertical-slice-definition.md`).
 
 ### Specification readiness
 
@@ -51,6 +54,8 @@ A slice, feature, or part is done when all of the following are true:
 - The intended behavior is implemented.
 - The implementation respects architecture and ADRs.
 - No unauthorized architectural drift was introduced.
+- If the slice includes a human workflow surface, a user-facing verification
+  confirms the end-to-end capability, not just API or integration tests.
 
 ### Testing completeness
 

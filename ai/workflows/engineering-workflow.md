@@ -15,6 +15,25 @@ Write:
 
 - `architecture/delivery-plan.md`
 
+## Step 1b — Validate Delivery Plan Verticality
+
+Before proceeding to slice selection, validate the delivery plan against
+`ai/guides/vertical-slice-definition.md`.
+
+For each slice in the plan, apply the verticality test:
+
+1. Does this slice deliver a capability a user/operator can exercise or observe?
+2. If the architecture specifies human-in-the-loop for this capability, does the
+   slice include the minimal UI to prove that loop?
+3. Can this slice be called "done" with a user-facing verification, not just an
+   integration test?
+
+If any slice is a horizontal layer (all-frontend, all-backend without human
+workflow), restructure the delivery plan before proceeding.
+
+This validation is **mandatory** for the initial delivery plan. It is optional
+for subsequent slice selections once the plan has been validated.
+
 ## Step 2 — Select the Next Slice
 
 Choose the next implementation slice from the delivery plan.

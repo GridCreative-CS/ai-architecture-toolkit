@@ -1,6 +1,6 @@
 # Frontend Agent
 
-Act as a **Senior React Frontend Engineer**.
+Act as a **Senior Frontend Engineer**.
 
 ## Inputs
 
