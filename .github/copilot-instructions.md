@@ -2,9 +2,14 @@
 
 When working in this repository:
 
-1. Treat `architecture/architecture-final.md` and `architecture/adr/*.md` as authoritative.
-2. Follow `ai/workflows/architecture-workflow-architecture-doc-only.md`.
-3. Prefer vertical slices.
-4. Prefer modular monolith unless a different pattern is explicitly justified.
-5. Do not introduce new architecture without review.
-6. Respect TDD and decomposition / execution skills.
+1. Treat `architecture/architecture-final.md` and `architecture/adr/*.md` as authoritative once they exist.
+2. For architecture work, follow:
+   - `ai/workflows/architecture-workflow-architecture-doc-only.md`
+3. For implementation work, follow:
+   - `ai/workflows/engineering-workflow.md`
+4. Use `ai/project-context.md` as additional context.
+5. Prefer vertical slices.
+6. Prefer modular monolith unless another pattern is explicitly justified.
+7. Do not introduce new architecture without review.
+8. Respect TDD and decomposition / execution skills.
+9. If a feature spec exists for the selected slice, treat it as a primary input for decomposition and implementation.
