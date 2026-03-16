@@ -82,3 +82,11 @@ A slice, feature, or part is done when all of the following are true:
 - Required logging, metrics, tracing, or monitoring hooks are present.
 - Security and authorization constraints are respected.
 - Deployment or configuration implications are documented when relevant.
+
+---
+
+## Glossary Reference
+
+For precise definitions of terms used in this document — including
+"decomposition-ready," "independently verifiable," "scope creep," and
+"architecture drift" — see `ai/guides/glossary.md`.

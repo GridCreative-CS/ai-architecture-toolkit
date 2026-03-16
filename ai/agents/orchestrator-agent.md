@@ -43,3 +43,8 @@ For each slice produce:
 - do not ignore unresolved architectural risks
 - do not produce a slice plan where all Frontend Tasks are deferred to a
   separate slice
+
+## Glossary Reference
+
+For definitions of "slice," "milestone," "human-in-the-loop," and other key
+terms, see `ai/guides/glossary.md`.

@@ -9,6 +9,8 @@ Convert the final architecture and ADRs into a structured delivery plan.
 - `architecture/architecture-final.md`
 - `architecture/adr/*.md`
 
+Consult `ai/guides/glossary.md` for precise definitions of key terms.
+
 ## Binding Constraints
 
 All slices must conform to the vertical slice definition in

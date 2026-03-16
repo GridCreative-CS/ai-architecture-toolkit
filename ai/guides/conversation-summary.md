@@ -19,8 +19,11 @@ not as a direct migration workflow.
 - Reconcile the review into a final architecture spec
 - Generate ADRs
 - Prefer vertical slices over a large horizontal application layer
-- Prefer modular monolith by default
+- Prefer modular monolith by default (see `ai/guides/modular-monolith-definition.md`)
 - Keep architecture authoritative for implementation agents
+
+> For precise definitions of "modular monolith," "vertical slice," and other
+> key terms, see `ai/guides/glossary.md`.
 
 ## Engineering decisions made
 

@@ -42,6 +42,10 @@ The `PART_SPEC` JSON remains the immediate execution contract.
 However, if a relevant feature spec exists, it should be used to validate that the Part is
 being implemented in the intended slice context and not drifting from the approved slice design.
 
+### Glossary reference
+For definitions of "TDD," "scope creep," "contract," and other key terms, see
+`ai/guides/glossary.md`.
+
 
 ---
 

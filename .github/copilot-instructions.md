@@ -13,3 +13,4 @@ When working in this repository:
 7. Do not introduce new architecture without review.
 8. Respect TDD and decomposition / execution skills.
 9. If a feature spec exists for the selected slice, treat it as a primary input for decomposition and implementation.
+10. See `ai/guides/glossary.md` for definitions of key terms used throughout the toolkit.

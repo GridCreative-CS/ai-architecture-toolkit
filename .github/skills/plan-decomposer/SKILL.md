@@ -41,6 +41,10 @@ For the selected slice, prefer the feature spec over vague or broader delivery-p
 wording when defining scope, acceptance criteria, contracts, test implications, and
 touch points.
 
+### Glossary reference
+For definitions of "independently verifiable," "scope creep,"
+"decomposition-ready," and other key terms, see `ai/guides/glossary.md`.
+
 ### Typical feature spec location
 - `architecture/feature-specs/<slice-name>.md`
 

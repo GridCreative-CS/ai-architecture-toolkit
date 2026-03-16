@@ -35,3 +35,6 @@ Section 5b (Human Workflow Surfaces) is **mandatory**. If the architecture
 defines human interaction for this capability and the spec omits a UI surface,
 flag it as a gap. If the slice is purely automated with no human interaction,
 cite the architecture or ADR that confirms this.
+
+Consult `ai/guides/glossary.md` for term definitions, especially: contract,
+human-in-the-loop, end-to-end.

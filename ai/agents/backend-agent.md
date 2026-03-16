@@ -33,3 +33,8 @@ Provide:
 - do not cross slice boundaries without explicit approval
 - do not skip required tests
 - do not move logic into inappropriate layers
+
+## Glossary Reference
+
+For definitions of "bounded context," "contract," and other key terms, see
+`ai/guides/glossary.md`.
