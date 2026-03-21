@@ -1,1276 +1,349 @@
-# AI Architecture Toolkit — v2
+# AI Architecture Toolkit
 
-This toolkit supports a **prototype → architecture → delivery → decomposition → TDD execution** workflow.
+[![Version](https://img.shields.io/badge/version-4.1.1-blue?style=flat-square)](VERSION.md)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-It is designed for a way of working where you:
+A structured, AI-assisted workflow for going from **prototype to production** — covering architecture design, review, delivery planning, decomposition, and TDD execution.
 
-1. Build a prototype (often Spark or other exploratory technology)
-2. Extract the validated behavior and business intent
-3. Design the production architecture
-4. Review and reconcile the architecture
-5. Generate ADRs
-6. Create a delivery plan
-7. Break the work into executable parts
-8. Implement using TDD
-9. Use specialist AI agents where helpful
+[Overview](#overview) · [Quick Start](#quick-start) · [Getting Started](#getting-started) · [Workflow](#workflow) · [What's Included](#whats-included) · [Usage](#usage) · [Repository Strategy](#repository-strategy) · [Guides & Examples](#guides--examples)
 
----
+## Overview
 
-## End-to-end workflow
+This toolkit provides prompts, agents, templates, workflows, and guides that support a disciplined software delivery process, from early prototyping through production-grade implementation.
 
-```text
-Spark Prototype
-      ↓
-Prototype Analyzer
-      ↓
-Architecture Designer
-      ↓
-Architecture Reviewer
-      ↓
-Architecture Reconciler
-      ↓
-ADR Generator
-      ↓
-Delivery Planner
-      ↓
-Feature Spec Generator
-      ↓
-Architecture Compliance Check
-      ↓
-Plan-Decomposer
-      ↓
-Part-Executor (TDD)
-      ↓
-Specialist Agents
-      ↓
-AI Testing Agent
-      ↓
-Integration Review
-```
+It is designed for teams and individuals who:
 
----
+- Build exploratory prototypes and want to extract validated architecture from them
+- Need a repeatable process for architecture design, review, and reconciliation
+- Want structured delivery planning with vertical slices and feature specs
+- Use TDD-based execution with AI-assisted decomposition
+- Rely on specialist AI agents for backend, frontend, QA, DevOps, and more
 
-## What is included
+> [!NOTE]
+> This toolkit is workflow-driven. It does not generate code directly — it provides the structured prompts, templates, and guidance that AI coding agents consume to produce consistent, architecture-aligned output.
 
-### Prompts
+## Quick Start
 
-Located under:
+The shortest path from prototype to implementation:
 
-- `ai/prompts/`
+1. Fill in project context using `ai/templates/project-context-template.md`
+2. Run `prototype-analyzer` → `architecture/prototype-analysis.md`
+3. Run `architecture-designer` → `architecture/architecture-blueprint.md`
+4. Run `architecture-reviewer` → `architecture/review-report.md`
+5. Run `architecture-reconciler` → `architecture/architecture-final.md`
+6. Run `adr-generator` → `architecture/adr/*.md`
+7. Run `delivery-planner` → `architecture/delivery-plan.md`
+8. Run `plan-decomposer` → `ai-parts/OVERVIEW.md` and `ai-parts/PXX-*.md`
+9. Run `part-executor-tdd` → execute one Part at a time with strict TDD
 
-These are used for:
+> [!TIP]
+> If you are unsure where to start, run the first three prompts for your entry mode (see [Getting Started](#getting-started)). That will get you oriented quickly.
 
-- prototype analysis
-- architecture design
-- architecture review
-- architecture reconciliation
-- ADR generation
-- delivery planning
-- feature specification generation
-- architecture compliance
-- golden dataset generation
+## Getting Started
 
-### Agents
+### 1. Choose your entry mode
 
-Located under:
+Your starting point depends on what you already have:
 
-- `ai/agents/`
+| Mode | You have | Workflow |
+|------|----------|----------|
+| **A — Prototype Only** | A working prototype, no architecture doc | `ai/workflows/architecture-workflow-prototype-only.md` |
+| **B — Prototype + Architecture Doc** | Both a prototype and an existing architecture document | `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md` |
+| **C — Architecture Doc Only** | An architecture document, no prototype | `ai/workflows/architecture-workflow-architecture-doc-only.md` |
 
-These are used for:
+Choose the mode based on the strongest available input. If you have an architecture document but are unsure whether it is trustworthy, use Mode B and validate it rather than assuming it is correct.
 
-- orchestration
-- backend work
-- frontend work
-- AI/model work
-- QA work
-- AI-focused testing
-- DevOps work
-- integration review
+See `ai/guides/how-to-choose-entry-mode.md` for details.
 
-### Templates
+### 2. Fill in project context
 
-Located under:
+Copy `ai/templates/project-context-template.md` to `ai/project-context.md` and fill it in for your project.
 
-- `ai/templates/`
+### 3. Follow the workflow
 
-These help structure:
+Each entry mode guides you through architecture analysis, review, reconciliation, ADR generation, and delivery planning. Once a delivery plan exists, switch to the **engineering workflow** for implementation.
 
-- architecture blueprints
-- ADRs
-- feature specifications
-- golden dataset definitions
+## Workflow
 
-### Skills
+### Architecture phase
 
-Located under:
+Each entry mode follows a different path to produce the authoritative architecture:
 
-- `skills/plan-decomposer/SKILL.md`
-- `skills/part-executor-tdd/SKILL.md`
-
-These are your execution-layer skills and are the bridge between planning and code implementation.
-
-### Existing expert engineering agent
-
-Located under:
-
-- `agents/expert-dotnet-software-engineer.agent.md`
-
-This provides expert .NET engineering guidance and is already integrated into your plan decomposition / implementation model.
-
----
-
-# How to use this with Claude
-
-There are two practical ways to use this toolkit with Claude.
-
-## Option A — Use it directly from inside the project repo
-
-This is the simplest setup.
-
-Place this toolkit inside your project repository and then use Claude with the repo open.
-
-Recommended project structure:
+<details>
+<summary><b>Mode A — Prototype Only</b></summary>
 
 ```text
-repo
-│
-├ architecture
-├ ai
-├ skills
-├ src
-├ tests
-└ .github
+Prototype
+  → Prototype Analyzer
+  → Architecture Designer
+  → Architecture Reviewer
+  → Architecture Reconciler
+  → ADR Generator
 ```
 
-### Architecture phase with Claude
+</details>
 
-#### Step 1 — Prototype analysis
-
-Prompt Claude with something like:
+<details>
+<summary><b>Mode B — Prototype + Existing Architecture Document</b></summary>
 
 ```text
-Use ai/prompts/prototype-analyzer.md.
-
-Analyze this repository as a prototype.
-Treat it as reference behavior, not reference architecture.
-Write the result in architecture/prototype-analysis.md.
+Prototype + Existing Architecture Document
+  → Prototype Analyzer
+  → Existing Architecture Reviewer
+  → Prototype-Architecture Alignment
+  → Architecture Gap Reconciler
+  → ADR Generator
 ```
 
-#### Step 2 — Architecture blueprint
+</details>
 
-Then:
+<details>
+<summary><b>Mode C — Architecture Document Only</b></summary>
 
 ```text
-Use ai/prompts/architecture-designer.md
-and ai/templates/architecture-blueprint-template.md.
-
-Generate architecture/architecture-blueprint.md.
+Existing Architecture Document
+  → Existing Architecture Reviewer
+  → Architecture Gap Reconciler
+  → Final Architecture
+  → ADR Generator
 ```
 
-#### Step 3 — Architecture review
+</details>
 
-Then:
+### Delivery and execution phase
+
+Once the architecture is finalized, all modes converge into the same delivery and execution loop driven by `ai/workflows/engineering-workflow.md`:
 
 ```text
-Use ai/prompts/architecture-reviewer.md.
-
-Review architecture/architecture-blueprint.md
-and write the result to architecture/review-report.md.
+Delivery Plan
+  → Select Slice
+  → Feature Spec for that Slice
+  → Architecture Compliance Check (if needed)
+  → Plan Decomposition into Parts
+  → TDD Execution (one Part at a time)
+  → Specialist Agents (as needed)
+  → Repeat for next Slice
 ```
 
-#### Step 4 — Architecture reconciliation
+Feature specs are not optional documentation. When a feature spec exists for the selected slice, it is the primary input that guides decomposition — more precisely than the broader delivery plan.
 
-Then:
+## What's Included
 
-```text
-Use ai/prompts/architecture-reconciler.md.
+### Prompts — `ai/prompts/`
 
-Use architecture/architecture-blueprint.md
-and architecture/review-report.md
-to generate architecture/architecture-final.md.
-```
+Structured prompts for each workflow step:
 
-#### Step 5 — Generate ADRs
+| Prompt | Purpose |
+|--------|---------|
+| `prototype-analyzer` | Extract behavior and intent from a prototype |
+| `architecture-designer` | Design production architecture |
+| `architecture-reviewer` | Review architecture for risks and gaps |
+| `architecture-reconciler` | Reconcile reviewer feedback into a final architecture |
+| `architecture-gap-reconciler` | Reconcile gaps when starting from an existing doc |
+| `existing-architecture-reviewer` | Review a pre-existing architecture document |
+| `prototype-architecture-alignment` | Align prototype behavior with architecture doc |
+| `adr-generator` | Generate Architecture Decision Records |
+| `delivery-planner` | Create a milestone-based delivery plan with vertical slices |
+| `feature-spec-generator` | Generate detailed specs for individual slices |
+| `feature-spec-reconciler` | Reconcile feature spec feedback |
+| `architecture-compliance` | Verify implementation aligns with approved architecture |
+| `golden-dataset-generator` | Generate test datasets for AI/business logic validation |
 
-Then:
+### Agents — `ai/agents/`
 
-```text
-Use ai/prompts/adr-generator.md
-and ai/templates/adr-template.md.
+Specialist AI agents for different concerns:
 
-Generate ADR files under architecture/adr/.
-```
+| Agent | Focus |
+|-------|-------|
+| `orchestrator-agent` | Coordinates the overall workflow |
+| `backend-agent` | Backend implementation |
+| `frontend-agent` | Frontend implementation |
+| `ai-agent` | AI/ML model integration |
+| `qa-agent` | Quality assurance |
+| `ai-testing-agent` | AI-specific testing and golden datasets |
+| `devops-agent` | CI/CD, infrastructure, deployment |
+| `integration-reviewer` | Cross-boundary integration review |
 
-### Delivery phase with Claude
+### Skills — `.github/skills/`
 
-#### Step 6 — Delivery plan
+Execution-layer skills that bridge planning and code implementation:
 
-Then:
+| Skill | Purpose |
+|-------|---------|
+| `plan-decomposer` | Decomposes a delivery plan or feature spec into independently verifiable Parts |
+| `part-executor-tdd` | Executes one Part at a time using strict red-green-refactor TDD |
 
-```text
-Use ai/prompts/delivery-planner.md.
+An expert .NET engineering agent is also available at `.github/agents/expert-dotnet-software-engineer.agent.md`.
 
-Use architecture/architecture-final.md and architecture/adr/*.md
-to create architecture/delivery-plan.md.
-```
+### Templates — `ai/templates/`
 
-#### Step 7 — Feature specs
+Reusable templates for structured output:
 
-Then:
+- **Architecture blueprint** — `architecture-blueprint-template.md`
+- **ADR** — `adr-template.md`
+- **Feature spec** — `feature-spec-template.md`
+- **Compliance report** — `compliance-report-template.md`
+- **Golden dataset** — `golden-dataset-template.md` / `golden-dataset-json-template.json`
+- **Project context** — `project-context-template.md`
 
-```text
-Use ai/prompts/feature-spec-generator.md
-and ai/templates/feature-spec-template.md.
+### Workflows — `ai/workflows/`
 
-Generate one feature spec at a time in architecture/feature-specs/.
-```
+End-to-end process definitions:
 
-#### Step 8 — Golden dataset definitions
+- `architecture-workflow.md` — Full prototype-to-architecture flow
+- `architecture-workflow-prototype-only.md` — Mode A
+- `architecture-workflow-prototype-plus-architecture-doc.md` — Mode B
+- `architecture-workflow-architecture-doc-only.md` — Mode C
+- `engineering-workflow.md` — Slice-based implementation with TDD
 
-Then:
+### Architecture outputs — `architecture/`
 
-```text
-Use ai/prompts/golden-dataset-generator.md
-and ai/templates/golden-dataset-template.md.
+Per-project outputs generated by running the toolkit:
 
-Generate scenario packs in architecture/golden-datasets/.
-```
+- `architecture-final.md` — Authoritative architecture (source of truth)
+- `adr/` — Architecture Decision Records
+- `delivery-plan.md` — Milestone and slice plan
+- `feature-specs/` — Per-slice feature specifications
+- `golden-datasets/` — Test datasets for validation
 
-### Execution phase with Claude
+## Usage
 
-#### Step 9 — Plan decomposition
+### Using with Copilot
 
-Use your existing skill:
+Copilot works best when instructions and architecture files live inside the repo. Use `.github/copilot-instructions.md` to point Copilot at:
 
-```text
-Use skills/plan-decomposer/SKILL.md.
+- `architecture/architecture-final.md` and `architecture/adr/*.md` as authoritative sources
+- Workflows in `ai/workflows/`
+- Vertical slice, modular monolith, and TDD expectations
 
-Input: architecture/delivery-plan.md
-Output: ai-parts/OVERVIEW.md and ai-parts/PXX-*.md
-```
-
-#### Step 10 — TDD part execution
-
-Then use:
-
-```text
-Use skills/part-executor-tdd/SKILL.md.
-
-Execute exactly one Part from ai-parts/.
-Follow strict TDD.
-```
-
-#### Step 11 — Specialist agent support
-
-When needed, ask Claude to adopt one of the specialist agent roles, for example:
-
-```text
-Use ai/agents/backend-agent.md.
-Implement the backend tasks for the Recommendation slice.
-```
-
-Or:
-
-```text
-Use ai/agents/ai-testing-agent.md.
-Review the golden scenario coverage for this slice.
-```
-
----
-
-## Option B — Use a central toolkit repo and a separate project repo
-
-This is usually the best model if you work across many repositories.
-
-### Recommended setup
-
-Create one central repo, for example:
-
-```text
-ai-architecture-toolkit
-```
-
-Store the toolkit there.
-
-Then, in each project repo, keep only:
-
-```text
-/architecture
-/ai/project-context.md
-/.github/copilot-instructions.md
-```
-
-In that case, you use the central toolkit as your source of prompts and templates, and store only the generated outputs in the project repo.
-
-### Why this is often better
-
-Benefits:
-
-- one master version of prompts and workflows
-- easier maintenance
-- less copy/paste between repos
-- consistent architecture and delivery process across projects
-
-### When local copies are still useful
-
-Keep local overrides in a project repo when:
-
-- the project needs domain-specific prompt variations
-- a project has special compliance requirements
-- you want version traceability of exactly which prompt version was used
-
----
-
-# How to use this with GitHub / Copilot
-
-For GitHub and Copilot, the best model is slightly different from Claude.
-
-Copilot works best when:
-
-- instructions live inside the repo
-- architecture files are present locally
-- workflows are explicit
-- prompts or instructions can be referenced from repo files
-
-## Recommended minimal local setup for GitHub repos
-
-Even if you keep the toolkit centrally, keep these in each project repo:
-
-```text
-architecture/
-.github/copilot-instructions.md
-ai/project-context.md
-```
-
-Optionally also keep:
-
-```text
-ai/workflows/
-ai/prompts/
-```
-
-if you want everything self-contained.
-
----
-
-## Copilot usage pattern
-
-### 1. Architecture must be present in the repo
-
-Copilot should always be guided by:
-
-- `architecture/architecture-final.md`
-- `architecture/adr/*.md`
-
-These should be treated as authoritative.
-
-### 2. Copilot instructions
-
-Use `.github/copilot-instructions.md` to tell Copilot to follow:
-
-- architecture
-- ADRs
-- vertical slices
-- modular monolith defaults
-- TDD expectations
-- workflows in `ai/workflows/`
-
-### 3. Prompting Copilot
-
-Examples:
-
-```text
-Follow ai/workflows/architecture-workflow.md
-and generate architecture/architecture-blueprint.md.
-```
-
-Or:
+Example prompts:
 
 ```text
 Follow ai/workflows/engineering-workflow.md.
 Use architecture/delivery-plan.md as input.
 ```
 
-Or:
-
 ```text
 Use ai/agents/backend-agent.md
 and implement the backend tasks for the current slice.
 ```
 
----
+### Using with Claude or other AI coding agents
 
-# Recommended repository strategy
-
-## Best practical strategy for your situation
-
-Use a **hybrid model**:
-
-### Central toolkit repo
-
-Keep the master toolkit centrally:
-
-```text
-ai-architecture-toolkit
-```
-
-### Per project repo
-
-Keep only:
-
-- generated outputs
-- project-specific context
-- local overrides if needed
-- Copilot instructions
-
-That means:
-
-### Central
-
-- prompts
-- templates
-- workflows
-- base agents
-- shared documentation
-
-### Per project
-
-- architecture outputs
-- ADR outputs
-- delivery plan
-- feature specs
-- golden datasets
-- ai-parts generated from decomposition
-- project-specific overrides
-
-This gives you:
-
-- consistency
-- maintainability
-- flexibility
-
----
-
-# Suggested way of working
-
-## For new projects
-
-1. start from a prototype
-2. run the architecture workflow
-3. approve architecture
-4. generate ADRs
-5. create the delivery plan
-6. generate feature specs
-7. define golden scenarios where valuable
-8. decompose into parts
-9. execute parts with TDD
-10. use specialist agents only under orchestration
-
-## For ongoing projects
-
-1. update architecture if needed
-2. add or update ADRs when decisions change
-3. regenerate delivery plan when scope changes
-4. use architecture compliance checks before major implementation changes
-
----
-
-# Important principle
-
-This toolkit is strongest when you treat it as:
-
-**Architecture governance + AI engineering execution**
-
-not just as a collection of prompts.
-
-That means:
-
-- architecture first
-- planning second
-- implementation third
-- review throughout
-
----
-
-# Included implementation-layer skills
-
-This toolkit already contains your integrated skills:
-
-- `skills/plan-decomposer/SKILL.md`
-- `skills/part-executor-tdd/SKILL.md`
-- `agents/expert-dotnet-software-engineer.agent.md`
-
-These make the execution phase much stronger because they already enforce:
-
-- decomposition discipline
-- file-based handoff
-- TDD
-- expert .NET engineering guidance
-
----
-
-# Suggested next step
-
-Use this toolkit as your **central master repo**.
-
-Then for each new product/project:
-
-- create or reuse a project repo
-- copy in only the local files you need
-- keep the generated outputs in the project repo
-- keep the master prompts/templates/workflows centrally maintained
-
-
----
-
-## v3 Extension — Support for Prototype + Existing Architecture Document
-
-The earlier versions primarily assumed:
-
-```text
-Prototype
-   ↓
-Architecture generation
-```
-
-v3 also supports a second input mode:
-
-```text
-Prototype + existing architecture document
-   ↓
-Existing Architecture Review
-   ↓
-Prototype vs Architecture Alignment
-   ↓
-Architecture Gap Reconciliation
-   ↓
-Final Architecture
-```
-
-### Why this matters
-
-In real projects you may already have:
-- a prototype
-- an architecture draft
-- stakeholder notes
-- partial design decisions
-
-In that case the toolkit should not always regenerate architecture from scratch.
-
-Instead it should:
-- assess the quality of the existing architecture
-- compare it with prototype reality
-- identify gaps and inconsistencies
-- reconcile them into a stronger final architecture
-
-### New prompts in v3
-
-- `ai/prompts/existing-architecture-reviewer.md`
-- `ai/prompts/prototype-architecture-alignment.md`
-- `ai/prompts/architecture-gap-reconciler.md`
-
-### Additional output files in v3
-
-- `architecture/existing-architecture-review.md`
-- `architecture/prototype-architecture-alignment.md`
-
-### Recommended modes
-
-#### Mode A — Prototype only
-
-Use:
-1. prototype analyzer
-2. architecture designer
-3. architecture reviewer
-4. architecture reconciler
-5. ADR generator
-
-#### Mode B — Prototype + existing architecture document
-
-Use:
-1. prototype analyzer
-2. existing architecture reviewer
-3. prototype vs architecture alignment
-4. architecture gap reconciler
-5. ADR generator
-
-### Example Claude usage for Mode B
+Place the toolkit inside or alongside your project repository, then prompt step by step:
 
 ```text
 Use ai/prompts/prototype-analyzer.md.
-
-Analyze the repository as a prototype and write the result to architecture/prototype-analysis.md.
-```
-
-```text
-Use ai/prompts/existing-architecture-reviewer.md.
-
-Review the provided architecture document and write the result to architecture/existing-architecture-review.md.
-```
-
-```text
-Use ai/prompts/prototype-architecture-alignment.md.
-
-Compare architecture/prototype-analysis.md with the existing architecture document and write the alignment report to architecture/prototype-architecture-alignment.md.
-```
-
-```text
-Use ai/prompts/architecture-gap-reconciler.md.
-
-Use the existing architecture document, architecture/existing-architecture-review.md, and architecture/prototype-architecture-alignment.md to generate architecture/architecture-final.md.
-```
-
----
-
-# v3.1 Improvement Pack Additions
-
-This toolkit also includes the v3.1 improvement pack.
-
-## Added in v3.1
-
-- `ai/templates/project-context-template.md`
-- `ai/templates/compliance-report-template.md`
-- `ai/templates/golden-dataset-json-template.json`
-- sharpened agent contracts
-- `ai/guides/definition-of-ready-and-done.md`
-- split workflows:
-  - `ai/workflows/architecture-workflow-prototype-only.md`
-  - `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md`
-- examples:
-  - `ai/examples/example-compliance-report.md`
-  - `ai/examples/example-feature-spec-outline.md`
-  - `ai/examples/example-golden-dataset-case.json`
-
-## Why these were added
-
-These additions make the toolkit more operational and less ambiguous by improving:
-
-- project context capture
-- compliance reporting
-- golden dataset structure
-- agent input/output contracts
-- readiness and done criteria
-- explicit workflow selection for the two architecture modes
-
-## Notes
-
-This merged v3.1 toolkit preserves the broader toolkit README and appends the
-improvement-pack additions instead of replacing the original documentation.
-
----
-
-# README Operational Additions
-
-This section makes the toolkit easier to use in practice.
-
-## Quick Start in 5 Minutes
-
-If you want the shortest path from prototype to implementation, use this sequence.
-
-### Quick Start
-
-1. Put the prototype repository in scope.
-2. Run `prototype-analyzer`.
-3. Run `architecture-designer`.
-4. Run `architecture-reviewer`.
-5. Run `architecture-reconciler`.
-6. Run `adr-generator`.
-7. Run `delivery-planner`.
-8. Run `plan-decomposer`.
-9. Run `part-executor-tdd`.
-
-### Minimal quick-start prompts
-
-Use prompts like these.
-
-#### Step 1 — Prototype analysis
-
-```text
-Use ai/prompts/prototype-analyzer.md.
-
 Analyze this repository as a prototype.
 Treat it as reference behavior, not reference architecture.
 Write the result to architecture/prototype-analysis.md.
 ```
 
-#### Step 2 — Architecture blueprint
-
 ```text
 Use ai/prompts/architecture-designer.md
 and ai/templates/architecture-blueprint-template.md.
-
 Generate architecture/architecture-blueprint.md.
 ```
 
-#### Step 3 — Architecture review
+Continue through the workflow steps. For execution, use:
 
 ```text
-Use ai/prompts/architecture-reviewer.md.
-
-Review architecture/architecture-blueprint.md
-and write the result to architecture/review-report.md.
-```
-
-#### Step 4 — Architecture reconciliation
-
-```text
-Use ai/prompts/architecture-reconciler.md.
-
-Use architecture/architecture-blueprint.md
-and architecture/review-report.md
-to generate architecture/architecture-final.md.
-```
-
-#### Step 5 — ADR generation
-
-```text
-Use ai/prompts/adr-generator.md
-and ai/templates/adr-template.md.
-
-Generate ADR files under architecture/adr/.
-```
-
-#### Step 6 — Delivery planning
-
-```text
-Use ai/prompts/delivery-planner.md.
-
-Use architecture/architecture-final.md and architecture/adr/*.md
-to create architecture/delivery-plan.md.
-```
-
-#### Step 7 — Decomposition
-
-```text
-Use skills/plan-decomposer/SKILL.md.
-
+Use .github/skills/plan-decomposer/SKILL.md.
 Input: architecture/delivery-plan.md
 Output: ai-parts/OVERVIEW.md and ai-parts/PXX-*.md
 ```
 
-#### Step 8 — TDD implementation
-
 ```text
-Use skills/part-executor-tdd/SKILL.md.
-
+Use .github/skills/part-executor-tdd/SKILL.md.
 Execute exactly one Part from ai-parts/.
 Follow strict TDD.
 ```
 
-## First 3 Commands or Prompts to Run
-
-If you are starting a new project, these are the first three prompts to run.
-
-### If you only have a prototype
-
-1. `prototype-analyzer`
-2. `architecture-designer`
-3. `architecture-reviewer`
-
-### If you have a prototype and an existing architecture document
-
-1. `prototype-analyzer`
-2. `existing-architecture-reviewer`
-3. `prototype-architecture-alignment`
-
-This gets you quickly into the right mode.
-
-## Which Mode Should You Choose
-
-The toolkit supports two architecture entry modes.
-
-### Mode A — Prototype Only
-
-Use this mode when:
-
-- you have a prototype
-- you do not yet have a useful architecture document
-- you want the toolkit to generate the architecture from the prototype
-
-Use this workflow:
-
-- `ai/workflows/architecture-workflow-prototype-only.md`
-
-Typical sequence:
+When needed, ask the agent to adopt a specialist role:
 
 ```text
-Prototype
-  ↓
-Prototype Analyzer
-  ↓
-Architecture Designer
-  ↓
-Architecture Reviewer
-  ↓
-Architecture Reconciler
-  ↓
-ADR Generator
+Use ai/agents/backend-agent.md.
+Implement the backend tasks for the current slice.
 ```
 
-### Mode B — Prototype Plus Existing Architecture Document
+## Repository Strategy
 
-Use this mode when:
+The toolkit supports two deployment models.
 
-- you have a prototype
-- you also have an existing architecture document
-- you want to validate and reconcile the document against prototype reality
+### Option A — Toolkit inside the project repo
 
-Use this workflow:
-
-- `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md`
-
-Typical sequence:
+Place the full toolkit in your project repository. Simplest setup for a single project.
 
 ```text
-Prototype
-+ Existing Architecture Document
-  ↓
-Prototype Analyzer
-  ↓
-Existing Architecture Reviewer
-  ↓
-Prototype-Architecture Alignment
-  ↓
-Architecture Gap Reconciler
-  ↓
-ADR Generator
+project-repo/
+├── ai/
+├── architecture/
+├── .github/
+│   ├── skills/
+│   ├── agents/
+│   └── copilot-instructions.md
+├── src/
+└── tests/
 ```
 
-## Central Toolkit Repo vs Project Repo
+### Option B — Central toolkit repo + per-project repos (recommended)
 
-The toolkit works best with a hybrid model.
+Keep the master toolkit centrally and maintain one version of prompts, templates, and workflows. Each project repo keeps only its generated outputs and project-specific context.
 
-### Central toolkit repo
-
-Use a central repo when you want:
-
-- one master version of prompts
-- one master version of templates
-- one master version of workflows
-- one place to improve the toolkit over time
-
-Recommended central repo contents:
+**Central toolkit repo:**
 
 ```text
-ai-architecture-toolkit
-├ ai
-├ skills
-├ agents
-├ architecture
-└ README.md
+ai-architecture-toolkit/
+├── ai/          (prompts, templates, workflows, agents, guides, examples)
+├── .github/     (skills, agents, instructions)
+└── README.md
 ```
 
-### Project repo
-
-Use the project repo for:
-
-- generated architecture outputs
-- ADR outputs
-- delivery plans
-- feature specs
-- golden datasets
-- decomposition output in `ai-parts`
-- project-specific context
-- local overrides if needed
-
-Recommended minimal project repo contents:
+**Per-project repo (minimal):**
 
 ```text
-project-repo
-├ architecture
-├ ai
-│  └ project-context.md
-├ .github
-│  └ copilot-instructions.md
-├ src
-└ tests
+project-repo/
+├── architecture/          (generated outputs, ADRs, feature specs, golden datasets)
+├── ai/project-context.md  (project-specific context)
+├── .github/copilot-instructions.md
+├── ai-parts/              (decomposition output)
+├── src/
+└── tests/
 ```
 
-### Practical recommendation
-
-For your setup, the best model is:
-
-- keep the master toolkit centrally
-- keep project outputs in the project repo
-- copy local overrides only when a project really needs them
-
-## Exact Example Project Flow
-
-This is an example of how to run one real project from start to implementation.
-
-### Example scenario
-
-You have:
-
-- a Spark prototype
-- no final production architecture yet
-- a target stack of .NET and React
-
-### Example flow
-
-#### 1. Create project context
-
-Use:
-
-- `ai/templates/project-context-template.md`
-
-Write:
-
-- `ai/project-context.md`
-
-#### 2. Analyze the prototype
-
-Use:
-
-- `ai/prompts/prototype-analyzer.md`
-
-Write:
-
-- `architecture/prototype-analysis.md`
-
-#### 3. Generate the blueprint
-
-Use:
-
-- `ai/prompts/architecture-designer.md`
-- `ai/templates/architecture-blueprint-template.md`
-
-Write:
-
-- `architecture/architecture-blueprint.md`
-
-#### 4. Review the blueprint
-
-Use:
-
-- `ai/prompts/architecture-reviewer.md`
-
-Write:
-
-- `architecture/review-report.md`
-
-#### 5. Reconcile into the final architecture
-
-Use:
-
-- `ai/prompts/architecture-reconciler.md`
-
-Write:
-
-- `architecture/architecture-final.md`
-
-#### 6. Generate ADRs
-
-Use:
-
-- `ai/prompts/adr-generator.md`
-- `ai/templates/adr-template.md`
-
-Write:
-
-- `architecture/adr/*.md`
-
-#### 7. Generate the delivery plan
-
-Use:
-
-- `ai/prompts/delivery-planner.md`
-
-Write:
-
-- `architecture/delivery-plan.md`
-
-#### 8. Generate feature specs if needed
-
-Use:
-
-- `ai/prompts/feature-spec-generator.md`
-- `ai/templates/feature-spec-template.md`
-
-Write:
-
-- `architecture/feature-specs/*.md`
-
-#### 9. Generate golden scenarios where useful
-
-Use:
-
-- `ai/prompts/golden-dataset-generator.md`
-- `ai/templates/golden-dataset-template.md`
-
-Write:
-
-- `architecture/golden-datasets/*.md`
-
-#### 10. Decompose implementation
-
-Use:
-
-- `skills/plan-decomposer/SKILL.md`
-
-Write:
-
-- `ai-parts/OVERVIEW.md`
-- `ai-parts/PXX-*.md`
-
-#### 11. Execute parts with TDD
-
-Use:
-
-- `skills/part-executor-tdd/SKILL.md`
-
-#### 12. Use specialist agents only when needed
-
-Examples:
-
-- `ai/agents/backend-agent.md`
-- `ai/agents/frontend-agent.md`
-- `ai/agents/ai-agent.md`
-- `ai/agents/qa-agent.md`
-- `ai/agents/ai-testing-agent.md`
-- `ai/agents/devops-agent.md`
-
-## Practical Rule of Thumb
-
-If you are unsure where to start, use this rule:
-
-- only prototype available → use **Prototype Only** mode
-- prototype + architecture doc available → use **Prototype Plus Existing Architecture Document** mode
-
-If you are unsure whether the architecture document is trustworthy, still use the second mode and validate it rather than assuming it is correct.
-
----
-
-# v4 Baseline Notes
-
-This v4 baseline is the normalized merged package that combines:
-
-- the full prototype-to-product architecture toolkit
-- the v3.1 improvement pack
-- the operational README additions
-
-## What this v4 baseline is for
-
-Use this as the stable starting point for real projects.
-
-It is intended to be the version you:
-
-- keep as the central master toolkit repo
-- reuse across multiple project repositories
-- improve over time based on actual project usage
-
-## Included improvements
-
-This baseline includes:
-
-- project context template
-- compliance report template
-- golden dataset JSON template
-- sharpened agent contracts
-- definition of ready / done
-- split workflows for both architecture entry modes
-- operational quick start guidance
-- example compliance report
-- example feature spec outline
-- example golden dataset case
-
-## Recommended usage model
-
-### Central toolkit repo
-
-Keep the full toolkit centrally and maintain it there.
-
-### Project repo
-
-Keep generated outputs and project-specific overrides in the project repo, including:
-
-- architecture outputs
-- ADR outputs
-- delivery plan
-- feature specs
-- golden datasets
-- decomposition output
-- project context
-- local Copilot instructions
-
-## Suggested next evolution after v4
-
-Use this baseline on at least one real project before making a v4.1 or v5.
-
-The best next improvements should come from real friction observed during usage, not from theoretical expansion alone.
-
----
-
-# v4.1 Unified Entry Modes
-
-This unified toolkit supports **three architecture entry modes**.
-
-## Mode A — Prototype Only
-
-Use this mode when:
-
-- you have a prototype
-- you do not have a useful architecture document
-- you want the toolkit to generate the architecture from prototype behavior
-
-Workflow file:
-
-- `ai/workflows/architecture-workflow-prototype-only.md`
-
-Typical sequence:
-
-```text
-Prototype
-  ↓
-Prototype Analyzer
-  ↓
-Architecture Designer
-  ↓
-Architecture Reviewer
-  ↓
-Architecture Reconciler
-  ↓
-ADR Generator
-```
-
-## Mode B — Prototype Plus Existing Architecture Document
-
-Use this mode when:
-
-- you have both a prototype and an architecture document
-- you want to validate the document against prototype reality
-- you want to reconcile gaps between implementation evidence and documented design
-
-Workflow file:
-
-- `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md`
-
-Typical sequence:
-
-```text
-Prototype
-+ Existing Architecture Document
-  ↓
-Prototype Analyzer
-  ↓
-Existing Architecture Reviewer
-  ↓
-Prototype-Architecture Alignment
-  ↓
-Architecture Gap Reconciler
-  ↓
-ADR Generator
-```
-
-## Mode C — Architecture Document Only
-
-Use this mode when:
-
-- you have an architecture document
-- you do not have a prototype
-- you want to assess and strengthen the architecture before implementation begins
-
-Workflow file:
-
-- `ai/workflows/architecture-workflow-architecture-doc-only.md`
-
-Typical sequence:
-
-```text
-Existing Architecture Document
-        ↓
-Existing Architecture Reviewer
-        ↓
-Architecture Gap Reconciler
-        ↓
-Final Architecture
-        ↓
-ADR Generator
-        ↓
-Delivery Planner
-        ↓
-Feature Spec Generator
-        ↓
-Architecture Compliance
-        ↓
-Plan-Decomposer
-        ↓
-Part-Executor (TDD)
-```
-
-## Unified rule of thumb
-
-Choose the mode based on the strongest available input:
-
-- only prototype available → use **Prototype Only**
-- prototype + architecture document available → use **Prototype Plus Existing Architecture Document**
-- only architecture document available → use **Architecture Document Only**
-
-## Additional files included for doc-first mode
-
-### Prompts
-- `ai/prompts/existing-architecture-reviewer.md`
-- `ai/prompts/architecture-gap-reconciler.md`
-
-### Workflow
-- `ai/workflows/architecture-workflow-architecture-doc-only.md`
-
-### Starter architecture files
-- `architecture/existing-architecture-review.md`
-
-## Recommended central toolkit strategy
-
-Use this unified v4.1 package as the **single master toolkit**.
-
-Then per project repo, keep only:
-
-- architecture outputs
-- ADRs
-- delivery plan
-- feature specs
-- golden datasets
-- decomposition output
-- project context
-- local Copilot instructions
-- local overrides where needed
-
----
-
-# Feature Spec Usage Clarification
-
-Feature specifications are not optional documentation artifacts with no downstream role.
-When a feature spec exists for a selected slice, it should be treated as a primary
-implementation-shaping input for that slice.
-
-## Correct downstream flow
-
-```text
-Architecture Final
-→ ADRs
-→ Delivery Plan
-→ Feature Spec for Selected Slice
-→ Architecture Compliance Check
-→ Plan-Decomposer
-→ Part-Executor (TDD)
-```
-
-## Practical rule
-
-If a feature spec exists for the selected slice, use it together with:
-
-- `architecture/architecture-final.md`
-- `architecture/adr/*.md`
-- `architecture/delivery-plan.md`
-
-In practice, the feature spec should guide decomposition for that slice more
-precisely than the broader delivery plan.
-
-## Recommended per-slice sequence
-
-1. Generate the delivery plan.
-2. Select the next slice.
-3. Generate one feature spec for that slice.
-4. Optionally run architecture compliance.
-5. Decompose that slice.
-6. Execute one Part at a time with TDD.
-7. Repeat for the next slice.
+Keep local overrides in a project repo only when the project needs domain-specific prompt variations, special compliance requirements, or version traceability of exactly which prompt version was used.
+
+## Guides & Examples
+
+### Guides — `ai/guides/`
+
+| Guide | Description |
+|-------|-------------|
+| `glossary.md` | Definitions of all load-bearing terms (slice, part, phase, contract, etc.) |
+| `vertical-slice-definition.md` | What constitutes a vertical slice, the verticality test, and anti-patterns |
+| `modular-monolith-definition.md` | Modular monolith pattern and when to use it |
+| `contract-definition.md` | API contract structure and testing guidance |
+| `how-to-choose-entry-mode.md` | Decision guide for which workflow to use |
+| `how-feature-specs-are-used.md` | How feature specs bridge planning and implementation |
+| `definition-of-ready-and-done.md` | Readiness and completion criteria |
+| `operating-model.md` | Full operating model across all phases |
+| `conversation-summary.md` | Guidance for summarizing conversations |
+
+### Examples — `ai/examples/`
+
+- `vertical-vs-horizontal-slices.md` — Comparison of slice approaches
+- `modular-monolith-patterns.md` — Patterns for modular monolith design
+- `contract-patterns.md` — API contract examples
+- `feature-spec-driven-slice-flow.md` — Walkthrough of the feature-spec-to-implementation flow
+- `example-compliance-report.md` — Sample compliance report
+- `example-feature-spec-outline.md` — Sample feature spec outline
+- `example-golden-dataset-case.json` — Sample golden dataset case
+
+## Key Concepts
+
+- **Vertical slices** — Every deliverable proves an end-to-end user workflow, not a horizontal layer
+- **Modular monolith** — Default architecture pattern unless another is explicitly justified
+- **Feature specs** — Bridge between delivery planning and decomposition; one spec per slice
+- **Parts** — Smallest independently verifiable unit of work, executed with TDD
+- **Architecture compliance** — Continuous verification against approved architecture and ADRs
+- **Architecture first, planning second, implementation third, review throughout**
