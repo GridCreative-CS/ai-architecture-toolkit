@@ -74,6 +74,27 @@ Write:
 
 - `architecture/compliance-reports/<slice-name>.md`
 
+## Step 4b — Reconcile Feature Spec Against Compliance Findings
+
+If the compliance report contains findings or required corrections, use:
+
+- `ai/prompts/feature-spec-reconciler.md`
+- `ai/prompts/feature-spec-reconciler-quickversion.md` (optional for low-severity or narrow updates)
+
+Inputs:
+
+- `architecture/architecture-final.md`
+- `architecture/adr/*.md`
+- `architecture/delivery-plan.md`
+- `architecture/compliance-reports/<slice-name>.md`
+- `architecture/feature-specs/<slice-name>.md`
+
+Write:
+
+- `architecture/feature-specs/<slice-name>.md` (updated)
+
+If there are no findings that require spec changes, proceed directly to decomposition.
+
 ## Step 5 — Decompose the Slice
 
 Use:
@@ -83,7 +104,7 @@ Use:
 Inputs:
 
 - `architecture/delivery-plan.md`
-- `architecture/feature-specs/<slice-name>.md`
+- `architecture/feature-specs/<slice-name>.md` (reconciled when compliance findings exist)
 
 If both exist, the feature spec should guide the decomposition for that slice
 more precisely than the high-level delivery plan.
@@ -128,6 +149,7 @@ Delivery Plan
 → Select Slice
 → Feature Spec
 → Compliance Check
+→ Feature Spec Reconciliation (if findings)
 → Decomposition
 → TDD Execution
 → Next Slice

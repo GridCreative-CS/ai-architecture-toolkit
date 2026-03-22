@@ -27,7 +27,7 @@
 
 ## 4. Delivery Context
 
-- Target stack:
+- Target stack: (e.g. .NET 10 / ASP.NET Core 10 / React — for .NET 10 projects, specify `.slnx` as the solution format; `dotnet new sln --format slnx`)
 - Delivery constraints:
 - Regulatory or compliance constraints:
 - Timeline expectations:

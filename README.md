@@ -119,13 +119,14 @@ Delivery Plan
   → Select Slice
   → Feature Spec for that Slice
   → Architecture Compliance Check (if needed)
+  → Reconcile Feature Spec Against Compliance Findings (if findings exist)
   → Plan Decomposition into Parts
   → TDD Execution (one Part at a time)
   → Specialist Agents (as needed)
   → Repeat for next Slice
 ```
 
-Feature specs are not optional documentation. When a feature spec exists for the selected slice, it is the primary input that guides decomposition — more precisely than the broader delivery plan.
+Feature specs are not optional documentation. When a feature spec exists for the selected slice, it is the primary input that guides decomposition — more precisely than the broader delivery plan. If a compliance check identifies required corrections, reconcile the feature spec before decomposition.
 
 ## What's Included
 

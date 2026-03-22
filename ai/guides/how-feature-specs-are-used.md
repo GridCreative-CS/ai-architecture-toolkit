@@ -27,6 +27,8 @@ The correct place for a feature spec is:
 ```text
 Delivery Plan
 → Feature Spec
+→ Architecture Compliance (if needed)
+→ Feature Spec Reconciliation (if findings)
 → Plan Decomposer
 ```
 
@@ -50,9 +52,10 @@ for that slice.
 2. Select the next slice.
 3. Generate one feature spec for that slice.
 4. Optionally run architecture compliance.
-5. Decompose that slice into Parts.
-6. Execute Parts with TDD.
-7. Move to the next slice.
+5. Reconcile the feature spec if compliance findings require changes.
+6. Decompose that slice into Parts.
+7. Execute Parts with TDD.
+8. Move to the next slice.
 
 ## Source priority
 

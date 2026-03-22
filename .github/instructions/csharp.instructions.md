@@ -39,6 +39,7 @@ applyTo: '**/*.cs'
 - Show proper separation of concerns with models, services, and data access layers.
 - Explain the Program.cs and configuration system in ASP.NET Core 10 including environment-specific settings.
 - Use NuGet Central Package Management (`Directory.Packages.props`) to keep all package versions aligned in one place. Individual csproj files must not specify `Version` on `PackageReference`.
+- **Always use `.slnx` format** (not `.sln`) for any new solution targeting .NET 9 or later. Create the solution with `dotnet new sln --format slnx`. If an existing `.sln` is found in a .NET 10 project, flag it as a deviation and offer to migrate it to `.slnx`.
 
 ## Nullable Reference Types
 
