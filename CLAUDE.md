@@ -2,11 +2,11 @@
 
 ## Project overview
 
-This is an AI-assisted architecture and engineering toolkit. It contains reusable prompts, agents, workflows, templates, guides, and skills for architecture design, delivery planning, feature specification, decomposition, and TDD-based implementation.
+This repository uses the AI Architecture Toolkit — a set of reusable prompts, agents, workflows, templates, guides, and skills for AI-assisted architecture design, delivery planning, feature specification, decomposition, and TDD-based implementation. The toolkit is copied into project repositories and adapted to each project's needs.
 
-There is no application code in this repo — it is a toolkit of AI guidance documents.
+## Toolkit structure
 
-## Repository structure
+This toolkit is designed to be copied into other repositories as a foundation for AI-assisted architecture and engineering. The toolkit files live in these directories:
 
 ```text
 ai/                          # Core toolkit
@@ -17,7 +17,6 @@ ai/                          # Core toolkit
   workflows/                 # End-to-end workflow definitions
   examples/                  # Concrete good/bad pattern examples
   project-context.md         # Project-specific context (fill per project)
-architecture/                # Architecture outputs (blueprint, ADRs, delivery plan, etc.)
 .github/
   instructions/              # File-type coding conventions (C#, Docker, Compose)
   skills/                    # Decomposition and execution skills
@@ -25,6 +24,8 @@ architecture/                # Architecture outputs (blueprint, ADRs, delivery p
   prompts/                   # Planning prompts
   copilot-instructions.md    # Cross-tool instructions (also applies to Claude)
 ```
+
+The `architecture/` directory is an output location created per project (blueprints, ADRs, delivery plans, feature specs, compliance reports). The rest of the project structure depends on the application being built.
 
 ## Working rules
 
