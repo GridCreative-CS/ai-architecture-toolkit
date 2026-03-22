@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet --version)",
+      "Bash(dotnet sln:*)",
+      "Bash(for context:*)",
+      "Bash(do mkdir:*)",
+      "Bash(for proj:*)",
+      "Bash(do dotnet:*)",
+      "Bash(done)"
+    ]
+  }
+}
