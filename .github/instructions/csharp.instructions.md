@@ -94,6 +94,7 @@ applyTo: '**/*.cs'
 - Always include test cases for critical paths of the application.
 - Guide users through creating unit tests.
 - Do not emit "Act", "Arrange" or "Assert" comments.
+- Use the format `ClassName_Scenario_ExpectedBehavior` for test method names (e.g., `Symbol_WithEmptyString_ThrowsArgumentException`, `DateRange_WithEndBeforeStart_ThrowsArgumentException`). The class-under-test prefix ensures unambiguous test output in filtered and aggregated reports.
 - Copy existing style in nearby files for test method names and capitalization.
 - Ensure test method names accurately describe the expected behavior and exception type (e.g. use `ThrowsArgumentNullException`, not `ThrowsArgumentException`, when asserting `ArgumentNullException`).
 - Test observable behavior, not implementation details. Avoid assertions that depend on which internal code path is exercised (e.g. fallback vs. configured value) — assert the contract instead.
