@@ -245,6 +245,10 @@ Status: TODO
 - Test cases:
 - Expected Red (what fails and why):
 
+## ProjectReference Checklist (required for test project parts)
+- [ ] Each `tests/<Module>.Tests.csproj` references `../../src/<Module>/<Module>.csproj`
+- [ ] `dotnet build <solution>` passes (full solution, not just target project)
+
 ## Acceptance Criteria
 - ...
 

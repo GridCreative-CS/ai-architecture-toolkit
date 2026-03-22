@@ -76,6 +76,10 @@ A slice, feature, or part is done when all of the following are true:
 - Architecture compliance is checked for significant changes.
 - Integration review is completed where cross-slice interaction exists.
 - Outstanding issues are either fixed or explicitly accepted.
+- Architecture-sourced doc comments and test descriptions cite the specific
+  owning document (e.g., architecture-final.md section reference, specific ADR
+  number). Generic claims like "per architecture" or "per ADR" without a
+  traceable citation are not acceptable.
 
 ### Operational completeness
 

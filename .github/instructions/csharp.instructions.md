@@ -40,6 +40,7 @@ applyTo: '**/*.cs'
 - Explain the Program.cs and configuration system in ASP.NET Core 10 including environment-specific settings.
 - Use NuGet Central Package Management (`Directory.Packages.props`) to keep all package versions aligned in one place. Individual csproj files must not specify `Version` on `PackageReference`.
 - **Always use `.slnx` format** (not `.sln`) for any new solution targeting .NET 9 or later. Create the solution with `dotnet new sln --format slnx`. If an existing `.sln` is found in a .NET 10 project, flag it as a deviation and offer to migrate it to `.slnx`.
+- **Test ↔ Src project pairing (CI-enforced):** Every solution must include a `SolutionStructureTests` class (typically in an existing architectural or integration test project) that asserts the following invariant: for every `*.Tests.csproj` discovered under `tests/`, a `ProjectReference` to the matching `src/<Module>/<Module>.csproj` exists inside that test project file. This turns a manual review comment into a failing CI build. If no architectural test project exists yet, create one (e.g., `tests/Architecture.Tests`) and add the assertion there.
 
 ## Nullable Reference Types
 
