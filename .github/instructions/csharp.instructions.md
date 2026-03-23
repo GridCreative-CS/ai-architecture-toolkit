@@ -47,6 +47,9 @@ applyTo: '**/*.cs'
 - Declare variables non-nullable, and check for `null` at entry points.
 - Always use `is null` or `is not null` instead of `== null` or `!= null`.
 - Trust the C# null annotations and don't add null checks when the type system says a value cannot be null.
+- Use `ArgumentNullException.ThrowIfNull(param)` as the first guard in public methods accepting reference types. Throw `ArgumentNullException` for null; reserve `ArgumentException` for non-null invalid values (empty, whitespace, out-of-range). Never combine both cases into a single `ArgumentException`.
+- When a guard method (e.g. `Guard.Against.Null`) returns a validated non-null value, always capture and use that return value. Never discard it and then use `!` on the original. This keeps nullable flow analysis accurate and eliminates suppression operators.
+- Every public method parameter gets a null guard at the boundary — including delegates (`Func<>`, `Action<>`), collections, and other reference types. Delegate parameters are no different from data parameters.
 
 ## Data Access Patterns
 
@@ -125,9 +128,37 @@ applyTo: '**/*.cs'
 - Value objects and types documented as immutable must be truly immutable. Never store mutable references (e.g. `byte[]`, `List<T>`) directly from constructor parameters — always defensively copy on input.
 - Expose mutable-backing data as read-only views (`ReadOnlyMemory<byte>`, `IReadOnlyList<T>`, `ReadOnlyCollection<T>`) rather than the raw mutable type.
 - For `params` array parameters: validate non-null and non-empty, then clone before storing (e.g. `Array.AsReadOnly((T[])arr.Clone())`).
+- If a property wraps or transforms a backing field and the wrapper is stable (same backing data), compute the wrapper once and cache it. Properties should be cheap — callers expect field-read cost, not allocation on every access. Example: call `_items.AsReadOnly()` once in the constructor and store the result, then expose it via the property.
+
+## Value Object Type Choice
+
+- Use `sealed record` for domain value objects when `default(T)` would violate an invariant — this includes any value object wrapping a reference type (`string`, collections) or where zero-initialized fields are semantically invalid.
+- Use `readonly record struct` only when `default(T)` is a semantically valid state (e.g., a `decimal` wrapper where `0m` is acceptable).
+- When in doubt, prefer `sealed record` — correctness of invariants outweighs allocation micro-optimization for domain objects.
+
+## Discriminated State Types
+
+- In types with mutually exclusive states (success/failure, Some/None), properties that belong to only one variant must throw `InvalidOperationException` when accessed on the wrong variant.
+- Never rely on an enum's implicit `default(0)` value to represent "not applicable". Use a nullable backing field and throw on wrong-variant access so misuse fails loudly instead of returning plausible-looking garbage.
+- Consider adding an explicit `None = 0` member to error-classification enums so the default value is visibly meaningless rather than accidentally valid.
+
+## Entity Identity
+
+- Entity constructors must reject `default(TId)` in addition to `null`. For value-type IDs (e.g. `Guid`), `Guid.Empty` passes a null guard but is semantically invalid as an identifier. Use `EqualityComparer<TId>.Default.Equals(id, default!)` to detect the zero/empty default.
+- If this pattern recurs across multiple entity or value types, extract a `Guard.Against.Default<T>()` method.
 
 ## Configuration and Secrets
 
 - Never commit credentials, passwords, API keys, or connection strings with real values in `appsettings*.json`. Use empty/placeholder values and document how to supply secrets via `dotnet user-secrets`, environment variables, or `.env` files.
 - Fail fast on missing required configuration at startup: use `?? throw new InvalidOperationException("...")` or a guard clause when reading required config values such as connection strings.
 - Keep `.env` gitignored and provide a `.env.example` template with empty values and setup instructions.
+
+## New Type Checklist
+
+Before completing any new class, record, or struct, verify:
+
+- **Property allocation:** Does any property allocate or compute on every access? Cache the wrapper.
+- **Guard return values:** Am I discarding a guard's return value and then using `!`? Capture and use it.
+- **Enum defaults:** Can an enum property be accessed in a state where it's meaningless? Make the wrong-variant accessor throw.
+- **Value-type identity:** Does this type accept a generic `TId`? Guard against `default` as well as `null`.
+- **Delegate parameters:** Does any public method take a `Func<>` or `Action<>`? Null-guard it at the boundary.
