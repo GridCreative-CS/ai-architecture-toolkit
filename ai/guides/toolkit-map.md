@@ -143,6 +143,8 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `definition-of-ready-and-done` | Readiness and completion criteria |
 | `operating-model` | Full operating model across all phases |
 | `conversation-summary` | Guidance for summarizing conversations |
+| `ai-explainability-guide` | Explainability tiers, patterns, storage, and testing |
+| `ai-governance-checklist` | Governance checklist for AI features (transparency, oversight, bias, security) |
 
 ### Examples — `ai/examples/`
 
@@ -155,6 +157,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `example-compliance-report` | Sample compliance report |
 | `example-feature-spec-outline` | Sample feature spec |
 | `example-golden-dataset-case.json` | Sample golden dataset case |
+| `ai-explainability-patterns` | Good vs. bad explainability patterns with concrete examples |
 
 ## Where to start
 
