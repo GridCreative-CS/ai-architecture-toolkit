@@ -28,6 +28,8 @@ You need an AI coding agent such as GitHub Copilot, Claude, Cursor, or any LLM-b
 
 ## Quick Start
 
+> **New to the toolkit?** Read the [Quick-Start Guide](ai/guides/quick-start.md) for a guided walkthrough that takes you from zero to your first vertical slice in 15 minutes. See the [Toolkit Map](ai/guides/toolkit-map.md) for a visual reference of how all components connect.
+
 The shortest path from prototype to implementation. Each step means prompting your AI agent with the referenced prompt file and writing the output to the indicated path.
 
 1. Fill in project context using `ai/templates/project-context-template.md`
@@ -333,6 +335,8 @@ Keep local overrides in a project repo only when the project needs domain-specif
 
 | Guide | Description |
 |-------|-------------|
+| `quick-start.md` | Guided walkthrough — zero to first vertical slice in 15 minutes |
+| `toolkit-map.md` | Visual map of all toolkit components organized by phase |
 | `glossary.md` | Definitions of all load-bearing terms (slice, part, phase, contract, etc.) |
 | `vertical-slice-definition.md` | What constitutes a vertical slice, the verticality test, and anti-patterns |
 | `modular-monolith-definition.md` | Modular monolith pattern and when to use it |
