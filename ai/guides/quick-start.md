@@ -65,7 +65,7 @@ Repeat steps 5–6 for each slice in the delivery plan.
 | **Feature Spec** | A detailed specification of exactly one slice — the bridge between planning and implementation |
 | **Part** | The smallest independently verifiable unit of work within a slice — the TDD execution target |
 | **Contract** | The complete testable agreement between a producer and a consumer (schema + behavior + NFRs) |
-| **Verticality Test** | A slice passes if it proves user value through all required layers end-to-end |
+| **Verticality test** | A slice passes if it proves user value through all required layers end-to-end |
 
 See `ai/guides/glossary.md` for full definitions of all terms.
 
