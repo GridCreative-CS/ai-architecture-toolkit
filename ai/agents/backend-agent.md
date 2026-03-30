@@ -42,18 +42,23 @@ Follow the modular monolith boundary rules from
 - expose only public interfaces, DTOs, and events — internal types stay internal
 - communicate between modules via interfaces, not direct implementation references
 
-### 3. Implement contracts first
+### 3. Implement contracts first, driven by TDD
 
 Define or update the API contract before writing implementation logic. A
 contract includes schema (request/response shapes), behavior (error codes,
 idempotency), and non-functional expectations. See
 `ai/guides/contract-definition.md`.
 
-### 4. Follow TDD
+Use TDD to formalize the contract — the first failing test encodes the
+expected contract behavior (schema shape, status codes, error responses).
+This makes contract definition and the Red phase of TDD the same step.
 
-For every behavioral change, follow the red-green-refactor cycle:
+### 4. Follow the red-green-refactor cycle
+
+For every behavioral change:
 
 1. **Red** — write a failing test that describes the expected behavior
+   (including contract expectations from step 3)
 2. **Green** — write the minimum code to make the test pass
 3. **Refactor** — clean up without changing behavior
 

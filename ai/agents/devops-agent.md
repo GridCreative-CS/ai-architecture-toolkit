@@ -72,7 +72,9 @@ For production readiness, ensure:
 - health check endpoints are available
 - metrics collection is set up (where required by architecture)
 - alerting rules exist for critical failures
-- deployment rollback strategy is documented
+- deployment rollback strategy is documented (in an ADR, runbook, or deployment
+  guide — include rollback procedure, validation steps, and recovery time
+  objectives)
 
 ## Required Output
 

@@ -64,6 +64,7 @@ For every API contract defined in the feature spec:
 - verify schema correctness (types, required fields, enum values)
 - verify behavioral correctness (valid/invalid input handling, error codes)
 - verify idempotency guarantees (where specified)
+- verify backward compatibility for changed contracts (versioning compliance)
 
 See `ai/guides/contract-definition.md` for what a complete contract test covers.
 

@@ -65,6 +65,7 @@ Apply baseline accessibility:
 - semantic HTML elements
 - keyboard navigation for interactive elements
 - appropriate ARIA attributes where semantic HTML is insufficient
+- proper label associations for form inputs
 - sufficient color contrast
 - meaningful alt text for images
 

@@ -91,6 +91,9 @@ Use Mode A. The toolkit is designed for exactly this — extracting validated ar
 **What if my architecture doc is outdated?**
 Use Mode B. The prototype-architecture alignment step will surface gaps and contradictions, and the gap reconciler will produce a corrected final architecture.
 
+**What if I have an outdated architecture doc but no prototype?**
+Use Mode C. The existing-architecture-reviewer prompt will identify gaps and risks, and the gap reconciler will produce a corrected final architecture.
+
 ## Next steps
 
 - Read `ai/guides/toolkit-map.md` for a visual map of all toolkit components

@@ -71,7 +71,9 @@ For each AI decision that requires explainability:
 - verify the explanation includes all required fields (inputs, rules/model,
   confidence, version, trace)
 - verify the explanation is correct — it reflects what actually happened, not
-  a post-hoc rationalization
+  a post-hoc rationalization. Techniques: compare explanation traces to actual
+  execution logs, verify confidence scores match the thresholds applied,
+  cross-reference reported model/rule versions with what was actually invoked
 - verify the explanation is stored or logged as required by governance
 
 ## Required Output
