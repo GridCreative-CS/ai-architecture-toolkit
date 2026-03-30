@@ -9,7 +9,8 @@ Convert the final architecture and ADRs into a structured delivery plan.
 - `architecture/architecture-final.md`
 - `architecture/adr/*.md`
 
-Consult `ai/guides/glossary.md` for precise definitions of key terms.
+Consult `ai/guides/glossary.md` for precise definitions of key terms,
+especially: slice, milestone, phase, decomposition-ready.
 
 ## Binding Constraints
 
@@ -43,6 +44,25 @@ fails any question, restructure before finalizing the plan.
 3. Can this slice be called "done" with a user-facing verification, not just an
    integration test?
 
+## Milestone Sizing
+
+- aim for 2–5 slices per milestone
+- each milestone should represent a demonstrable progress point (stakeholder
+  checkpoint or release boundary)
+- if a milestone has more than 5 slices, consider splitting it
+- if a milestone has only 1 slice, consider merging it with an adjacent
+  milestone unless the slice is large enough to justify its own checkpoint
+
+## Risk Prioritization
+
+For each risk in the High Risk Areas section:
+
+| Impact | Action |
+|--------|--------|
+| **Blocks deployment** | Must be resolved in the milestone that introduces the dependency |
+| **Degrades quality** | Should be resolved before the milestone is marked complete |
+| **Future concern** | Document and track; no immediate action required |
+
 ## Output
 
 Write to `architecture/delivery-plan.md` with:
@@ -55,4 +75,11 @@ Write to `architecture/delivery-plan.md` with:
 6. Dependency Map
 7. High Risk Areas
 8. Implementation Strategy
-9. Ready for Decomposition
+9. Ready for Decomposition — list which slices are decomposition-ready (see
+   `ai/guides/glossary.md`: scope bounded, acceptance criteria binary,
+   target files known, verification strategy defined)
+
+## References
+
+- Vertical slice definition: `ai/guides/vertical-slice-definition.md`
+- Glossary: `ai/guides/glossary.md`

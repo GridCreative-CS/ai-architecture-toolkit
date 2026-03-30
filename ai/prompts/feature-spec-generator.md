@@ -2,17 +2,23 @@
 
 Act as a **Product Engineer, Solution Architect, and Delivery Spec Author**.
 
-Generate a feature specification for one slice or capability from:
+## Objective
 
-- final architecture
-- ADRs
-- delivery plan
+Generate a feature specification for one slice or capability.
+
+## Inputs
+
+- `architecture/architecture-final.md`
+- `architecture/adr/*.md`
+- `architecture/delivery-plan.md`
+
+## Output
 
 Write each feature spec under:
 
 - `architecture/feature-specs/`
 
-Required sections:
+## Required Sections
 
 1. Feature Name
 2. Purpose
@@ -36,5 +42,36 @@ defines human interaction for this capability and the spec omits a UI surface,
 flag it as a gap. If the slice is purely automated with no human interaction,
 cite the architecture or ADR that confirms this.
 
-Consult `ai/guides/glossary.md` for term definitions, especially: contract,
-human-in-the-loop, end-to-end.
+## Acceptance Criteria Guidance
+
+Acceptance criteria in section 11 must be:
+
+- **Binary** — each criterion is either met or not met (no subjective judgment)
+- **Testable** — each criterion maps to at least one automated or manual test
+- **Specific** — no vague language like "should work correctly" or "handles
+  errors gracefully"
+
+## Decomposition Readiness
+
+A feature spec is decomposition-ready when (see `ai/guides/glossary.md`):
+
+- scope is bounded (Scope In / Scope Out are explicit)
+- acceptance criteria are binary
+- target files or modules are identifiable from the spec
+- no unresolved architectural unknowns remain in Open Questions
+- a verification strategy is clear from Test Implications
+
+If the spec is not yet decomposition-ready, note the blockers in section 13.
+
+## Rules
+
+- one feature spec per slice — do not combine multiple slices
+- reference contracts from `ai/guides/contract-definition.md` when defining
+  section 7
+- do not widen scope beyond what the delivery plan assigns to this slice
+
+## References
+
+- Feature spec template: `ai/templates/feature-spec-template.md`
+- Contract definition: `ai/guides/contract-definition.md`
+- Glossary: `ai/guides/glossary.md`
