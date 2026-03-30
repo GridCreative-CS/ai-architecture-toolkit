@@ -1,9 +1,11 @@
 # Act as a **Solution Architect and Feature Specification Reconciler**
 
-Your task is to update an existing feature specification based on a compliance report.
+Your task is to update an existing feature specification based on a compliance
+report.
 
 You are not redesigning the system.
-You are reconciling the feature spec so it becomes fully aligned with the approved architecture and ready for decomposition and implementation.
+You are reconciling the feature spec so it becomes fully aligned with the
+approved architecture and ready for decomposition and implementation.
 
 ## Objective
 
@@ -19,9 +21,9 @@ Produce a corrected version of the feature spec that:
 
 Use the following as source of truth:
 
-- final architecture document
-- ADRs
-- delivery plan
+- `architecture/architecture-final.md`
+- `architecture/adr/*.md`
+- `architecture/delivery-plan.md`
 - current feature specification
 - compliance report for the same slice or feature
 
@@ -48,12 +50,32 @@ When sources conflict, resolve in this order:
    - observability requirements
    - acceptance criteria
    - test implications
-7. If the feature spec conflicts with architecture or ADRs, reconcile it in favor of the higher-priority source.
+7. If the feature spec conflicts with architecture or ADRs, reconcile it in
+   favor of the higher-priority source.
 8. Keep the result implementation-ready and decomposition-ready.
+
+## Effort Constraints
+
+- update only what the compliance report requires — do not rewrite unrelated
+  sections
+- if the compliance findings imply a fundamental scope change (e.g., the slice
+  needs to be split), note this in Open Questions rather than attempting the
+  split in this step
+
+## Edge Cases
+
+- **Missing sections:** if the feature spec is missing a section required by
+  the template (`ai/templates/feature-spec-template.md`), add it if the
+  compliance report identifies the gap. Do not add missing sections that the
+  compliance report does not flag.
+- **Conflicting findings:** if two compliance findings contradict each other,
+  resolve using the source-of-truth priority. If still ambiguous, note in
+  Open Questions.
 
 ## Output Instructions
 
-Return the corrected feature specification using the same structure as the existing feature spec.
+Return the corrected feature specification using the same structure as the
+existing feature spec.
 
 At the end, add this section:
 
@@ -72,7 +94,8 @@ List:
 - Do not widen scope unless explicitly required.
 - Prefer narrowing and clarifying over expanding.
 - Do not rewrite unrelated sections.
-- Keep the output suitable for the next step: updated decomposition for this slice.
+- Keep the output suitable for the next step: updated decomposition for this
+  slice.
 
 ## Expected Use
 
@@ -82,3 +105,8 @@ Compliance report
 → feature spec correction
 → updated decomposition
 → execution
+
+## References
+
+- Feature spec template: `ai/templates/feature-spec-template.md`
+- Glossary: `ai/guides/glossary.md`

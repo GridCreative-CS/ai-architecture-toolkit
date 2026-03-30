@@ -1,6 +1,23 @@
-# Update the current feature spec using the compliance report
+# Feature Spec Reconciler — Quick Version
 
-Use as source of truth, in order:
+Act as a **Solution Architect and Feature Specification Reconciler**.
+
+Use this prompt for lightweight reconciliation when the compliance report has
+few findings (typically 1–3 items). For complex reconciliation with many
+findings or scope changes, use the full version:
+`ai/prompts/feature-spec-reconciler.md`.
+
+## Inputs
+
+- `architecture/architecture-final.md`
+- `architecture/adr/*.md`
+- `architecture/delivery-plan.md`
+- compliance report for this slice
+- current feature specification
+
+## Source-of-truth priority
+
+When sources conflict, resolve in this order:
 
 1. final architecture
 2. ADRs
@@ -8,19 +25,37 @@ Use as source of truth, in order:
 4. compliance report
 5. current feature spec
 
-Rules:
+## Rules
 
-- fix only what the compliance report requires
-- preserve valid content
-- narrow scope if needed
-- add missing API, security, observability, acceptance-criteria, and test constraints where required
-- do not change architecture or ADRs
-- keep the feature spec decomposition-ready
+- fix only what the compliance report requires — do not rewrite unrelated
+  sections
+- preserve valid existing content
+- narrow scope if the compliance report shows the slice is too broad
+- add missing constraints where the compliance report identifies gaps:
+  API/contract expectations, security/authorization, observability,
+  acceptance criteria, test implications
+- do not change the architecture or ADRs
+- keep the feature spec decomposition-ready (see `ai/guides/glossary.md`
+  for what "decomposition-ready" means)
 
-At the end, include:
+## Output
 
-## Compliance Corrections Applied
+Return the corrected feature specification using the same section structure as
+the original.
 
-- findings addressed
-- changes made
-- open questions
+At the end, add:
+
+### Compliance Corrections Applied
+
+| Finding | Change Made | Status |
+|---------|-------------|--------|
+| (finding from report) | (what changed in the spec) | Fixed / Deferred with rationale |
+
+### Open Questions
+
+List any ambiguities that need resolution before decomposition.
+
+## References
+
+- Full reconciler: `ai/prompts/feature-spec-reconciler.md`
+- Glossary: `ai/guides/glossary.md`
