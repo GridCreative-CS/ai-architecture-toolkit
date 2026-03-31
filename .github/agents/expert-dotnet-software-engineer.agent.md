@@ -1,7 +1,66 @@
 ---
 description: "Provide expert .NET software engineering guidance using modern software design patterns."
 name: "Expert .NET software engineer mode instructions"
-tools: [vscode/getProjectSetupInfo, vscode/installExtension, vscode/newWorkspace, vscode/openSimpleBrowser, vscode/runCommand, vscode/askQuestions, vscode/vscodeAPI, vscode/extensions, execute/runNotebookCell, execute/testFailure, execute/getTerminalOutput, execute/awaitTerminal, execute/killTerminal, execute/createAndRunTask, execute/runInTerminal, execute/runTests, read/getNotebookSummary, read/problems, read/readFile, read/terminalSelection, read/terminalLastCommand, agent/runSubagent, edit/createDirectory, edit/createFile, edit/createJupyterNotebook, edit/editFiles, edit/editNotebook, search/changes, search/codebase, search/fileSearch, search/listDirectory, search/searchResults, search/textSearch, search/usages, web/fetch, web/githubRepo, azure-mcp/search, github.vscode-pull-request-github/issue_fetch, github.vscode-pull-request-github/suggest-fix, github.vscode-pull-request-github/searchSyntax, github.vscode-pull-request-github/doSearch, github.vscode-pull-request-github/renderIssues, github.vscode-pull-request-github/activePullRequest, github.vscode-pull-request-github/openPullRequest, mermaidchart.vscode-mermaid-chart/get_syntax_docs, mermaidchart.vscode-mermaid-chart/mermaid-diagram-validator, mermaidchart.vscode-mermaid-chart/mermaid-diagram-preview, ms-azuretools.vscode-containers/containerToolsConfig, todo]
+tools:  [
+  vscode/getProjectSetupInfo,
+  vscode/installExtension,
+  vscode/newWorkspace,
+  vscode/openSimpleBrowser,
+  vscode/runCommand,
+  vscode/askQuestions,
+  vscode/vscodeAPI,
+  vscode/extensions,
+
+  read/readFile,
+  read/getNotebookSummary,
+  read/problems,
+  read/terminalSelection,
+  read/terminalLastCommand,
+
+  search/codebase,
+  search/fileSearch,
+  search/listDirectory,
+  search/searchResults,
+  search/textSearch,
+  search/usages,
+  search/changes,
+
+  edit/createDirectory,
+  edit/createFile,
+  edit/createJupyterNotebook,
+  edit/editFiles,
+  edit/editNotebook,
+
+  execute/runNotebookCell,
+  execute/runInTerminal,
+  execute/runTests,
+  execute/testFailure,
+  execute/getTerminalOutput,
+  execute/awaitTerminal,
+  execute/killTerminal,
+  execute/createAndRunTask,
+
+  agent/runSubagent,
+
+  web/fetch,
+  web/githubRepo,
+  azure-mcp/search,
+
+  github.vscode-pull-request-github/issue_fetch,
+  github.vscode-pull-request-github/suggest-fix,
+  github.vscode-pull-request-github/searchSyntax,
+  github.vscode-pull-request-github/doSearch,
+  github.vscode-pull-request-github/renderIssues,
+  github.vscode-pull-request-github/activePullRequest,
+  github.vscode-pull-request-github/openPullRequest,
+
+  mermaidchart.vscode-mermaid-chart/get_syntax_docs,
+  mermaidchart.vscode-mermaid-chart/mermaid-diagram-validator,
+  mermaidchart.vscode-mermaid-chart/mermaid-diagram-preview,
+
+  ms-azuretools.vscode-containers/containerToolsConfig,
+  todo
+]
 ---
 
 # Expert .NET software engineer mode instructions
