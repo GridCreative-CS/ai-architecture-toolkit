@@ -9,9 +9,10 @@ UI inventory through design system derivation to behavior-preserving migration.
 ## Prerequisites
 
 - `architecture/architecture-final.md` exists
-- `architecture/delivery-plan.md` exists
 - at least one slice has been implemented with UI surfaces
 - no `architecture/design-system.md` exists (or it is incomplete)
+- `architecture/delivery-plan.md` (when present — required for Step 3 onward,
+  but Steps 1–2 can run before delivery planning)
 
 ## When to Use
 
@@ -76,6 +77,11 @@ migration planning.
 
 ## Step 3 — Plan Retrofit Migration
 
+> **Note:** `architecture/delivery-plan.md` must exist before this step.
+> Steps 1–2 (inventory and design system derivation) can run before delivery
+> planning, but migration planning requires the delivery plan and its feature
+> specs.
+
 For each existing slice with UI surfaces that do not conform to the new design
 system, create a retrofit specification:
 
@@ -137,11 +143,13 @@ After retrofit migration is complete:
 ```text
 Existing Project (slices implemented without design system)
   ↓
-Step 1: UI Inventory
+Step 1: UI Inventory                          ← can run before delivery planning
   → architecture/ui-inventory.md
   ↓
-Step 2: Derive Design System
+Step 2: Derive Design System                  ← can run before delivery planning
   → architecture/design-system.md
+  ↓
+─── delivery-plan.md required from here ───
   ↓
 Step 3: Plan Retrofit
   → architecture/feature-specs/retrofit-<slice>.md (one per slice)
