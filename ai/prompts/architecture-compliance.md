@@ -32,6 +32,7 @@ intersection between the artifact and the architecture.
 | **ADR compliance** | Does the artifact follow all relevant ADR decisions? |
 | **Contract compliance** | Are API contracts consistent with the architecture? (See `ai/guides/contract-definition.md`) |
 | **Verticality compliance** | Does the slice include the human workflow required by the architecture? |
+| **Design system compliance** | Do the UI surfaces conform to the approved design system? (Skip if no `architecture/design-system.md` exists) |
 | **Security compliance** | Are authentication, authorization, and secrets handling consistent? |
 | **Observability compliance** | Are logging, metrics, and tracing requirements met? |
 

@@ -8,6 +8,8 @@ Convert the final architecture and ADRs into a structured delivery plan.
 
 - `architecture/architecture-final.md`
 - `architecture/adr/*.md`
+- `architecture/design-system.md` (when present — slices with UI surfaces
+  should reference design system tokens and components in their scope)
 
 Consult `ai/guides/glossary.md` for precise definitions of key terms,
 especially: slice, milestone, phase, decomposition-ready.

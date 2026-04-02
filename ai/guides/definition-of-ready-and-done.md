@@ -33,6 +33,8 @@ A slice or feature is ready when all of the following are true:
 - A feature specification exists or the scope is otherwise explicit.
 - Scope in and scope out are defined.
 - Acceptance criteria are defined.
+- If a design system exists (`architecture/design-system.md`), UI acceptance
+  criteria reference it (§11b of the feature spec).
 - Security and observability requirements are identified.
 - Test implications are identified.
 
@@ -70,6 +72,8 @@ A slice, feature, or part is done when all of the following are true:
 - Verification commands pass.
 - No partial refactors are left behind.
 - No hidden TODO hacks are introduced.
+- If a design system exists, UI surfaces conform to the approved design
+  system (tokens, components, patterns, accessibility baseline).
 
 ### Review completeness
 

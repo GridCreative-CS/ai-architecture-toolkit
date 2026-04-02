@@ -23,6 +23,21 @@ A visual reference showing how all toolkit components connect — prompts, templ
                                     │
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
+│               UI FOUNDATION PHASE (optional — UI projects)             │
+│                                                                        │
+│  Greenfield:                      Retrofit:                            │
+│  ───────────                      ─────────                            │
+│  design-system-generator      →   ui-inventory              →          │
+│    → design-system.md             → ui-inventory.md                    │
+│                                   design-system-from-inventory →       │
+│                                   → design-system.md                   │
+│                                                                        │
+│  Templates: design-system-template, ui-inventory-template              │
+│  Workflows: ui-foundation-workflow, ui-retrofit-workflow               │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
 │                     DELIVERY & SPECIFICATION PHASE                      │
 │                                                                        │
 │  Prompts:                         Outputs:                             │
@@ -43,6 +58,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 │  ────────                         ────────                             │
 │  architecture-compliance      →   compliance-report.md                 │
 │  feature-spec-reconciler      →   updated feature-specs/<slice>.md     │
+│  ui-compliance-check          →   UI compliance findings (per slice)   │
 │                                                                        │
 │  Templates used: compliance-report-template                            │
 │  Guides: definition-of-ready-and-done                                  │
@@ -95,6 +111,10 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `architecture-compliance` | Compliance | Verify feature spec aligns with approved architecture |
 | `feature-spec-reconciler` | Compliance | Reconcile feature spec after compliance findings |
 | `feature-spec-reconciler-quickversion` | Compliance | Lightweight reconciliation for smaller changes |
+| `design-system-generator` | UI Foundation | Generate a design system v1 from architecture (greenfield) |
+| `design-system-from-inventory` | UI Foundation | Derive a design system from an existing UI inventory (retrofit) |
+| `ui-inventory` | UI Foundation | Inventory existing UI surfaces, components, and tokens |
+| `ui-compliance-check` | Compliance | Verify UI implementation conforms to the design system |
 
 ### Templates — `ai/templates/`
 
@@ -107,6 +127,9 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `golden-dataset-template` | `golden-dataset-generator` |
 | `golden-dataset-json-template.json` | `golden-dataset-generator` |
 | `project-context-template` | Filled in manually as the first step |
+| `design-system-template` | `design-system-generator`, `design-system-from-inventory` |
+| `ui-inventory-template` | `ui-inventory` |
+| `retrofit-spec-template` | Used for retrofit migration slices |
 
 ### Agents — `ai/agents/`
 
@@ -146,6 +169,18 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `ai-explainability-guide` | Explainability tiers, patterns, storage, and testing |
 | `ai-governance-checklist` | Governance checklist for AI features (transparency, oversight, bias, security) |
 
+### Workflows — `ai/workflows/`
+
+| Workflow | Purpose |
+|----------|---------|
+| `architecture-workflow` | Full prototype-to-architecture flow |
+| `architecture-workflow-prototype-only` | Mode A entry point |
+| `architecture-workflow-prototype-plus-architecture-doc` | Mode B entry point |
+| `architecture-workflow-architecture-doc-only` | Mode C entry point |
+| `engineering-workflow` | Slice-based implementation with TDD |
+| `ui-foundation-workflow` | Greenfield UI — create design system before delivery planning |
+| `ui-retrofit-workflow` | Retrofit UI — inventory, derive design system, migrate existing slices |
+
 ### Examples — `ai/examples/`
 
 | Example | What it demonstrates |
@@ -166,3 +201,5 @@ A visual reference showing how all toolkit components connect — prompts, templ
 - **Understanding terms?** → `ai/guides/glossary.md`
 - **Full operating model?** → `ai/guides/operating-model.md`
 - **Writing a feature spec?** → `ai/guides/how-feature-specs-are-used.md`
+- **Adding UI to a new project?** → `ai/workflows/ui-foundation-workflow.md`
+- **Adding UI consistency to an existing project?** → `ai/workflows/ui-retrofit-workflow.md`

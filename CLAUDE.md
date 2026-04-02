@@ -42,6 +42,8 @@ These rules apply to ALL work in this repository (sourced from `.github/copilot-
 9. If a feature spec exists for the selected slice, treat it as a primary input for decomposition and implementation.
 10. See `ai/guides/glossary.md` for definitions of key terms used throughout the toolkit.
 11. Do not make assumptions about the project context beyond what is stated in `ai/project-context.md`. Prefer asking for clarification over assuming. For every question you ask, provide advice.
+12. Treat `architecture/design-system.md` as authoritative for UI decisions when it exists.
+13. For UI-inclusive projects, follow `ai/workflows/ui-foundation-workflow.md` (greenfield) or `ai/workflows/ui-retrofit-workflow.md` (retrofit).
 
 ## Workflows
 
@@ -57,7 +59,6 @@ Follow `ai/workflows/architecture-workflow.md`. Variants:
 Follow `ai/workflows/engineering-workflow.md`. The sequence is:
 
 1. Delivery planning (`ai/prompts/delivery-planner.md`)
-
 2. Validate delivery plan verticality
 3. Select next slice
 4. Generate feature spec (`ai/prompts/feature-spec-generator.md` + `ai/templates/feature-spec-template.md`)
@@ -66,6 +67,14 @@ Follow `ai/workflows/engineering-workflow.md`. The sequence is:
 7. Decompose the slice (use `/plan-decomposer` skill)
 8. Execute parts with TDD (use `/part-executor-tdd` skill)
 9. Repeat per slice
+
+### UI workflows
+
+For projects with human-facing UI:
+
+- **Greenfield:** Follow `ai/workflows/ui-foundation-workflow.md` to create a design system after architecture finalization, before delivery planning.
+- **Retrofit:** Follow `ai/workflows/ui-retrofit-workflow.md` to inventory existing UI, derive a design system, and migrate slices.
+- Treat `architecture/design-system.md` as authoritative for UI decisions once it exists.
 
 ## Specialist agents
 
@@ -133,3 +142,6 @@ Before making decisions, consult:
 - **Definition of Ready/Done:** `ai/guides/definition-of-ready-and-done.md`
 - **How feature specs are used:** `ai/guides/how-feature-specs-are-used.md`
 - **Operating model:** `ai/guides/operating-model.md`
+- **Design system template:** `ai/templates/design-system-template.md`
+- **UI foundation workflow:** `ai/workflows/ui-foundation-workflow.md`
+- **UI retrofit workflow:** `ai/workflows/ui-retrofit-workflow.md`

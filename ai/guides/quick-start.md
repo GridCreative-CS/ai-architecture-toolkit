@@ -38,6 +38,16 @@ Prompt your AI agent with each step in the workflow for your entry mode. The typ
 
 After this step, `architecture/architecture-final.md` is your source of truth.
 
+## Step 3b — Create a design system (optional — UI projects)
+
+If your project includes human-facing UI, create a design system before
+delivery planning:
+
+- **New project:** prompt with `ai/prompts/design-system-generator.md` → `architecture/design-system.md`
+- **Existing project with UI:** follow `ai/workflows/ui-retrofit-workflow.md` to inventory existing UI and derive a design system
+
+If your project has no UI, skip this step.
+
 ## Step 4 — Create a delivery plan
 
 Prompt with `ai/prompts/delivery-planner.md` → `architecture/delivery-plan.md`
@@ -65,6 +75,7 @@ Repeat steps 5–6 for each slice in the delivery plan.
 | **Feature Spec** | A detailed specification of exactly one slice — the bridge between planning and implementation |
 | **Part** | The smallest independently verifiable unit of work within a slice — the TDD execution target |
 | **Contract** | The complete testable agreement between a producer and a consumer (schema + behavior + NFRs) |
+| **Design System** | The shared visual vocabulary (tokens, components, patterns) for a project's UI — documented in `architecture/design-system.md` |
 | **Verticality test** | A slice passes if it proves user value through all required layers end-to-end |
 
 See `ai/guides/glossary.md` for full definitions of all terms.
@@ -78,6 +89,9 @@ See `ai/guides/glossary.md` for full definitions of all terms.
 - **Don't treat prototype code as architecture.** A prototype shows *what the system does* (reference behavior), not *how it should be organized* (reference architecture). Extract behavior, then design architecture.
 
 ## FAQ
+
+**When do I need a design system?**
+If your project has human-facing UI, create a design system after architecture finalization. For new projects, use `ai/prompts/design-system-generator.md`. For existing projects with inconsistent UI, follow `ai/workflows/ui-retrofit-workflow.md`. Projects with no UI can skip this entirely.
 
 **When do I need a compliance check?**
 Run `ai/prompts/architecture-compliance.md` before decomposition when the slice touches security, contracts, or cross-cutting concerns — or whenever you want confidence that the feature spec aligns with the approved architecture.

@@ -21,6 +21,7 @@ appropriate specialist agent instead.
 - `architecture/adr/*.md`
 - `architecture/delivery-plan.md`
 - `architecture/feature-specs/<slice>.md` (where relevant)
+- `architecture/design-system.md` (where relevant)
 - compliance reports (where relevant)
 
 ## Methodology
@@ -37,6 +38,8 @@ For the selected slice, produce tasks grouped by discipline:
 
 - **Backend Tasks** — domain logic, API, persistence, contracts
 - **Frontend Tasks** — UI components, flows, error/loading states
+- **Design System Tasks** — new tokens, components, or patterns needed for
+  this slice (only when `architecture/design-system.md` exists)
 - **AI Tasks** — model integration, explainability, governance hooks
 - **QA Tasks** — test strategy, coverage targets, golden scenarios
 - **DevOps Tasks** — CI/CD, environment, monitoring, deployment
@@ -75,6 +78,7 @@ For each slice produce:
 | Purpose | One-sentence user-facing goal |
 | Backend Tasks | Specific implementation tasks |
 | Frontend Tasks | Specific UI/flow tasks (must not be empty for human-facing slices) |
+| Design System Tasks | New tokens or components to add to the design system (when present) |
 | AI Tasks | Model integration tasks (if applicable) |
 | QA Tasks | Testing tasks and coverage targets |
 | DevOps Tasks | Infrastructure and deployment tasks |

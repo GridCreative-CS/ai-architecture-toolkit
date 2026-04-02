@@ -246,3 +246,57 @@ prototype code.
 
 **Key distinction:** Reference architecture is a design decision. It is not
 observed fact.
+
+---
+
+## UI & Design System
+
+### Design System
+
+A shared visual vocabulary that defines the tokens (colors, typography,
+spacing, breakpoints), components (buttons, forms, cards, navigation,
+feedback), layout patterns, state patterns, and accessibility baseline for
+a project's UI surfaces. Documented in `architecture/design-system.md`.
+
+**Key distinction:** A design system is a project output, not a toolkit
+constraint. It is created per project — either greenfield
+(`ai/workflows/ui-foundation-workflow.md`) or derived from existing code
+(`ai/workflows/ui-retrofit-workflow.md`).
+
+### Design Token
+
+An atomic visual value (color hex code, font size in px, spacing value,
+breakpoint width) that is named and reused across UI components. Tokens are
+the smallest unit of the design system.
+
+**Key distinction:** A token is a named value, not a CSS variable or
+implementation detail. The name is semantic (e.g., `--color-primary`), not
+descriptive (e.g., `--blue-500`).
+
+### UI Inventory
+
+A comprehensive catalog of all existing UI surfaces, components, styling
+patterns, and design token values in a project's codebase. Used as the
+starting input for the retrofit track.
+
+**Key distinction:** An inventory reports what exists. It does not propose
+changes.
+
+### Retrofit Slice
+
+A vertical slice whose purpose is to migrate an existing UI surface from
+ad-hoc styling to the approved design system. Retrofit slices are
+behavior-preserving — all existing tests must pass unchanged after migration.
+
+**Key distinction:** A retrofit slice changes appearance, not behavior. If
+behavior must change, that is a separate feature slice.
+
+### Behavior-Preserving Migration
+
+A change to UI implementation (tokens, components, layout) that does not
+alter observable behavior. Verified by green-to-green TDD: existing tests
+pass before and after each migration step.
+
+**Key distinction:** If a test needs modification to accommodate the change,
+the change is not behavior-preserving and should be handled as a feature
+change, not a retrofit.

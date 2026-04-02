@@ -17,6 +17,40 @@ Outputs:
 - `architecture/architecture-final.md`
 - `architecture/adr/*.md`
 
+## Phase 1b — UI Foundation (Optional)
+
+When the project includes human-facing UI, establish a design system before
+delivery planning.
+
+**Greenfield** (new project, no existing UI):
+
+Prompt:
+
+- `ai/prompts/design-system-generator.md`
+
+Output:
+
+- `architecture/design-system.md`
+
+**Retrofit** (existing project, UI already implemented):
+
+Prompts:
+
+- `ai/prompts/ui-inventory.md`
+- `ai/prompts/design-system-from-inventory.md`
+
+Outputs:
+
+- `architecture/ui-inventory.md`
+- `architecture/design-system.md`
+
+Workflow files:
+
+- `ai/workflows/ui-foundation-workflow.md` (greenfield)
+- `ai/workflows/ui-retrofit-workflow.md` (retrofit)
+
+Skip this phase entirely if the project has no UI.
+
 ## Phase 2 — Delivery & Specification
 
 Prompts:
@@ -36,6 +70,7 @@ Outputs:
 Prompt:
 
 - `ai/prompts/architecture-compliance.md`
+- `ai/prompts/ui-compliance-check.md` (when design system exists)
 
 Skills:
 
