@@ -5,6 +5,18 @@
 This workflow makes feature specifications a concrete input to decomposition and
 implementation.
 
+## Step 0b — UI Foundation (Optional)
+
+If the project includes human-facing UI and no design system exists yet:
+
+- **Greenfield:** follow `ai/workflows/ui-foundation-workflow.md` to create
+  `architecture/design-system.md` before delivery planning.
+- **Retrofit:** follow `ai/workflows/ui-retrofit-workflow.md` to inventory
+  existing UI and derive a design system.
+
+This step is optional. If the project has no UI, or a design system already
+exists, skip to Step 1.
+
 ## Step 1 — Delivery Planning
 
 Use:
@@ -73,6 +85,23 @@ Inputs:
 Write:
 
 - `architecture/compliance-reports/<slice-name>.md`
+
+## Step 4a — Run UI Compliance Check (Optional)
+
+If `architecture/design-system.md` exists and the slice includes UI surfaces,
+optionally run a UI-specific compliance check:
+
+- `ai/prompts/ui-compliance-check.md`
+
+Inputs:
+
+- `architecture/design-system.md`
+- `architecture/feature-specs/<slice-name>.md`
+- the implemented UI code for the slice
+
+This check verifies token usage, component usage, layout conformance, state
+handling, and accessibility against the design system. Findings are classified
+by severity and should be addressed before marking the slice done.
 
 ## Step 4b — Reconcile Feature Spec Against Compliance Findings
 

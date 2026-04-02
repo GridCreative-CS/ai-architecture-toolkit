@@ -19,6 +19,7 @@ Do NOT use this agent for backend logic, API design, or infrastructure work.
 - `architecture/adr/*.md`
 - `architecture/delivery-plan.md`
 - `architecture/feature-specs/<slice>.md`
+- `architecture/design-system.md` (when present — authoritative for UI decisions)
 - approved API contracts (from feature spec §7 or backend agent output)
 
 ## Methodology
@@ -38,17 +39,30 @@ Use the API contracts as defined in the feature spec or by the backend agent.
 If a contract is missing or ambiguous, escalate to the orchestrator — do not
 invent a contract that may conflict with the backend implementation.
 
-### 3. Implement the minimum viable UI
+### 3. Consume the design system
+
+When `architecture/design-system.md` exists:
+
+- use only design system tokens (colors, typography, spacing, breakpoints)
+- use only design system components (buttons, forms, cards, etc.)
+- follow the design system's layout patterns and state patterns
+- meet the design system's accessibility baseline
+
+If a component or token is needed but not in the design system, escalate —
+do not create ad-hoc alternatives.
+
+### 4. Implement the minimum viable UI
 
 For each slice, build the thinnest UI that:
 
 - proves the end-to-end user workflow
 - handles success, error, and loading states
 - supports the human-in-the-loop interactions specified in the architecture
+- conforms to the design system when one exists
 
 Do not build speculative UI features beyond what the slice requires.
 
-### 4. Handle states explicitly
+### 5. Handle states explicitly
 
 Every API-backed interaction must handle:
 
@@ -58,7 +72,7 @@ Every API-backed interaction must handle:
   contract (RFC 7807 problem details where applicable)
 - **Empty** — handle the case where no data exists yet
 
-### 5. Consider accessibility
+### 6. Consider accessibility
 
 Apply baseline accessibility:
 
@@ -89,6 +103,8 @@ Before marking work complete, verify:
 - [ ] baseline accessibility is met
 - [ ] no backend logic is reimplemented in the UI
 - [ ] slice can be demonstrated to a stakeholder
+- [ ] design system conformance — only approved tokens and components used
+  (when `architecture/design-system.md` exists)
 
 ## Forbidden Actions
 
@@ -97,10 +113,14 @@ Before marking work complete, verify:
 - do not bypass slice boundaries
 - do not defer all error/loading state handling to a future slice
 - do not build UI without a backing API contract
+- do not use ad-hoc tokens or components when a design system exists —
+  escalate missing design system entries
 
 ## References
 
 - Vertical slice definition: `ai/guides/vertical-slice-definition.md`
 - Contract definition: `ai/guides/contract-definition.md`
 - Glossary (human-in-the-loop): `ai/guides/glossary.md`
+- Design system template: `ai/templates/design-system-template.md`
+- UI compliance check: `ai/prompts/ui-compliance-check.md`
 - Definition of Ready/Done: `ai/guides/definition-of-ready-and-done.md`

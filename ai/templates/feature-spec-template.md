@@ -75,6 +75,25 @@
 <!-- Example: "Endpoint returns 200 with approved contract shape for valid    -->
 <!-- input." "Unauthorized users receive 403."                                 -->
 
+## 11b. UI/UX Acceptance Criteria
+
+<!-- CONDITIONAL section — mandatory when architecture/design-system.md       -->
+<!-- exists. If no design system has been adopted, state:                      -->
+<!-- "N/A — no design system adopted for this project."                        -->
+<!--                                                                           -->
+<!-- When a design system exists, list UI/UX criteria for this slice:          -->
+<!-- - Which design system components are used?                                -->
+<!-- - Which design tokens (colors, typography, spacing) apply?                -->
+<!-- - Which layout patterns from the design system are followed?              -->
+<!-- - Are all four states handled per the design system state patterns        -->
+<!--   (loading, success, error, empty)?                                       -->
+<!-- - Does the UI meet the design system's accessibility baseline (§6)?       -->
+<!--                                                                           -->
+<!-- Each criterion must be binary, testable, and specific — same rules as     -->
+<!-- §11.                                                                       -->
+<!-- Reference: architecture/design-system.md                                  -->
+<!-- Reference: ai/templates/design-system-template.md                         -->
+
 ## 12. Test Implications
 
 <!-- What types of tests are required? (unit, integration, contract, golden   -->
