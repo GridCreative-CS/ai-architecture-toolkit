@@ -14,7 +14,7 @@ When working in this repository:
 8. Respect TDD and decomposition / execution skills.
 9. If a feature spec exists for the selected slice, treat it as a primary input for decomposition and implementation.
 10. See `ai/guides/glossary.md` for definitions of key terms used throughout the toolkit.
-11. Do not make assumptions about the project context beyond what is stated in `ai/project-context.md`. If you need to make assumptions, explicitly state them in your response. But prefer asking for clarification or additional context if something is not clear rather than making assumptions. For every question you ask  provide me with advice.
+11. Do not make assumptions about the project context beyond what is stated in `ai/project-context.md`. If you need to make assumptions, explicitly state them in your response. But prefer asking for clarification or additional context if something is not clear rather than making assumptions. For every question you ask, provide me with advice.
 12. Treat `architecture/design-system.md` as authoritative for UI decisions when it exists.
 13. For UI-inclusive projects, follow:
     - `ai/workflows/ui-foundation-workflow.md` — for greenfield projects creating a design system from scratch
