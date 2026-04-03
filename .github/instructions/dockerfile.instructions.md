@@ -380,6 +380,7 @@ ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 - [ ] EXPOSE documents the listening port
 - [ ] HEALTHCHECK defined for orchestration
 - [ ] .dockerignore excludes unnecessary files
+- [ ] If EF Core migrations exist: `Dockerfile.migrate` is present, uses `CMD` (not `ENTRYPOINT`), and the build configuration matches exactly (Release/Debug) between the `dotnet build` step and the `dotnet ef` command
 
 ## Troubleshooting
 

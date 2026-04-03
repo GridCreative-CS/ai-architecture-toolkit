@@ -90,6 +90,10 @@ A slice, feature, or part is done when all of the following are true:
 - Required logging, metrics, tracing, or monitoring hooks are present.
 - Security and authorization constraints are respected.
 - Deployment or configuration implications are documented when relevant.
+- If the slice adds or modifies an EF Core migration: a `Dockerfile.migrate`
+  exists, the migration service is present in `docker-compose.yml` with
+  `restart: "no"`, and the API service depends on it with
+  `condition: service_completed_successfully`.
 
 ---
 

@@ -354,7 +354,7 @@ services:
 - [ ] Traefik labels include priority for routing order
 - [ ] HTTPS router uses `tls.certresolver=letsencrypt`
 - [ ] HTTP router includes redirect middleware
-- [ ] Migration container uses `restart: "no"`
+- [ ] If EF Core migrations exist: migration service is present, uses `restart: "no"`, and the API service depends on it with `condition: service_completed_successfully`
 - [ ] Named volumes used for data persistence
 
 ## Common Issues
