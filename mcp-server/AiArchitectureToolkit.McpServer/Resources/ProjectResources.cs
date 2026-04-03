@@ -87,4 +87,11 @@ public sealed class ProjectResources
         return service.GetDesignSystem()
             ?? "design-system.md not found in this workspace.";
     }
+
+    [McpServerResource(UriTemplate = "project://remediation-audit"), Description("The UI remediation audit results")]
+    public static string GetRemediationAudit(ProjectContentService service)
+    {
+        return service.GetRemediationAudit()
+            ?? "remediation-audit.md not found in this workspace.";
+    }
 }

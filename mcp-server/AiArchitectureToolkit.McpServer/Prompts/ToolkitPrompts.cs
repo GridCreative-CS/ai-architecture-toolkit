@@ -483,4 +483,97 @@ public sealed class ToolkitPrompts
             Compare the prototype analysis against the architecture document. Identify alignment, gaps, and inconsistencies.
             """;
     }
+
+    /// <summary>
+    /// Assembles a complete UI compliance check prompt.
+    /// </summary>
+    [McpServerPrompt, Description("Generates a complete prompt for running a UI compliance check on a slice. Includes the UI compliance check prompt, design system, feature spec, and architecture context.")]
+    public static string UiComplianceCheck(
+        ToolkitContentService toolkitService,
+        ProjectContentService projectService,
+        [Description("Name of the slice to check for UI compliance")] string sliceName)
+    {
+        var prompt = toolkitService.GetContent("prompts", "ui-compliance-check") ?? "";
+        var designSystem = projectService.GetDesignSystem() ?? "(no design-system.md found)";
+        var featureSpec = projectService.GetFeatureSpec(sliceName) ?? $"(no feature spec found for '{sliceName}')";
+        var architecture = projectService.GetArchitecture() ?? "(no architecture-final.md found)";
+
+        return $"""
+            {prompt}
+
+            ---
+
+            ## Context: Design System
+
+            {designSystem}
+
+            ---
+
+            ## Context: Architecture
+
+            {architecture}
+
+            ---
+
+            ## Artifact Under Review: Feature Spec for {sliceName}
+
+            {featureSpec}
+
+            ---
+
+            ## Task
+
+            Run a UI compliance check on the slice **{sliceName}** against the design system above.
+            """;
+    }
+
+    /// <summary>
+    /// Assembles a complete slice verification checklist prompt.
+    /// </summary>
+    [McpServerPrompt, Description("Generates a complete prompt for running the integrated slice verification checklist (Step 6b). Includes the checklist template, feature spec, design system, and architecture context.")]
+    public static string SliceVerification(
+        ToolkitContentService toolkitService,
+        ProjectContentService projectService,
+        [Description("Name of the slice to verify")] string sliceName)
+    {
+        var checklist = toolkitService.GetContent("templates", "slice-verification-checklist-template") ?? "";
+        var featureSpec = projectService.GetFeatureSpec(sliceName) ?? $"(no feature spec found for '{sliceName}')";
+        var designSystem = projectService.GetDesignSystem();
+        var architecture = projectService.GetArchitecture() ?? "(no architecture-final.md found)";
+
+        var designSystemSection = designSystem is not null
+            ? $"\n\n## Context: Design System\n\n{designSystem}"
+            : "";
+
+        return $"""
+            # Slice Verification — {sliceName}
+
+            Use the checklist below to verify this slice in the running application.
+
+            ---
+
+            ## Checklist
+
+            {checklist}
+
+            ---
+
+            ## Context: Feature Spec
+
+            {featureSpec}
+
+            ---
+
+            ## Context: Architecture
+
+            {architecture}
+            {designSystemSection}
+
+            ---
+
+            ## Task
+
+            Walk through the checklist for slice **{sliceName}**. Verify each item in the running application and report pass/fail status.
+            """;
+    }
 }

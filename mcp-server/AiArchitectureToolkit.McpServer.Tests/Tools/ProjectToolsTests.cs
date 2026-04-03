@@ -29,9 +29,12 @@ public sealed class ProjectToolsTests : IDisposable
         CreateFile(aiDir, "prompts", "architecture-gap-reconciler.md", "# Gap Reconciler\n\nFill gaps.");
         CreateFile(aiDir, "prompts", "prototype-analyzer.md", "# Prototype Analyzer\n\nExtract behavior.");
         CreateFile(aiDir, "prompts", "prototype-architecture-alignment.md", "# Alignment Prompt\n\nCompare prototype with architecture.");
+        CreateFile(aiDir, "prompts", "ui-compliance-check.md", "# UI Compliance Check\n\nVerify UI compliance.");
         CreateFile(aiDir, "templates", "feature-spec-template.md", "# Feature Spec Template");
         CreateFile(aiDir, "templates", "compliance-report-template.md", "# Compliance Report Template");
         CreateFile(aiDir, "templates", "architecture-blueprint-template.md", "# Blueprint Template");
+        CreateFile(aiDir, "templates", "remediation-spec-template.md", "# Remediation Spec Template");
+        CreateFile(aiDir, "templates", "slice-verification-checklist-template.md", "# Slice Verification Checklist");
         CreateFile(aiDir, "guides", "vertical-slice-definition.md", "# Vertical Slice Definition\n\nThe verticality test.");
         CreateFile(aiDir, "guides", "how-feature-specs-are-used.md", "# How Feature Specs Are Used");
         CreateFile(aiDir, "guides", "contract-definition.md", "# Contract Definition");
@@ -55,6 +58,7 @@ public sealed class ProjectToolsTests : IDisposable
         CreateFile(_tempDir, "architecture", "delivery-plan.md", "# Delivery Plan\n\nSlice: user-registration.");
         CreateFile(_tempDir, "architecture/adr", "ADR-001.md", "# ADR-001\n\nDecision.");
         CreateFile(_tempDir, "architecture/feature-specs", "user-registration.md", "# User Registration Spec");
+        CreateFile(_tempDir, "architecture", "design-system.md", "# Design System\n\nToken definitions.");
 
         var options = Options.Create(new ServerOptions
         {
@@ -179,6 +183,27 @@ public sealed class ProjectToolsTests : IDisposable
         Assert.Contains("Alignment Prompt", result);
         Assert.Contains("Behavior", result);
         Assert.Contains("Modular monolith", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_UiRemediation_ReturnsPromptTemplateAndContext()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "ui-remediation");
+
+        Assert.Contains("UI Compliance Check", result);
+        Assert.Contains("Remediation Spec Template", result);
+        Assert.Contains("Modular monolith", result);
+        Assert.Contains("Token definitions", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_SliceVerification_ReturnsChecklistAndContext()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "slice-verification");
+
+        Assert.Contains("Slice Verification Checklist", result);
+        Assert.Contains("Modular monolith", result);
+        Assert.Contains("Token definitions", result);
     }
 
     [Fact]

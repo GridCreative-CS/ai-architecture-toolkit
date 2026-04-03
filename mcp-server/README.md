@@ -28,6 +28,7 @@ This MCP server makes the toolkit **project-aware** — it serves both static to
 | `project://feature-spec/{name}` | Feature spec for a slice |
 | `project://project-context` | Project context |
 | `project://design-system` | Design system document |
+| `project://remediation-audit` | UI remediation audit results |
 
 ### MCP Tools
 
@@ -39,7 +40,7 @@ This MCP server makes the toolkit **project-aware** — it serves both static to
 | `get_toolkit_file` | Gets full content of a specific toolkit file by category and name |
 | `list_project_artifacts` | Lists project artifacts with existence status |
 | `get_workspace_structure` | Scans workspace for .NET solutions, projects, and dependencies |
-| `get_workflow_context` | **Key tool** — returns everything needed for a workflow step (prompt + template + guide + project artifacts). Supports both engineering and architecture workflow steps |
+| `get_workflow_context` | **Key tool** — returns everything needed for a workflow step (prompt + template + guide + project artifacts). Supports engineering, architecture, and UI workflow steps |
 | `get_slice_context` | Returns all context for a specific slice (feature spec + compliance report + ADRs + delivery plan) |
 | `check_verticality` | Provides the verticality test criteria for evaluating a slice |
 
@@ -58,6 +59,8 @@ This MCP server makes the toolkit **project-aware** — it serves both static to
 | `existing_architecture_reviewer` | — | Review an existing architecture document (no-prototype path) |
 | `architecture_gap_reconciler` | — | Reconcile existing architecture with review findings (no-prototype path) |
 | `prototype_architecture_alignment` | — | Compare prototype analysis against architecture document |
+| `ui_compliance_check` | `slice_name` | UI compliance check against design system for a slice |
+| `slice_verification` | `slice_name` | Integrated slice verification checklist (Step 6b) with full context |
 
 ## Requirements
 

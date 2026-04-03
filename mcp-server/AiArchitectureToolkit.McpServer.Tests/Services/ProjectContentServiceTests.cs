@@ -200,6 +200,23 @@ public sealed class ProjectContentServiceTests : IDisposable
         Assert.Null(content);
     }
 
+    [Fact]
+    public void GetRemediationAudit_WhenMissing_ReturnsNull()
+    {
+        var content = _service.GetRemediationAudit();
+
+        Assert.Null(content);
+    }
+
+    [Fact]
+    public void ListArtifacts_IncludesRemediationAudit()
+    {
+        var artifacts = _service.ListArtifacts();
+
+        Assert.Contains("remediation-audit", artifacts.Keys);
+        Assert.False(artifacts["remediation-audit"][0].Exists);
+    }
+
     public void Dispose()
     {
         try { Directory.Delete(_tempDir, recursive: true); }

@@ -40,7 +40,7 @@ public sealed class ProjectTools
     public static string GetWorkflowContext(
         ToolkitContentService toolkitService,
         ProjectContentService projectService,
-        [Description("Workflow step: 'delivery-planning', 'feature-spec', 'compliance-check', 'feature-spec-reconciliation', 'decomposition', 'architecture-review', 'adr-generation', 'ui-compliance', 'architecture-design', 'architecture-blueprint-review', 'architecture-reconciliation', 'existing-architecture-review', 'architecture-gap-reconciliation', 'prototype-analysis', 'prototype-architecture-alignment'")] string step)
+        [Description("Workflow step: 'delivery-planning', 'feature-spec', 'compliance-check', 'feature-spec-reconciliation', 'decomposition', 'architecture-review', 'adr-generation', 'ui-compliance', 'ui-remediation', 'slice-verification', 'architecture-design', 'architecture-blueprint-review', 'architecture-reconciliation', 'existing-architecture-review', 'architecture-gap-reconciliation', 'prototype-analysis', 'prototype-architecture-alignment'")] string step)
     {
         var sb = new StringBuilder();
 
@@ -94,6 +94,18 @@ public sealed class ProjectTools
                 (string?)null,
                 new[] { ("Design System", projectService.GetDesignSystem()) }
             ),
+            "ui-remediation" => (
+                "ui-compliance-check",
+                (string?)"remediation-spec-template",
+                (string?)null,
+                new[] { ("Architecture", projectService.GetArchitecture()), ("Design System", projectService.GetDesignSystem()), ("Delivery Plan", projectService.GetDeliveryPlan()), ("Remediation Audit", projectService.GetRemediationAudit()) }
+            ),
+            "slice-verification" => (
+                (string?)null,
+                (string?)"slice-verification-checklist-template",
+                (string?)null,
+                new[] { ("Architecture", projectService.GetArchitecture()), ("Design System", projectService.GetDesignSystem()), ("Delivery Plan", projectService.GetDeliveryPlan()) }
+            ),
             "architecture-design" => (
                 "architecture-designer",
                 (string?)"architecture-blueprint-template",
@@ -146,7 +158,7 @@ public sealed class ProjectTools
 
         if (prompt is null && template is null && guide is null)
         {
-            return $"Unknown workflow step: '{step}'. Valid steps: delivery-planning, feature-spec, compliance-check, feature-spec-reconciliation, decomposition, architecture-review, adr-generation, ui-compliance, architecture-design, architecture-blueprint-review, architecture-reconciliation, existing-architecture-review, architecture-gap-reconciliation, prototype-analysis, prototype-architecture-alignment";
+            return $"Unknown workflow step: '{step}'. Valid steps: delivery-planning, feature-spec, compliance-check, feature-spec-reconciliation, decomposition, architecture-review, adr-generation, ui-compliance, ui-remediation, slice-verification, architecture-design, architecture-blueprint-review, architecture-reconciliation, existing-architecture-review, architecture-gap-reconciliation, prototype-analysis, prototype-architecture-alignment";
         }
 
         if (prompt is not null)

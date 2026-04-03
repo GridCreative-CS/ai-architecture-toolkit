@@ -34,6 +34,7 @@ public sealed class ProjectContentService
         result["delivery-plan"] = [CheckFile("architecture/delivery-plan.md")];
         result["design-system"] = [CheckFile("architecture/design-system.md")];
         result["project-context"] = [CheckFile("ai/project-context.md")];
+        result["remediation-audit"] = [CheckFile("architecture/remediation-audit.md")];
 
         // Directories
         result["adrs"] = ListDirectory("architecture/adr");
@@ -108,6 +109,11 @@ public sealed class ProjectContentService
     /// Gets the design system content.
     /// </summary>
     public string? GetDesignSystem() => ReadSafe("architecture/design-system.md");
+
+    /// <summary>
+    /// Gets the remediation audit content.
+    /// </summary>
+    public string? GetRemediationAudit() => ReadSafe("architecture/remediation-audit.md");
 
     /// <summary>
     /// Gets a compliance report by slice name.
