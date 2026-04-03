@@ -41,6 +41,8 @@ A slice or feature is ready when all of the following are true:
 ### Execution readiness
 
 - The target files or modules are known.
+- A concrete execution handoff exists for the selected slice:
+  `architecture/feature-specs/<slice-name>.md` and `ai-parts/PXX-*.md`.
 - The decomposition target is small enough to be executed safely.
 - Verification strategy is known.
 - Open questions are either resolved or explicitly recorded.
