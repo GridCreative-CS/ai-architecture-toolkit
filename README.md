@@ -201,7 +201,7 @@ Execution-layer skills that bridge planning and code implementation:
 
 | Skill | Purpose |
 |-------|---------|
-| `plan-decomposer` | Decomposes a delivery plan or feature spec into independently verifiable Parts |
+| `plan-decomposer` | Decomposes a selected slice, guided primarily by its feature spec, into independently verifiable Parts |
 | `part-executor-tdd` | Executes one Part at a time using strict red-green-refactor TDD |
 
 An expert .NET engineering agent is also available at `.github/agents/expert-dotnet-software-engineer.agent.md`.
