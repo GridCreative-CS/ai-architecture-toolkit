@@ -39,10 +39,11 @@ The shortest path from prototype to implementation. Each step means prompting yo
 5. Prompt with `ai/prompts/architecture-reconciler.md` → `architecture/architecture-final.md`
 6. Prompt with `ai/prompts/adr-generator.md` → `architecture/adr/*.md`
 7. Prompt with `ai/prompts/delivery-planner.md` → `architecture/delivery-plan.md`
-8. Use `.github/skills/plan-decomposer` → `ai-parts/OVERVIEW.md` and `ai-parts/PXX-*.md`
-9. Use `.github/skills/part-executor-tdd` → execute one Part at a time with strict TDD
+8. Prompt with `ai/prompts/feature-spec-generator.md` → `architecture/feature-specs/<slice-name>.md`
+9. Use `.github/skills/plan-decomposer` → `ai-parts/OVERVIEW.md` and `ai-parts/PXX-*.md`
+10. Use `.github/skills/part-executor-tdd` → execute one Part at a time with strict TDD
 
-Implementation begins at **step 9**, after you have both a selected slice
+Implementation begins at **step 10**, after you have both a selected slice
 feature spec and `ai-parts/PXX-*.md` files. The delivery plan is the roadmap;
 the Part files are the execution-ready handoff.
 
