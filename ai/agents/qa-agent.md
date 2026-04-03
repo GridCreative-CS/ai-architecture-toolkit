@@ -77,6 +77,28 @@ For every change, ask:
   catch?
 - are there related features that should be regression-tested?
 
+### 6. Verify browser-level behavior (for slices with UI)
+
+For slices with human workflow surfaces, automated tests alone are
+insufficient. The QA agent must also verify:
+
+- **E2E browser tests** — at least one automated browser test (Playwright,
+  Cypress, or equivalent) that exercises the primary user flow from §5/§5b
+  through the running application.
+- **Responsive checks** — verify the slice renders correctly at mobile
+  (≤480px) and desktop (≥1024px) viewport widths at minimum.
+- **Cross-slice regression** — verify previously completed UI slices still
+  render and function after the new slice is integrated.
+- **Interactive verification** — all buttons, links, forms, and navigation
+  elements function correctly in the browser.
+- **Shared layout integrity** — the application's shared layout (header,
+  sidebar, navigation, footer) remains intact.
+
+E2E browser tests for critical user flows are **required**, not optional.
+Move testing up the pyramid (unit → integration → E2E) only when the
+lower-level test fully proves the behavior — UI rendering and interaction
+cannot be proven by unit tests.
+
 ## Required Output
 
 | Field | Description |
@@ -97,6 +119,9 @@ Before marking work complete, verify:
 - [ ] no tests depend on implementation details (test observable behavior)
 - [ ] all tests can run in CI without manual setup
 - [ ] regression risk is documented and mitigated
+- [ ] slices with UI have at least one E2E browser test for the primary flow
+- [ ] responsive behavior verified at mobile and desktop viewports
+- [ ] previously completed slices still function after integration
 
 ## Forbidden Actions
 

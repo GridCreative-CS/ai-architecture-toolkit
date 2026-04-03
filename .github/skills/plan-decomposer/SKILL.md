@@ -174,6 +174,9 @@ OPTIONAL fields:
 - `risks` (array of strings)
 - `notes` (array of strings)
 - `definition_of_done` (array of strings)
+- `e2e_verify` (array of strings; browser-based verification commands — e.g.,
+  Playwright test commands, Cypress commands, or documented manual browser
+  walkthrough steps. **Required for the final Part of any UI slice.**)
 
 ---
 
@@ -263,6 +266,27 @@ Status: TODO
 
 ## Notes (optional)
 - ...
+
+---
+
+## Terminal Verification Part (required for UI slices)
+
+For slices with human workflow surfaces, the **last Part** in the decomposition
+must be a dedicated verification Part that:
+
+1. Has no production code changes (verification only)
+2. Runs the full application
+3. Executes the Slice Completion Verification Checklist
+   (`ai/templates/slice-verification-checklist-template.md`)
+4. Runs any E2E browser tests
+5. Verifies cross-slice navigation and shared layout integrity
+6. Documents verification evidence
+
+This Part's PART_SPEC must include:
+
+- `e2e_verify` — browser-based verification commands
+- `acceptance_criteria` — all §11 and §11b criteria from the feature spec
+- `verify` — commands to start the app + run E2E tests
 
 ---
 

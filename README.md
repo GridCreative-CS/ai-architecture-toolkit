@@ -130,13 +130,19 @@ flowchart TD
     B --> C[Feature Spec]
     C --> D{Compliance Check Needed?}
     D -- Yes --> E[Architecture Compliance Check]
-    E --> F{Findings?}
+    E --> E2{UI Slice?}
+    E2 -- Yes --> E3[UI Compliance Check — mandatory]
+    E3 --> F{Findings?}
+    E2 -- No --> F
     F -- Yes --> G[Reconcile Feature Spec]
     G --> H[Plan Decomposition into Parts]
     F -- No --> H
     D -- No --> H
     H --> I[TDD Execution — one Part at a time]
-    I --> J[Specialist Agents — as needed]
+    I --> I2{UI Slice?}
+    I2 -- Yes --> I3[Integrated Slice Verification — mandatory]
+    I3 --> J[Specialist Agents — as needed]
+    I2 -- No --> J
     J --> B
 ```
 
@@ -208,6 +214,8 @@ Reusable templates for structured output:
 - **Design system** — `design-system-template.md`
 - **UI inventory** — `ui-inventory-template.md`
 - **Retrofit spec** — `retrofit-spec-template.md`
+- **Slice verification checklist** — `slice-verification-checklist-template.md`
+- **Remediation spec** — `remediation-spec-template.md`
 
 ### Workflows — `ai/workflows/`
 
@@ -220,6 +228,7 @@ End-to-end process definitions:
 - `engineering-workflow.md` — Slice-based implementation with TDD
 - `ui-foundation-workflow.md` — Greenfield UI — create design system before delivery planning
 - `ui-retrofit-workflow.md` — Retrofit UI — inventory, derive design system, migrate existing slices
+- `ui-remediation-workflow.md` — Revalidate and fix slices completed without browser-based UI verification
 
 ### Architecture outputs — `architecture/`
 
@@ -367,7 +376,9 @@ The toolkit supports two UI tracks for projects with human-facing interfaces:
 | **Greenfield** | New project — create design system from architecture | `ai/workflows/ui-foundation-workflow.md` |
 | **Retrofit** | Existing project — derive design system from current UI | `ai/workflows/ui-retrofit-workflow.md` |
 
-Both tracks produce `architecture/design-system.md`, which becomes authoritative for UI decisions. Projects without UI can skip both tracks entirely — all UI-related steps are conditional on the design system file's existence.
+Both tracks produce `architecture/design-system.md`, which becomes authoritative for UI decisions. Projects without UI can skip both tracks entirely — all UI-related steps are conditional on the project having human workflow surfaces.
+
+For projects that already have UI slices implemented without browser-based verification, use `ai/workflows/ui-remediation-workflow.md` to revalidate and fix before continuing with new slices or starting a retrofit.
 
 ### Examples — `ai/examples/`
 
@@ -387,6 +398,7 @@ Both tracks produce `architecture/design-system.md`, which becomes authoritative
 - **Parts** — Smallest independently verifiable unit of work, executed with TDD
 - **Architecture compliance** — Continuous verification against approved architecture and ADRs
 - **Design system** — Shared visual vocabulary for UI-inclusive projects; optional for non-UI projects
+- **Browser-based verification** — Mandatory confirmation that UI slices work in the running application, not just in tests
 - **Architecture first, planning second, implementation third, review throughout**
 
 ## Contributing

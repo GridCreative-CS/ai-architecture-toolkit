@@ -86,22 +86,36 @@ Write:
 
 - `architecture/compliance-reports/<slice-name>.md`
 
-## Step 4a — Run UI Compliance Check (Optional)
+## Step 4a — Run UI Compliance Check (Mandatory for UI Slices)
 
-If `architecture/design-system.md` exists and the slice includes UI surfaces,
-optionally run a UI-specific compliance check:
+If the slice includes human workflow surfaces (as identified in the feature
+spec §5b), this step is **mandatory**.
+
+When `architecture/design-system.md` exists, run the full design system
+compliance check:
 
 - `ai/prompts/ui-compliance-check.md`
 
+When no design system exists, run a reduced UI compliance check covering:
+
+- State handling (loading, success, error, empty)
+- Layout consistency with existing slices
+- Interactive element functionality
+- Accessibility baseline (semantic HTML, keyboard navigation, labels)
+
 Inputs:
 
-- `architecture/design-system.md`
+- `architecture/design-system.md` (when present)
 - `architecture/feature-specs/<slice-name>.md`
 - the implemented UI code for the slice
 
 This check verifies token usage, component usage, layout conformance, state
-handling, and accessibility against the design system. Findings are classified
-by severity and should be addressed before marking the slice done.
+handling, and accessibility against the design system (or baseline standards
+when no design system exists). Findings classified as Critical must be
+resolved before marking the slice done.
+
+Skip this step only when the slice has no human workflow surfaces and §5b
+of the feature spec explicitly confirms this with an architecture citation.
 
 ## Step 4b — Reconcile Feature Spec Against Compliance Findings
 
@@ -155,6 +169,44 @@ Input:
 
 Execute exactly one Part at a time using strict TDD.
 
+## Step 6b — Integrated Slice Verification (Mandatory for UI Slices)
+
+After all Parts in a slice are executed, verify the slice works correctly in
+the running application before proceeding.
+
+**This step is mandatory for slices with human workflow surfaces.** For
+API-only or automated slices, this step is recommended but not required.
+
+Use:
+
+- `ai/templates/slice-verification-checklist-template.md`
+
+Procedure:
+
+1. Start the full application (all services, database, frontend).
+2. Execute the user flow described in the feature spec §5 and §5b end-to-end
+   in a browser (or via browser-based E2E tests).
+3. Walk through the Slice Completion Verification Checklist.
+4. Verify all acceptance criteria from §11 and §11b against the running
+   application.
+5. Check that previously completed slices still render and function correctly.
+
+If any checklist item fails, the slice is **not done**. Fix the issue and
+re-verify before proceeding.
+
+Write:
+
+- Verification evidence in the slice's completion notes (pass/fail per
+  criterion, commands run, observations).
+
+### When to skip
+
+Skip this step only when:
+
+- The feature spec §5b explicitly confirms no human workflow surfaces,
+  citing the architecture or an ADR.
+- The slice is a pure backend/data slice with no rendered UI.
+
 ## Step 7 — Use Specialist Agents Where Helpful
 
 Use specialist agents only after the slice is defined and decomposed.
@@ -177,9 +229,10 @@ Repeat the sequence per slice:
 Delivery Plan
 → Select Slice
 → Feature Spec
-→ Compliance Check
+→ Compliance Check (UI compliance mandatory for UI slices)
 → Feature Spec Reconciliation (if findings)
 → Decomposition
 → TDD Execution
+→ Integrated Slice Verification (mandatory for UI slices)
 → Next Slice
 ```

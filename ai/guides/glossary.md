@@ -199,6 +199,26 @@ side effects, or error behavior.
 **NOT behavioral:** formatting, renaming, import reordering, configuration
 changes.
 
+### Integrated Slice Verification
+
+Mandatory browser-based check after all Parts in a UI slice complete. Confirms
+the slice works end-to-end in the running application, not just in tests.
+Performed during engineering workflow Step 6b using the Slice Completion
+Verification Checklist (`ai/templates/slice-verification-checklist-template.md`).
+
+### Browser-Based Verification
+
+Verification requiring the application to be running and accessed through a
+browser or browser automation tool (e.g., Playwright, Cypress). Distinguished
+from component tests and integration tests, which do not require a running
+application or real browser rendering.
+
+### Visual Regression
+
+Unintended changes to the appearance or layout of previously completed UI
+surfaces caused by new code. Detected during cross-slice regression checks
+in the Integrated Slice Verification step.
+
 **"Not feasible" exceptions:** UI layout, third-party SDK behavior,
 infrastructure config. Must be documented and replaced with alternative
 verification.

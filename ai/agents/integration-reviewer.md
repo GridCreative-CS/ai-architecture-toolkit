@@ -69,7 +69,27 @@ Compare the implementation against the approved architecture:
 Architecture drift is the gradual, undetected accumulation of small violations.
 Each individual violation may seem minor, but the pattern is the problem.
 
-### 5. Assess integration risk
+### 5. Verify visual integration (for slices with UI)
+
+For slices with human workflow surfaces, verify UI-level integration in
+addition to contract and data integration:
+
+- **Shared layout consistency** — does the new slice integrate correctly
+  with the application's shared layout (header, sidebar, navigation, footer)?
+  Does it break any previously working layout?
+- **Cross-slice navigation** — can the user navigate to and from the new
+  slice without broken links, missing routes, or stale navigation entries?
+- **Visual regression** — do previously completed slices still render
+  correctly after the new slice is deployed? Check for CSS conflicts,
+  z-index collisions, and unintended style inheritance.
+- **Consistent styling** — even without a formal design system, are there
+  unintentional visual differences between slices (different fonts, colors,
+  spacing for equivalent elements)?
+
+Visual integration issues should be classified using the same severity
+scale as other integration findings.
+
+### 6. Assess integration risk
 
 For each finding, classify the risk:
 
@@ -100,6 +120,9 @@ Before completing the review, verify:
 - [ ] correlation IDs and observability are maintained across boundaries
 - [ ] critical and high-severity findings are resolved or tracked
 - [ ] recommendation is clear: proceed, proceed with conditions, or stop
+- [ ] shared layout components render correctly with the new slice integrated
+- [ ] cross-slice navigation works without broken links or routes
+- [ ] no visual regressions in previously completed slices
 
 ## Forbidden Actions
 

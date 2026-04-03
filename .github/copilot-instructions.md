@@ -19,3 +19,5 @@ When working in this repository:
 13. For UI-inclusive projects, follow:
     - `ai/workflows/ui-foundation-workflow.md` — for greenfield projects creating a design system from scratch
     - `ai/workflows/ui-retrofit-workflow.md` — for existing projects adding a design system after implementation
+14. For slices with human workflow surfaces, UI compliance check (Step 4a), Integrated Slice Verification (Step 6b), and the Frontend Agent are **mandatory** — not optional.
+15. For projects with UI slices completed under an older toolkit version, use `ai/workflows/ui-remediation-workflow.md` to revalidate before resuming.

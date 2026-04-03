@@ -32,6 +32,7 @@ review. Do not review UI outside the slice boundary.
 | **State compliance** | Are all four states handled (loading, success, error, empty) using the design system's state patterns? |
 | **Accessibility compliance** | Does the UI meet the design system's accessibility baseline (contrast, focus, keyboard, ARIA, labels)? |
 | **Consistency compliance** | Is the slice visually consistent with other implemented slices? Are there unintentional visual differences? |
+| **Runtime compliance** | Does the UI function correctly in the running application? Can the user flow be exercised end-to-end in a browser? Do interactive elements respond correctly? Is the shared layout intact? |
 
 ### 3. Classify findings by severity
 
@@ -55,8 +56,10 @@ Include:
 5. **State Handling Audit** — assessment of loading, success, error, empty
    states
 6. **Accessibility Audit** — assessment against design system §6
-7. **Findings** — each with severity, description, and recommended correction
-8. **Approval Status** — APPROVED, APPROVED WITH CHANGES, or REJECTED
+7. **Runtime Audit** — assessment of UI behavior in the running application
+   (interactive elements, navigation, shared layout integrity, error handling)
+8. **Findings** — each with severity, description, and recommended correction
+9. **Approval Status** — APPROVED, APPROVED WITH CHANGES, or REJECTED
 
 ## Rules
 
@@ -67,7 +70,11 @@ Include:
   leaves open
 - severity must be justified, not assumed
 - if no design system exists (`architecture/design-system.md` is absent),
-  this check is not applicable — report as "N/A — no design system adopted"
+  run a reduced compliance check covering: state handling (loading, success,
+  error, empty), layout consistency with existing slices, interactive element
+  functionality, accessibility baseline (semantic HTML, keyboard navigation,
+  labels, sufficient contrast), and runtime verification. Skip token,
+  component, and layout pattern audits that require a design system.
 
 ## References
 
