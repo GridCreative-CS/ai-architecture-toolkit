@@ -287,7 +287,7 @@ Continue through the workflow steps. For execution, use:
 
 ```text
 Use .github/skills/plan-decomposer/SKILL.md.
-Input: architecture/delivery-plan.md
+Inputs: architecture/delivery-plan.md and architecture/feature-specs/<slice-name>.md
 Output: ai-parts/OVERVIEW.md and ai-parts/PXX-*.md
 ```
 
