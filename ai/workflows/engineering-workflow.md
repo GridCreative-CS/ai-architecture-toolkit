@@ -157,6 +157,14 @@ Write:
 - `ai-parts/OVERVIEW.md`
 - `ai-parts/PXX-*.md`
 
+Implementation does **not** start from `architecture/delivery-plan.md` alone.
+Execution starts only after the selected slice has a concrete implementation
+handoff:
+
+- `architecture/feature-specs/<slice-name>.md`
+- `ai-parts/OVERVIEW.md`
+- `ai-parts/PXX-*.md`
+
 ## Step 6 — Execute One Part at a Time
 
 Use:
@@ -169,6 +177,10 @@ Input:
 
 Execute exactly one Part at a time using strict TDD.
 
+This is the point where implementation begins. The delivery plan tells you
+**what** to build next, the feature spec defines **one selected slice**, and the
+Part file is the execution-ready artifact that tells the agent exactly what to
+implement and verify.
 ## Step 6b — Integrated Slice Verification (Mandatory for UI Slices)
 
 After all Parts in a slice are executed, verify the slice works correctly in

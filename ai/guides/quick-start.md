@@ -65,7 +65,22 @@ The feature spec makes one slice precise enough to decompose and implement.
 1. **Decompose** — use `.github/skills/plan-decomposer` to break the slice into independently verifiable Parts → `ai-parts/OVERVIEW.md` and `ai-parts/PXX-*.md`
 2. **Execute** — use `.github/skills/part-executor-tdd` to implement one Part at a time with strict red-green-refactor TDD
 
+Implementation starts at **Step 6.2** — when you execute a specific Part file.
+Approving the delivery plan alone does not start implementation; it only tells
+you which slice to prepare next.
+
 Repeat steps 5–6 for each slice in the delivery plan.
+
+## Where to find the plan and execution artifacts
+
+Use these paths as your handoff trail from planning to implementation:
+
+| Stage | File(s) | What you find there |
+|------|---------|---------------------|
+| Delivery plan | `architecture/delivery-plan.md` | Ordered slices and milestones |
+| Selected slice spec | `architecture/feature-specs/<slice-name>.md` | Scope, acceptance criteria, contracts, test implications |
+| Decomposition overview | `ai-parts/OVERVIEW.md` | Part index, execution order, preflight notes |
+| Execution-ready work items | `ai-parts/PXX-*.md` | The exact Part to implement with TDD |
 
 ## Five terms you need to know
 

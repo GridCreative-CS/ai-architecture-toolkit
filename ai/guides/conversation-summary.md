@@ -8,7 +8,7 @@ You wanted a reusable system for turning prototypes — especially Spark prototy
 
 The process should be framed as:
 
-**prototype → architecture → delivery → decomposition → TDD execution**
+**prototype → architecture → delivery → feature spec → decomposition → TDD execution**
 
 not as a direct migration workflow.
 
@@ -28,6 +28,6 @@ not as a direct migration workflow.
 ## Engineering decisions made
 
 - Reuse your existing `plan-decomposer` and `part-executor-tdd`
-- Add a delivery-planner step before decomposition
-- Use specialist agents (backend/frontend/AI/QA/DevOps) only after architecture and delivery planning
+- Add a delivery-planner step and a per-slice feature-spec step before decomposition
+- Use specialist agents (backend/frontend/AI/QA/DevOps) only after the slice is defined and decomposed
 - Use an orchestrator and integration review to avoid architectural drift
