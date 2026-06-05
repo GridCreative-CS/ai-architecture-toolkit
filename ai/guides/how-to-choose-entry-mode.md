@@ -34,8 +34,22 @@ Workflow:
 
 - `ai/workflows/architecture-workflow-architecture-doc-only.md`
 
+## Mode D — Legacy System Replacement
+
+Use this mode when:
+
+- you have a legacy system
+- the legacy system is not a trustworthy running prototype
+- you do not have a useful architecture document
+- you want to design and build a new replacement system rather than repair the legacy implementation
+
+Workflow:
+
+- `ai/workflows/architecture-workflow-legacy-system-replacement.md`
+
 ## Quick rule
 
 - prototype only → Mode A
 - prototype + architecture doc → Mode B
 - architecture doc only → Mode C
+- legacy system to replace → Mode D
