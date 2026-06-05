@@ -5,7 +5,7 @@
 
 A structured, AI-assisted workflow for going from **prototype to production** — covering architecture design, review, delivery planning, decomposition, and TDD execution.
 
-[Overview](#overview) · [Prerequisites](#prerequisites) · [Quick Start](#quick-start) · [Getting Started](#getting-started) · [Workflow](#workflow) · [What's Included](#whats-included) · [Usage](#usage) · [Repository Strategy](#repository-strategy) · [Guides & Examples](#guides--examples) · [Contributing](#contributing)
+[Overview](#overview) · [Prerequisites](#prerequisites) · [Quick Start](#quick-start) · [Getting Started](#getting-started) · [Workflow](#workflow) · [What's Included](#whats-included) · [Usage](#usage) · [Repository Strategy](#repository-strategy) · [Guides & Examples](#guides--examples) · [Key Concepts](#key-concepts) · [Contributing](#contributing) · [License](#license)
 
 ## Overview
 
@@ -20,15 +20,15 @@ It is designed for teams and individuals who:
 - Rely on specialist AI agents for backend, frontend, QA, DevOps, and more
 
 > [!NOTE]
-> This toolkit is workflow-driven. It does not generate code directly — it provides the structured prompts, templates, and guidance that AI coding agents consume to produce consistent, architecture-aligned output.
+> This toolkit is workflow-driven. It does not generate code directly — it provides the structured prompts, templates, and guidance that AI coding agents consume to produce consistent, architecture-aware outputs.
 
 ## Prerequisites
 
-You need an AI coding agent such as GitHub Copilot, Claude, Cursor, or any LLM-based assistant that can read files from your repository. The toolkit provides the prompts and structure — your AI agent does the work.
+You need an AI coding agent such as GitHub Copilot, Claude, Cursor, or any LLM-based assistant that can read files from your repository. The toolkit provides the prompts and structure — your AI agent performs the generation and implementation work.
 
 ## Quick Start
 
-> **New to the toolkit?** Read the [Quick-Start Guide](ai/guides/quick-start.md) for a guided walkthrough that takes you from zero to your first vertical slice in 15 minutes. See the [Toolkit Map](ai/guides/toolkit-map.md) for a visual reference of how all components connect.
+> **New to the toolkit?** Read the [Quick-Start Guide](ai/guides/quick-start.md) for a guided walkthrough that takes you from zero to your first vertical slice in 15 minutes. See the [Toolkit Map](ai/guides/toolkit-map.md) for a visual overview of all toolkit components.
 
 The shortest path from prototype to implementation. Each step means prompting your AI agent with the referenced prompt file and writing the output to the indicated path.
 
@@ -59,8 +59,9 @@ Your starting point depends on what you already have:
 | **A — Prototype Only** | A working prototype, no architecture doc | `ai/workflows/architecture-workflow-prototype-only.md` |
 | **B — Prototype + Architecture Doc** | Both a prototype and an existing architecture document | `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md` |
 | **C — Architecture Doc Only** | An architecture document, no prototype | `ai/workflows/architecture-workflow-architecture-doc-only.md` |
+| **D — Legacy System Replacement** | A legacy system you want to replace with a new system, not repair | `ai/workflows/architecture-workflow-legacy-system-replacement.md` |
 
-Choose the mode based on the strongest available input. If you have an architecture document but are unsure whether it is trustworthy, use Mode B and validate it rather than assuming it is correct.
+Choose the mode based on the strongest available input. If you have an architecture document but are unsure whether it is trustworthy, use Mode B and validate it rather than assuming it is correct. If your only usable input is a legacy system that you want to replace, use Mode D.
 
 See `ai/guides/how-to-choose-entry-mode.md` for details.
 
@@ -120,6 +121,20 @@ flowchart LR
 
 </details>
 
+<details>
+<summary><b>Mode D — Legacy System Replacement</b></summary>
+
+```mermaid
+flowchart LR
+    A[Legacy System] --> B[Legacy System Analyzer]
+    B --> C[Architecture Designer]
+    C --> D[Architecture Reviewer]
+    D --> E[Architecture Reconciler]
+    E --> F[ADR Generator]
+```
+
+</details>
+
 ### Delivery and execution phase
 
 Once the architecture is finalized, all modes converge into the same delivery and execution loop driven by `ai/workflows/engineering-workflow.md`:
@@ -146,7 +161,7 @@ flowchart TD
     J --> B
 ```
 
-Feature specs are not optional documentation. When a feature spec exists for the selected slice, it is the primary input that guides decomposition — more precisely than the broader delivery plan. If a compliance check identifies required corrections, reconcile the feature spec before decomposition.
+Feature specs are not optional documentation. When a feature spec exists for the selected slice, it is the primary input that guides decomposition — more precisely than the broader delivery plan.
 
 ## What's Included
 
@@ -157,6 +172,7 @@ Structured prompts for each workflow step:
 | Prompt | Purpose |
 |--------|---------|
 | `prototype-analyzer` | Extract behavior and intent from a prototype |
+| `legacy-system-analyzer` | Extract business intent, workflows, and constraints from a legacy system being replaced |
 | `architecture-designer` | Design production architecture |
 | `architecture-reviewer` | Review architecture for risks and gaps |
 | `architecture-reconciler` | Reconcile reviewer feedback into a final architecture |
@@ -225,6 +241,7 @@ End-to-end process definitions:
 - `architecture-workflow-prototype-only.md` — Mode A
 - `architecture-workflow-prototype-plus-architecture-doc.md` — Mode B
 - `architecture-workflow-architecture-doc-only.md` — Mode C
+- `architecture-workflow-legacy-system-replacement.md` — Mode D
 - `engineering-workflow.md` — Slice-based implementation with TDD
 - `ui-foundation-workflow.md` — Greenfield UI — create design system before delivery planning
 - `ui-retrofit-workflow.md` — Retrofit UI — inventory, derive design system, migrate existing slices
@@ -324,7 +341,7 @@ project-repo/
 
 ### Option B — Central toolkit repo + per-project repos (recommended)
 
-Keep the master toolkit centrally and maintain one version of prompts, templates, and workflows. Each project repo keeps only its generated outputs and project-specific context. This avoids prompt drift across projects and ensures all teams use the same toolkit version.
+Keep the master toolkit centrally and maintain one version of prompts, templates, and workflows. Each project repo keeps only its generated outputs and project-specific context. This avoids prompt duplication while keeping project architecture artifacts local.
 
 **Central toolkit repo:**
 
@@ -376,9 +393,9 @@ The toolkit supports two UI tracks for projects with human-facing interfaces:
 | **Greenfield** | New project — create design system from architecture | `ai/workflows/ui-foundation-workflow.md` |
 | **Retrofit** | Existing project — derive design system from current UI | `ai/workflows/ui-retrofit-workflow.md` |
 
-Both tracks produce `architecture/design-system.md`, which becomes authoritative for UI decisions. Projects without UI can skip both tracks entirely — all UI-related steps are conditional on the project having human workflow surfaces.
+Both tracks produce `architecture/design-system.md`, which becomes authoritative for UI decisions. Projects without UI can skip both tracks entirely — all UI-related steps are conditional on the project type.
 
-For projects that already have UI slices implemented without browser-based verification, use `ai/workflows/ui-remediation-workflow.md` to revalidate and fix before continuing with new slices or starting a retrofit.
+For projects that already have UI slices implemented without browser-based verification, use `ai/workflows/ui-remediation-workflow.md` to revalidate and fix before continuing with new slices or starting retrofit.
 
 ### Examples — `ai/examples/`
 
