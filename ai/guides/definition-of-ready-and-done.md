@@ -60,7 +60,8 @@ A slice, feature, or part is done when all of the following are true:
 - The implementation respects architecture and ADRs.
 - No unauthorized architectural drift was introduced.
 - If the slice includes a human workflow surface, a user-facing verification
-  confirms the end-to-end capability, not just API or integration tests.
+  **in a running application** confirms the end-to-end capability, not just
+  API, component, or integration tests. See UI completeness below.
 
 ### Testing completeness
 
@@ -68,6 +69,9 @@ A slice, feature, or part is done when all of the following are true:
 - TDD expectations are satisfied where applicable.
 - Regression risk is addressed.
 - Golden scenario validation is completed where relevant.
+- For slices with human workflow surfaces, at least one browser-based test
+  or documented browser walkthrough confirms the slice works end-to-end in
+  the running application.
 
 ### Quality completeness
 
@@ -77,6 +81,24 @@ A slice, feature, or part is done when all of the following are true:
 - No hidden TODO hacks are introduced.
 - If a design system exists, UI surfaces conform to the approved design
   system (tokens, components, patterns, accessibility baseline).
+
+### UI completeness (mandatory for slices with human workflow surfaces)
+
+- The application starts and runs with all required services.
+- The user flow from the feature spec §5/§5b is executable in a running
+  application via a browser or browser-based test.
+- All four interaction states are handled and visible: loading, success,
+  error, empty.
+- Interactive elements function correctly: buttons, links, forms, navigation.
+- The shared layout (header, sidebar, navigation) renders correctly with the
+  new slice integrated.
+- The slice renders correctly at a minimum of two viewport sizes (mobile and
+  desktop).
+- Previously completed slices still render and function correctly (no visual
+  regression).
+- If a design system exists, the UI compliance check passes with no critical
+  findings.
+- Browser verification evidence is documented in the slice completion report.
 
 ### Review completeness
 

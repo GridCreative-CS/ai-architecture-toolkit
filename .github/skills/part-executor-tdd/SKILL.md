@@ -130,6 +130,12 @@ A Part is “Done” only if:
 - immutability contracts are enforced: value objects / types documented as immutable must
   defensively copy mutable inputs and expose read-only views. Add tests that prove external
   mutation of source data does not affect the constructed instance.
+- for the **final Part of a UI slice** (or a dedicated verification Part):
+  the running application must be started and the user flow must be verified
+  in a browser or via E2E browser tests. Passing component-level or unit
+  tests alone is insufficient for slice-level UI verification.
+- if `e2e_verify` is present in the PART_SPEC, those commands must be
+  executed and pass.
 If a gate fails:
 - fix it now, or
 - roll back and propose a smaller Part/spike.
@@ -150,6 +156,12 @@ At the end of the Part, output exactly:
   - In scope for selected slice: PASS/FAIL
   - Contract expectations respected: PASS/FAIL
   - Security / observability expectations respected: PASS/FAIL
+- **Integrated UI verification** (when applicable)
+  - Application started successfully: YES/NO/N-A
+  - User flow verified in browser: YES/NO/N-A
+  - Cross-slice regression check: PASS/FAIL/N-A
+  - Responsive check (mobile + desktop): PASS/FAIL/N-A
+  - E2E browser tests passed: YES/NO/N-A
 - **What changed**
 - **Files changed**
 - **How to verify** (commands from PART_SPEC)

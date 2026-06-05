@@ -11,6 +11,10 @@ Activate the frontend agent when:
 - implementing error states, loading states, and validation feedback
 - working on accessibility or responsive behavior
 
+This agent is **mandatory** for slices with human workflow surfaces (as
+identified in the feature spec §5b). It is not optional when the slice
+includes UI.
+
 Do NOT use this agent for backend logic, API design, or infrastructure work.
 
 ## Inputs
@@ -105,6 +109,11 @@ Before marking work complete, verify:
 - [ ] slice can be demonstrated to a stakeholder
 - [ ] design system conformance — only approved tokens and components used
   (when `architecture/design-system.md` exists)
+- [ ] slice verified in running application in a browser
+- [ ] slice renders correctly at mobile (≤480px) and desktop (≥1024px)
+- [ ] navigation to and from this slice works in the shared layout
+- [ ] no console errors in the browser developer tools
+- [ ] previously completed slices still render correctly
 
 ## Forbidden Actions
 

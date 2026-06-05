@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="AiArchitectureToolkit.McpServer.Tests/AiArchitectureToolkit.McpServer.Tests.csproj" />
+  <Project Path="AiArchitectureToolkit.McpServer/AiArchitectureToolkit.McpServer.csproj" />
+</Solution>

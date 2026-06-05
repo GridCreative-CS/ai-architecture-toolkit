@@ -1,3 +1,3 @@
 # Version
 
-AI Architecture Toolkit — v4.1.1 unified
+AI Architecture Toolkit — v4.2.0 unified

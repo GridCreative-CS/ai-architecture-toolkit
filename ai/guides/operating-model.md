@@ -70,7 +70,7 @@ Outputs:
 Prompt:
 
 - `ai/prompts/architecture-compliance.md`
-- `ai/prompts/ui-compliance-check.md` (when design system exists)
+- `ai/prompts/ui-compliance-check.md` (mandatory for slices with human workflow surfaces)
 
 Skills:
 
@@ -81,12 +81,23 @@ Agents:
 
 - `ai/agents/orchestrator-agent.md`
 - `ai/agents/backend-agent.md`
-- `ai/agents/frontend-agent.md`
+- `ai/agents/frontend-agent.md` (mandatory for slices with human workflow surfaces)
 - `ai/agents/ai-agent.md`
 - `ai/agents/qa-agent.md`
 - `ai/agents/ai-testing-agent.md`
 - `ai/agents/devops-agent.md`
 - `ai/agents/integration-reviewer.md`
+
+### Mandatory UI Gates (for slices with human workflow surfaces)
+
+- UI compliance check: `ai/prompts/ui-compliance-check.md` — mandatory
+- Integrated slice verification: `ai/templates/slice-verification-checklist-template.md` — mandatory
+- Frontend agent: `ai/agents/frontend-agent.md` — mandatory
+
+### Remediation (for projects built under older toolkit versions)
+
+- Workflow: `ai/workflows/ui-remediation-workflow.md`
+- Template: `ai/templates/remediation-spec-template.md`
 
 ## Alternative Input Mode — Prototype + Existing Architecture Document
 

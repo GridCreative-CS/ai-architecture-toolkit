@@ -35,6 +35,7 @@ Write each feature spec under:
 11. Acceptance Criteria
 11b. UI/UX Acceptance Criteria
 12. Test Implications
+12b. Browser Verification Steps
 13. Open Questions / Assumptions
 
 ## Section 5b Instructions
@@ -46,8 +47,11 @@ cite the architecture or ADR that confirms this.
 
 ## Section 11b Instructions
 
-Section 11b (UI/UX Acceptance Criteria) is **mandatory** when
-`architecture/design-system.md` exists. It must specify:
+Section 11b (UI/UX Acceptance Criteria) is **mandatory** for every slice
+with human workflow surfaces identified in §5b, regardless of whether
+`architecture/design-system.md` exists.
+
+When a design system exists, §11b must specify:
 
 - which design system components the slice uses
 - which design tokens apply (colors, typography, spacing)
@@ -56,8 +60,18 @@ Section 11b (UI/UX Acceptance Criteria) is **mandatory** when
   state patterns
 - that the accessibility baseline from the design system is met
 
-If no design system exists, state "N/A — no design system adopted for this
-project."
+When no design system exists, §11b must specify:
+
+- which screens/pages are involved and their expected structure
+- which interactive elements exist and their expected behavior
+- that all four states are handled (loading, success, error, empty)
+- expected responsive behavior (minimum: mobile and desktop viewports)
+- accessibility baseline (semantic HTML, keyboard navigation, labels,
+  sufficient contrast)
+
+If the slice has no human workflow surfaces and §5b confirms this with an
+architecture or ADR citation, state: "N/A — this slice has no human workflow
+surfaces per [citation]."
 
 ## Acceptance Criteria Guidance
 
@@ -79,6 +93,24 @@ A feature spec is decomposition-ready when (see `ai/guides/glossary.md`):
 - a verification strategy is clear from Test Implications
 
 If the spec is not yet decomposition-ready, note the blockers in section 13.
+
+## Section 12b Instructions
+
+Section 12b (Browser Verification Steps) is **mandatory** for every slice
+with human workflow surfaces. It must describe:
+
+- how to start the application
+- the URL and steps to exercise the primary user flow in a browser
+- expected visible outcomes at each step
+- viewport sizes to verify (minimum: mobile and desktop)
+- cross-slice navigation checks
+
+This section becomes the input for the Integrated Slice Verification step
+(engineering workflow Step 6b) and the terminal verification Part during
+decomposition.
+
+If the slice has no human workflow surfaces, state:
+"N/A — this slice has no human workflow surfaces."
 
 ## Rules
 

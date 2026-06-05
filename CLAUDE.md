@@ -44,6 +44,8 @@ These rules apply to ALL work in this repository (sourced from `.github/copilot-
 11. Do not make assumptions about the project context beyond what is stated in `ai/project-context.md`. Prefer asking for clarification over assuming. For every question you ask, provide advice.
 12. Treat `architecture/design-system.md` as authoritative for UI decisions when it exists.
 13. For UI-inclusive projects, follow `ai/workflows/ui-foundation-workflow.md` (greenfield) or `ai/workflows/ui-retrofit-workflow.md` (retrofit).
+14. For slices with human workflow surfaces, UI compliance check (Step 4a), Integrated Slice Verification (Step 6b), and the Frontend Agent are **mandatory** — not optional.
+15. For projects with UI slices completed under an older toolkit version, use `ai/workflows/ui-remediation-workflow.md` to revalidate before resuming.
 
 ## Workflows
 
@@ -63,9 +65,11 @@ Follow `ai/workflows/engineering-workflow.md`. The sequence is:
 3. Select next slice
 4. Generate feature spec (`ai/prompts/feature-spec-generator.md` + `ai/templates/feature-spec-template.md`)
 5. Architecture compliance check (`ai/prompts/architecture-compliance.md`)
+5a. UI compliance check — **mandatory for UI slices** (`ai/prompts/ui-compliance-check.md`)
 6. Reconcile feature spec if compliance findings exist (`ai/prompts/feature-spec-reconciler.md`)
 7. Decompose the slice (use `/plan-decomposer` skill)
 8. Execute parts with TDD (use `/part-executor-tdd` skill)
+8b. Integrated Slice Verification — **mandatory for UI slices** (`ai/templates/slice-verification-checklist-template.md`)
 9. Repeat per slice
 
 ### UI workflows
@@ -74,6 +78,7 @@ For projects with human-facing UI:
 
 - **Greenfield:** Follow `ai/workflows/ui-foundation-workflow.md` to create a design system after architecture finalization, before delivery planning.
 - **Retrofit:** Follow `ai/workflows/ui-retrofit-workflow.md` to inventory existing UI, derive a design system, and migrate slices.
+- **Remediation:** Follow `ai/workflows/ui-remediation-workflow.md` to revalidate and fix slices completed under an older toolkit version that lacked mandatory browser-based UI verification.
 - Treat `architecture/design-system.md` as authoritative for UI decisions once it exists.
 
 ## Specialist agents
@@ -84,7 +89,7 @@ When working on implementation, adopt the relevant persona from `ai/agents/`:
 | --- | --- | --- |
 | Orchestrator | `ai/agents/orchestrator-agent.md` | Coordinating multi-agent slice work |
 | Backend | `ai/agents/backend-agent.md` | Backend/domain/API implementation |
-| Frontend | `ai/agents/frontend-agent.md` | Frontend implementation |
+| Frontend | `ai/agents/frontend-agent.md` | Frontend implementation (mandatory for UI slices) |
 | AI Agent | `ai/agents/ai-agent.md` | AI/ML feature implementation |
 | QA | `ai/agents/qa-agent.md` | Testing strategy and execution |
 | AI Testing | `ai/agents/ai-testing-agent.md` | AI-specific testing (golden datasets) |
@@ -142,6 +147,9 @@ Before making decisions, consult:
 - **Definition of Ready/Done:** `ai/guides/definition-of-ready-and-done.md`
 - **How feature specs are used:** `ai/guides/how-feature-specs-are-used.md`
 - **Operating model:** `ai/guides/operating-model.md`
+- **Slice verification checklist:** `ai/templates/slice-verification-checklist-template.md`
+- **Remediation workflow:** `ai/workflows/ui-remediation-workflow.md`
+- **Remediation spec template:** `ai/templates/remediation-spec-template.md`
 - **Design system template:** `ai/templates/design-system-template.md`
 - **UI foundation workflow:** `ai/workflows/ui-foundation-workflow.md`
 - **UI retrofit workflow:** `ai/workflows/ui-retrofit-workflow.md`

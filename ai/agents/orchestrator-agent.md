@@ -102,11 +102,19 @@ Before handing off to specialist agents, verify:
 | Agent | When to Involve |
 |-------|-----------------|
 | Backend agent | Backend tasks are ready and contracts are defined |
-| Frontend agent | API contracts are available for consumption |
+| Frontend agent | API contracts are available for consumption (mandatory for UI slices) |
 | AI agent | AI integration points are identified |
 | QA agent | Implementation is ready for test strategy |
 | DevOps agent | Infrastructure or deployment changes are needed |
 | Integration reviewer | Cross-slice boundaries are touched |
+
+### Step 6b — Integrated Slice Verification
+
+After all Parts in a slice are executed, the orchestrator must ensure Step 6b
+(Integrated Slice Verification) is performed for slices with human workflow
+surfaces. This step uses `ai/templates/slice-verification-checklist-template.md`
+and is **mandatory** before proceeding to the next slice. See
+`ai/workflows/engineering-workflow.md` for the full procedure.
 
 ## Forbidden Actions
 

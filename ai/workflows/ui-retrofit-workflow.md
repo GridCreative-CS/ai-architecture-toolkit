@@ -14,6 +14,15 @@ UI inventory through design system derivation to behavior-preserving migration.
 - `architecture/delivery-plan.md` (when present — required for Step 3 onward,
   but Steps 1–2 can run before delivery planning)
 
+## Functional Prerequisite
+
+Before running this workflow, ensure all completed slices are **functionally
+correct** in the running application. If slices have unverified or broken UI,
+run `ai/workflows/ui-remediation-workflow.md` first.
+
+The retrofit workflow assumes slices work correctly and only need visual
+unification. If functional issues exist, the retrofit may mask or compound them.
+
 ## When to Use
 
 Use this workflow when:

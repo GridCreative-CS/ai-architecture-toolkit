@@ -77,17 +77,27 @@
 
 ## 11b. UI/UX Acceptance Criteria
 
-<!-- CONDITIONAL section — mandatory when architecture/design-system.md       -->
-<!-- exists. If no design system has been adopted, state:                      -->
-<!-- "N/A — no design system adopted for this project."                        -->
+<!-- MANDATORY section for slices with human workflow surfaces (§5b).          -->
 <!--                                                                           -->
-<!-- When a design system exists, list UI/UX criteria for this slice:          -->
+<!-- When architecture/design-system.md exists, list:                           -->
 <!-- - Which design system components are used?                                -->
 <!-- - Which design tokens (colors, typography, spacing) apply?                -->
 <!-- - Which layout patterns from the design system are followed?              -->
 <!-- - Are all four states handled per the design system state patterns        -->
 <!--   (loading, success, error, empty)?                                       -->
 <!-- - Does the UI meet the design system's accessibility baseline (§6)?       -->
+<!--                                                                           -->
+<!-- When NO design system exists, list:                                        -->
+<!-- - Which screens/pages are involved and their expected structure?           -->
+<!-- - Which interactive elements exist (buttons, forms, links, navigation)?   -->
+<!-- - Are all four states handled (loading, success, error, empty)?            -->
+<!-- - Expected responsive behavior (minimum: mobile and desktop)?             -->
+<!-- - Accessibility baseline met (semantic HTML, keyboard navigation,         -->
+<!--   labels, sufficient contrast)?                                            -->
+<!--                                                                           -->
+<!-- If the slice has no human workflow surfaces (§5b confirms this with an    -->
+<!-- architecture citation), state:                                             -->
+<!-- "N/A — this slice has no human workflow surfaces per [citation]."          -->
 <!--                                                                           -->
 <!-- Each criterion must be binary, testable, and specific — same rules as     -->
 <!-- §11.                                                                       -->
@@ -98,6 +108,28 @@
 
 <!-- What types of tests are required? (unit, integration, contract, golden   -->
 <!-- dataset, authorization) What test infrastructure is needed?               -->
+
+## 12b. Browser Verification Steps
+
+<!-- MANDATORY section for slices with human workflow surfaces (§5b).          -->
+<!-- Describe the browser-based verification that confirms the slice works     -->
+<!-- end-to-end in the running application. This section becomes the basis     -->
+<!-- for the Integrated Slice Verification (engineering workflow Step 6b).     -->
+<!--                                                                           -->
+<!-- Include:                                                                   -->
+<!-- - Application startup commands (e.g., docker compose up)                  -->
+<!-- - The URL to access                                                        -->
+<!-- - Step-by-step click/navigate/input sequence for the primary flow         -->
+<!-- - Expected visible outcomes at each step                                   -->
+<!-- - Error flow walkthrough                                                   -->
+<!-- - Viewport sizes to check (minimum: mobile ≤480px, desktop ≥1024px)      -->
+<!-- - Cross-slice navigation check (navigate away and back)                   -->
+<!--                                                                           -->
+<!-- If automated E2E tests exist or should be created, list the test          -->
+<!-- commands (e.g., npx playwright test).                                      -->
+<!--                                                                           -->
+<!-- If the slice has no human workflow surfaces, state:                        -->
+<!-- "N/A — this slice has no human workflow surfaces."                         -->
 
 ## 13. Open Questions / Assumptions
 

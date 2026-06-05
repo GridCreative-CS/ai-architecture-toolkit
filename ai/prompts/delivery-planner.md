@@ -46,6 +46,19 @@ fails any question, restructure before finalizing the plan.
 3. Can this slice be called "done" with a user-facing verification, not just an
    integration test?
 
+### Browser Verification Approach
+
+For each slice with human workflow surfaces, the delivery plan should indicate
+the expected browser verification approach:
+
+- **Automated E2E tests** (Playwright, Cypress) — preferred for critical flows
+- **Documented browser walkthrough** — acceptable when automation is not yet
+  available
+- **Both** — recommended for high-risk or high-visibility slices
+
+This information feeds into the feature spec (§12b Browser Verification Steps)
+and the Integrated Slice Verification step (engineering workflow Step 6b).
+
 ## Milestone Sizing
 
 - aim for 2–5 slices per milestone
