@@ -1,4 +1,9 @@
-# ADR-002: Treat Prototype as Reference Behavior, Not Reference Architecture
+# Example ADR — Treat Prototype as Reference Behavior, Not Reference Architecture
+
+<!-- EXAMPLE ONLY. This is a sample ADR showing the expected shape and depth. -->
+<!-- It is NOT a decision for your project. Real ADRs are generated per       -->
+<!-- project via ai/prompts/adr-generator.md into architecture/adr/ and       -->
+<!-- become authoritative only there.                                          -->
 
 ## Status
 Accepted
