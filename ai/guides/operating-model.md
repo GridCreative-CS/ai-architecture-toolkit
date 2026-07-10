@@ -72,10 +72,15 @@ Skills:
 - `.github/skills/plan-decomposer/SKILL.md` →
   `ai-parts/<slice-id>/OVERVIEW.md` + `ai-parts/<slice-id>/PXX-*.md` (Step 5)
 - `.github/skills/part-executor-tdd/SKILL.md` — one Part at a time, strict TDD
-  (Step 6)
+  (Step 6); every Part ends with a Part Quality Report →
+  `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`
+  (`ai/templates/code-quality-checklist-template.md`)
 
 Verification:
 
+- Part Code Review → `ai-parts/<slice-id>/reviews/<part-id>-review.md`
+  (mandatory per Part — Step 6a, using `ai/prompts/code-quality-reviewer.md`;
+  the next Part starts only after `APPROVED` / `APPROVED WITH NOTES`)
 - Integrated Slice Verification →
   `architecture/slice-verification/<slice-id>-<slice-name>.md`
   (mandatory for UI slices — Step 6b, using
@@ -90,6 +95,7 @@ Agents (`ai/agents/`):
 - `qa-agent.md`
 - `ai-testing-agent.md`
 - `devops-agent.md`
+- `code-reviewer-agent.md` (mandatory per Part — Step 6a)
 - `integration-reviewer.md`
 
 ### Mandatory UI gates (for slices with human workflow surfaces)
@@ -102,7 +108,8 @@ Agents (`ai/agents/`):
 
 Infrastructure bootstrap and hardening phases use the same machinery: phase
 spec (feature spec template, §5b/§11b/§12b marked N/A) → compliance check →
-decomposition (`ai-parts/<phase-id>/`) → TDD execution. UI gates do not apply.
+decomposition (`ai-parts/<phase-id>/`) → TDD execution with per-Part quality
+reports and code review (Step 6a). UI gates do not apply.
 See "Executing Phases" in `ai/workflows/engineering-workflow.md`.
 
 ### Remediation (for projects built under older toolkit versions)

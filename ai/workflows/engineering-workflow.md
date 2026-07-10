@@ -258,11 +258,55 @@ This is the point where implementation begins. The delivery plan tells you
 Part file is the execution-ready artifact that tells the agent exactly what to
 implement and verify.
 
+Implementation quality is governed by `ai/guides/code-quality-standard.md`:
+read the nearby existing code and tests before writing anything, follow the
+project's established patterns over model defaults, add no unneeded
+dependencies or abstractions, and declare every touched contract surface.
+
+Every Part execution ends with a **Part Quality Report**
+(`ai/templates/code-quality-checklist-template.md`) written to
+`ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`, including an
+explicit **DONE / NOT DONE** verdict. A Part without a completed quality
+report is not done.
+
 **If implementation reality conflicts with the architecture or the feature
 spec** (a boundary cannot be respected, a contract cannot be implemented as
 specified), stop the Part, report the conflict as a compliance finding or open
 question, and wait for a decision. Do not resolve architecture conflicts inside
-a Part.
+a Part. The same applies when the existing code pattern is unclear or
+inconsistent: stop and list the ambiguity — do not invent a new style.
+
+## Step 6a — Part Code Review (Mandatory per Part)
+
+After each Part's quality report is delivered and before the next Part
+starts, review the Part.
+
+Use:
+
+- `ai/prompts/code-quality-reviewer.md` (persona:
+  `ai/agents/code-reviewer-agent.md`)
+
+Inputs:
+
+- the executed Part file and its quality report
+  (`ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`)
+- the actual diff / changed files
+- `architecture/architecture-final.md`, `architecture/adr/*.md`
+- `architecture/feature-specs/<slice-id>-<slice-name>.md`
+- `ai/guides/code-quality-standard.md`
+
+Prefer running the review in a fresh session/context from the one that
+executed the Part.
+
+Write:
+
+- `ai-parts/<slice-id>/reviews/<part-id>-review.md`
+
+The review ends in exactly one verdict: `APPROVED`, `APPROVED WITH NOTES`, or
+`REJECTED — MUST FIX`. On rejection, the Part goes back to the executor with
+the review's concrete required fixes; the Part's Status returns to
+`IN_PROGRESS` and it may not be marked `DONE` (and the next Part may not
+start) until a re-review returns `APPROVED` or `APPROVED WITH NOTES`.
 
 ## Step 6b — Integrated Slice Verification (Mandatory for UI Slices)
 
@@ -316,6 +360,7 @@ Possible agents (see `ai/agents/`):
 - QA
 - AI testing
 - DevOps
+- code reviewer (**mandatory** per Part — Step 6a)
 - integration reviewer (when the slice touches cross-slice or cross-module
   boundaries)
 
@@ -332,7 +377,8 @@ Delivery Plan
 → UI Compliance Check (mandatory for UI slices)
 → Feature Spec Reconciliation (if findings)
 → Decomposition (ai-parts/<slice-id>/)
-→ TDD Execution
+→ TDD Execution (quality report per Part)
+→ Part Code Review (per Part; next Part only after approval)
 → Integrated Slice Verification (mandatory for UI slices)
 → Next Slice
 ```
@@ -346,7 +392,8 @@ Phases (infrastructure bootstrap, production hardening — see
    §5b, §11b, and §12b marked "N/A — phase, no human workflow surfaces" and
    the phase labeled as a phase (not a slice).
 2. Run Step 4 (architecture compliance) on the phase spec.
-3. Decompose into `ai-parts/<phase-id>/` and execute with TDD (Steps 5–6).
+3. Decompose into `ai-parts/<phase-id>/` and execute with TDD (Steps 5–6),
+   including the per-Part quality report and code review (Step 6a).
 4. Steps 1b, 4a, and 6b do not apply to phases.
 
 ## Missing-input handling

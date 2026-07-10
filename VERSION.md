@@ -1,10 +1,26 @@
 # Version
 
-AI Architecture Toolkit — **v4.3.0**
+AI Architecture Toolkit — **v4.4.0**
 
 Projects adopting the toolkit should record this version in their project `CLAUDE.md`. Breaking workflow changes (renumbered steps, renamed output paths, changed handoff contracts) are marked **BREAKING** below, with the migration action a project must take.
 
 ## Changelog
+
+### v4.4.0 — 2026-07-10
+
+Code-quality release. Second audit pass against the reference project, focused on making cheaper models produce implementation code at the reference project's quality level. All changes are additive — no existing step was renumbered and no existing output path changed.
+
+- New guide: `ai/guides/code-quality-standard.md` — the implementation-quality rules enforced per Part: read-before-write protocol, source precedence, dependency and abstraction discipline, boundaries/dependency direction, error handling with stable error identifiers, validation split, logging/observability, async + cancellation, test quality (no mock-only/fake tests, truth-table coverage for rule matrices, contract tests), prohibited outputs, the four contract surfaces, and the ambiguity rule (stop and list, don't invent a style).
+- New template: `ai/templates/code-quality-checklist-template.md` — the **Part Quality Report** every Part execution must produce (`ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`): files changed, tests + TDD evidence, checks run, architecture rules verified, patterns followed, contract surfaces declared changed/unchanged, dependencies, deviations, risks, explicit DONE/NOT DONE.
+- New prompt + agent: `ai/prompts/code-quality-reviewer.md` and `ai/agents/code-reviewer-agent.md` — per-Part code review with ten required checks and a single verdict (`APPROVED` / `APPROVED WITH NOTES` / `REJECTED — MUST FIX`) → `ai-parts/<slice-id>/reviews/<part-id>-review.md`.
+- **Engineering workflow: new mandatory Step 6a — Part Code Review** (between Step 6 and Step 6b; per Part, also applies to phases). A rejected Part returns to `IN_PROGRESS`; the next Part starts only after approval. Migration: none for completed Parts; apply from the next Part onward.
+- `part-executor-tdd` v1.3.0: new required "Read before write" protocol step; non-negotiable rules extended (no new libraries without justification, no unneeded abstractions, no silent contract changes, stop on unclear patterns); quality gates extended (prohibited outputs, behavior-not-mocks tests, no weakened tests, contract-surface declaration); completion report replaced by the Part Quality Report; DONE now additionally gated on the Step 6a review verdict.
+- `plan-decomposer` v2.3.0: preflight now builds a **Pattern Inventory** (concrete existing files per artifact kind, written to OVERVIEW.md); new optional PART_SPEC fields `existing_patterns` and `contracts_touched` (additive — existing Part files remain valid).
+- Agents: backend, frontend, QA, and integration reviewer upgraded with read-before-write, pattern-adherence, error/validation/logging/cancellation checklist items, test-quality rules (QA), and hidden-contract-change detection across the four contract surfaces (integration reviewer).
+- `ai/guides/definition-of-ready-and-done.md`: Quality completeness now requires code-quality-standard adherence, no prohibited outputs, behavior-proving tests, and declared contract surfaces; Review completeness now requires the Part Quality Report and an approving Step 6a review verdict per Part.
+- `.github/instructions/csharp.instructions.md`: new "Async and Cancellation" and "Error Handling and Results" sections; structured-logging property/PII rules.
+- Rule 17 added to `.github/copilot-instructions.md` (mirrored in root `CLAUDE.md`): code follows the code quality standard; every Part ends with a quality report and passes Step 6a review.
+- Synced: `README.md`, root `CLAUDE.md`, `ai/CLAUDE.md` (step list now 0b–8 including 6a), `ai/guides/operating-model.md`, `ai/guides/quick-start.md`, `ai/guides/how-feature-specs-are-used.md`, `ai/guides/toolkit-map.md`.
 
 ### v4.3.0 — 2026-07-10
 

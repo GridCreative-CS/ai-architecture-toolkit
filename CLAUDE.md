@@ -63,6 +63,7 @@ The canonical numbered rules live in `.github/copilot-instructions.md` and apply
 13. For UI-inclusive projects, follow `ai/workflows/ui-foundation-workflow.md` (greenfield) or `ai/workflows/ui-retrofit-workflow.md` (retrofit).
 14. For slices with human workflow surfaces, the UI compliance check (engineering workflow Step 4a), Integrated Slice Verification (Step 6b), and the Frontend Agent are **mandatory**.
 15. For projects with UI slices completed under an older toolkit version, run `ai/workflows/ui-remediation-workflow.md` before resuming new slices.
+16. All implementation code follows `ai/guides/code-quality-standard.md`: read nearby code and tests before writing, follow existing project patterns over model defaults, no new libraries or speculative abstractions without justification, no silent contract changes, no TODOs/placeholders/fake implementations. Every Part ends with a Part Quality Report and passes the Part code review (engineering workflow Step 6a) before the next Part starts.
 
 ## Entry modes (architecture phase)
 
@@ -91,7 +92,8 @@ Follow `ai/workflows/engineering-workflow.md`. Its step numbers are canonical �
 - **Step 4a** — UI compliance check — **mandatory for UI slices** (`ai/prompts/ui-compliance-check.md` → `architecture/compliance-reports/<slice-id>-<slice-name>-ui.md`)
 - **Step 4b** — Reconcile the feature spec if findings exist (`ai/prompts/feature-spec-reconciler.md`)
 - **Step 5** — Decompose the slice (`plan-decomposer` skill → `ai-parts/<slice-id>/OVERVIEW.md` + `ai-parts/<slice-id>/PXX-*.md`)
-- **Step 6** — Execute one Part at a time with strict TDD (`part-executor-tdd` skill)
+- **Step 6** — Execute one Part at a time with strict TDD (`part-executor-tdd` skill; every Part ends with a Part Quality Report → `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`)
+- **Step 6a** — Part Code Review — **mandatory per Part** (`ai/prompts/code-quality-reviewer.md` → `ai-parts/<slice-id>/reviews/<part-id>-review.md`; verdict `APPROVED` / `APPROVED WITH NOTES` / `REJECTED — MUST FIX`; the next Part starts only after approval)
 - **Step 6b** — Integrated Slice Verification — **mandatory for UI slices** (checklist → `architecture/slice-verification/<slice-id>-<slice-name>.md`)
 - **Step 7** — Specialist agents as needed
 - **Step 8** — Repeat per slice
@@ -120,6 +122,7 @@ Adopt the relevant persona from `ai/agents/` during execution:
 | QA | `ai/agents/qa-agent.md` | Testing strategy and execution |
 | AI Testing | `ai/agents/ai-testing-agent.md` | AI-specific testing (golden datasets) |
 | DevOps | `ai/agents/devops-agent.md` | CI/CD, containers, infrastructure |
+| Code Reviewer | `ai/agents/code-reviewer-agent.md` | Per-Part code review (**mandatory** — Step 6a) |
 | Integration Reviewer | `ai/agents/integration-reviewer.md` | Cross-slice contract verification |
 
 Copilot-format personas live in `.github/agents/` (`expert-dotnet-software-engineer`, `backend-agent`, `devops-docker-traefik`). The backend and .NET personas assume the toolkit's default .NET stack; adapt persona headers when a project uses a different stack.
@@ -177,6 +180,7 @@ Before making decisions, consult:
 - **Vertical slices:** `ai/guides/vertical-slice-definition.md` — verticality test and anti-patterns
 - **Modular monolith:** `ai/guides/modular-monolith-definition.md` — module boundaries and extraction criteria
 - **Contracts:** `ai/guides/contract-definition.md` — three contract layers, testing, versioning
+- **Code quality standard:** `ai/guides/code-quality-standard.md` — implementation-quality rules enforced per Part (read-before-write, pattern precedence, contract surfaces, test quality)
 - **Definition of Ready/Done:** `ai/guides/definition-of-ready-and-done.md`
 - **How feature specs are used:** `ai/guides/how-feature-specs-are-used.md`
 - **Operating model:** `ai/guides/operating-model.md`

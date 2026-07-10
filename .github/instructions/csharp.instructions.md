@@ -86,6 +86,8 @@ applyTo: '**/*.cs'
 ## Logging and Monitoring
 
 - Guide the implementation of structured logging using Serilog or other providers.
+- Use message templates with named properties (`"SessionId={SessionId}"`), never string interpolation, in log calls.
+- Log identifiers, never sensitive payloads: no PII, secrets, tokens, or free-text user content unless the project has an explicit redaction mechanism and the log site uses it.
 - Explain the logging levels and when to use each.
 - Demonstrate integration with Application Insights for telemetry collection.
 - Show how to implement custom telemetry and correlation IDs for request tracking.
@@ -105,6 +107,19 @@ applyTo: '**/*.cs'
 - Demonstrate how to mock dependencies for effective testing.
 - Show how to test authentication and authorization logic.
 - Explain test-driven development principles as applied to API development.
+
+## Async and Cancellation
+
+- Every async public method accepts a `CancellationToken` and passes it to every awaited call down to the I/O layer. Do not accept a token and drop it, and do not add `CancellationToken.None` where a real token is in scope.
+- Use `ConfigureAwait(false)` on awaits in library/application-layer code (non-UI, non-ASP.NET-request-context code); follow the convention visible in nearby files.
+- No `async void` (except event handlers), no sync-over-async (`.Result`, `.Wait()`, `.GetAwaiter().GetResult()`), no fire-and-forget tasks outside an established background-work mechanism (hosted service, queue).
+- Timeouts, retries, and resilience use the project's existing mechanism (e.g., `Microsoft.Extensions.Http.Resilience`/Polly) — do not hand-roll retry loops.
+
+## Error Handling and Results
+
+- Follow the project's established error flow: if handlers/services return a result type (e.g., `Result<T>` with an error kind), new code uses it for expected failures — reserve exceptions for unexpected faults.
+- Give every externally visible error a stable error identifier (e.g., an `UPPER_SNAKE` code prefix in the error message or a problem-details `type`), formatted exactly like existing errors, so contracts and tests can rely on it.
+- Map infrastructure exceptions to the contract's documented error responses at the boundary where the project does so; never swallow exceptions or fall back silently.
 
 ## Performance Optimization
 

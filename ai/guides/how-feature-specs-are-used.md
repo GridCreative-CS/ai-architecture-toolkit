@@ -58,8 +58,9 @@ for that slice.
    slices (Step 4a).
 5. Reconcile the feature spec if compliance findings require changes (Step 4b).
 6. Decompose that slice into Parts (Step 5).
-7. Execute Parts with TDD (Step 6); Integrated Slice Verification for UI
-   slices (Step 6b).
+7. Execute Parts with TDD (Step 6), each ending in a Part Quality Report;
+   review each Part before the next one starts (Step 6a); Integrated Slice
+   Verification for UI slices (Step 6b).
 8. Move to the next slice (Step 8).
 
 ## Source priority

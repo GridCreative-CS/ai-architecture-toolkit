@@ -5,18 +5,22 @@ license: MIT
 compatibility: Designed for skills-compatible coding agents, including Claude Code and GitHub Copilot (VS Code). Assumes write access to the repository workspace and ability to run tests/build commands.
 metadata:
   author: Gridcreative Holding B.V.  by Jursley Koots
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Part Executor (TDD)
-*(Execute one PART_SPEC → Red/Green/Refactor → verify → report)*
+*(Execute one PART_SPEC → read nearby code → Red/Green/Refactor → verify → quality report)*
 
 ## What this skill does
 Given exactly **one Part** in the **Part Handoff Contract** format, you will:
 - confirm preconditions
-- implement the part using **mandatory TDD**
+- read the nearby existing code and tests before writing anything
+- implement the part using **mandatory TDD**, following the project's
+  existing patterns (`ai/guides/code-quality-standard.md`)
 - keep the repo green
-- deliver a completion report with verification commands and TDD evidence
+- deliver a **Part Quality Report** with verification commands, TDD evidence,
+  and an explicit contract-surface declaration
+  (`ai/templates/code-quality-checklist-template.md`)
 
 
 ## Feature Spec Awareness
@@ -62,8 +66,13 @@ If the heading or the PART_SPEC is missing or malformed:
 
 If the Part's `Status` is already `DONE`, stop and ask which Part to execute
 instead. When you start executing, set the Part file's Status to
-`IN_PROGRESS`; when the completion report is delivered and all gates pass, set
-it to `DONE` and update the matching row in `ai-parts/<slice-id>/OVERVIEW.md`.
+`IN_PROGRESS`; when the Part Quality Report is delivered and all gates pass,
+set it to `DONE` and update the matching row in
+`ai-parts/<slice-id>/OVERVIEW.md`. If the Part code review (engineering
+workflow Step 6a) returns `REJECTED — MUST FIX`, set the Status back to
+`IN_PROGRESS`, apply the required fixes within this Part (keeping TDD
+discipline), regenerate the quality report, and hand back for re-review — the
+Part is `DONE` only after an `APPROVED` or `APPROVED WITH NOTES` verdict.
 
 The JSON is the source of truth.
 
@@ -77,6 +86,18 @@ If a relevant feature spec is available, use it to interpret the Part safely.
 - **Do not execute multiple Parts at once**.
 - **No skipped verification**: run the commands from `verify`.
 - Do not violate the active slice feature spec if one exists.
+- **Read before write**: inspect nearby existing implementation and tests
+  before writing any code, and follow the project's established patterns over
+  generic model-generated patterns (`ai/guides/code-quality-standard.md` §1).
+- **If the existing pattern is unclear or inconsistent, stop** and list the
+  ambiguity as an open question — do not invent a new style.
+- **No new libraries/packages** without explicit justification recorded in the
+  quality report (code-quality standard §3).
+- **No abstractions this Part does not need** — no speculative interfaces,
+  base classes, wrappers, or configuration (code-quality standard §4).
+- **No silent contract changes**: any change to a public API, database schema,
+  event, or UI contract surface must be declared in the quality report §7 and
+  covered by the feature spec (code-quality standard §12).
 - No scope creep: if the Part is unclear, list assumptions and implement the smallest safe choice.
 
 ---
@@ -102,7 +123,24 @@ If a relevant feature spec is available, use it to interpret the Part safely.
 - If baseline is broken, stop and propose **a Baseline Fix Part** (do not proceed).
 - If a relevant feature spec exists, verify the Part still fits the intended slice scope.
 
-### 3) TDD workflow (required)
+### 3) Read before write (required)
+Before writing any test or production code:
+- Open at least two existing files that do the same kind of work as this Part
+  (same layer, same artifact type), **and their tests**. Start from the
+  PART_SPEC `file_touch_points`, the `existing_patterns` field if present, and
+  the OVERVIEW Preflight pattern inventory.
+- Record the observed patterns you will follow: file placement/naming, error
+  handling and error identifiers, validation split, logging/metrics/tracing,
+  async + cancellation propagation, doc-comment style, test naming and
+  assertion style. This list goes into the quality report §6.
+- Follow `ai/guides/code-quality-standard.md` §§1–2: existing project patterns
+  beat model defaults; when sources conflict, apply the precedence order; when
+  the pattern is unclear or inconsistent, stop and list the ambiguity.
+- If no comparable code exists (first slice, new layer), derive the pattern
+  from the architecture, ADRs, and project instruction files, and state in the
+  quality report that this Part establishes a new pattern.
+
+### 4) TDD workflow (required)
 1) **Red**
    - Implement/adjust tests listed in `tests_first.test_files`
    - Ensure at least one test fails consistent with `tests_first.expected_red`
@@ -131,6 +169,20 @@ A Part is “Done” only if:
 - no conflict with the relevant feature spec remains unresolved
 - no partial refactors left behind
 - no commented-out hacks / untracked TODOs
+- no prohibited outputs (code-quality standard §11): no placeholders, stub
+  bodies, or fake implementations in production paths; no dead/unused code;
+  no suppressed warnings without recorded justification
+- tests prove behavior, not implementation: no test passes purely by
+  verifying mocks were called or by mirroring internal steps; TDD claims are
+  backed by recorded red evidence (command + observed failure)
+- no existing test was weakened, deleted, or skipped to get to green (a
+  legitimately obsolete test is removed with justification in the quality
+  report)
+- all four contract surfaces (public API, database/schema, events/messages,
+  UI behavior) are explicitly declared **changed** (with spec coverage) or
+  **unchanged** in the quality report §7
+- any new dependency is justified in the quality report §8 (none added
+  otherwise)
 - architecture / layer-dependency tests are comprehensive: if the Part adds or modifies
   cross-layer boundaries, verify that architecture tests cover **all** prohibited dependency
   directions (e.g. Domain must not reference Api, Worker, Application, Infrastructure — not
@@ -153,32 +205,51 @@ If a gate fails:
 
 ---
 
-## Required completion report
-At the end of the Part, output exactly:
+## Required completion report — the Part Quality Report
+At the end of **every** Part, produce the **Part Quality Report** using
+`ai/templates/code-quality-checklist-template.md`, and write it to:
 
-## Part Complete — <part_id>: <title>
-- **TDD evidence**
-  - Tests added/updated:
-  - Red observed (command + what failed):
-  - Green achieved (command + what passed):
-- **Acceptance criteria check**
-  - <criterion>: PASS/FAIL
-- **Feature spec alignment**
-  - In scope for selected slice: PASS/FAIL
-  - Contract expectations respected: PASS/FAIL
-  - Security / observability expectations respected: PASS/FAIL
-- **Integrated UI verification** (when applicable)
-  - Application started successfully: YES/NO/N-A
-  - User flow verified in browser: YES/NO/N-A
-  - Cross-slice regression check: PASS/FAIL/N-A
-  - Responsive check (mobile + desktop): PASS/FAIL/N-A
-  - E2E browser tests passed: YES/NO/N-A
-- **What changed**
-- **Files changed**
-- **How to verify** (commands from PART_SPEC)
+- `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`
+
+(create the `reviews/` folder if missing). Also output it in the response.
+A Part without a completed quality report is **not done**. Every field is
+required — write "none" or "N/A — <reason>" rather than omitting a field.
+
+The report must contain (see the template for the full structure):
+
+1. **Part executed** — what was implemented
+2. **Files changed** — every file, with change type and purpose
+3. **Tests added or updated** — plus TDD evidence: red observed (command +
+   exact failure) and green achieved (command + result)
+4. **Checks run** — every command actually executed (`verify`, `e2e_verify`,
+   build, linters) with its real result — not intentions
+5. **Architecture rules verified** — boundaries touched, dependency direction,
+   ADRs applied (cited by number), architecture-test coverage of new boundaries
+6. **Existing patterns followed** — the nearby files read in step 3 and the
+   patterns adopted
+7. **Contract surfaces** — public API / database-schema / events / UI
+   behavior, each explicitly CHANGED (with details + spec reference) or
+   UNCHANGED
+8. **Dependencies** — new libraries added: NONE or name + justification
+9. **Deviations from existing patterns** — each with the reason, or "none"
+10. **Remaining risks** — or "none" only if true
+11. **Prohibited-output check** — PASS/FAIL lines per code-quality standard §11
+12. **Verdict** — explicit **Part status: DONE / NOT DONE** statement
+
+Additionally include (from the PART_SPEC):
+- **Acceptance criteria check** — each criterion: PASS/FAIL
+- **Feature spec alignment** — in scope / contracts respected / security &
+  observability respected: PASS/FAIL each
+- **Integrated UI verification** (when applicable) — app started, flow
+  verified in browser, cross-slice regression, responsive check, E2E tests:
+  YES/NO/N-A each
 - **Rollback** (commands/steps from PART_SPEC)
-- **Notes**
 - **Next part** (name only; do not start it)
+
+After delivering the report, the Part goes to the Part code review
+(engineering workflow Step 6a, `ai/prompts/code-quality-reviewer.md`). Do not
+start the next Part until the review verdict is `APPROVED` or
+`APPROVED WITH NOTES`.
 
 ---
 

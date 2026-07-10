@@ -74,7 +74,11 @@ A visual reference showing how all toolkit components connect — prompts, templ
 │  ───────                          ────────                             │
 │  plan-decomposer              →   ai-parts/<slice-id>/OVERVIEW.md      │
 │                                   ai-parts/<slice-id>/PXX-*.md         │
-│  part-executor-tdd            →   implemented code + tests             │
+│  part-executor-tdd            →   implemented code + tests +           │
+│                                   ai-parts/<slice-id>/reviews/         │
+│                                     <part-id>-quality-report.md        │
+│  code-quality-reviewer        →   ai-parts/<slice-id>/reviews/         │
+│  (per Part: Step 6a)                <part-id>-review.md                │
 │  (UI slices: Step 6b)         →   slice-verification/<slice>.md        │
 │                                                                        │
 │  Agents (adopt during execution):                                      │
@@ -86,9 +90,11 @@ A visual reference showing how all toolkit components connect — prompts, templ
 │  qa-agent             — quality assurance and testing strategy          │
 │  ai-testing-agent     — AI-specific testing and golden datasets        │
 │  devops-agent         — CI/CD, infrastructure, deployment              │
+│  code-reviewer-agent  — per-Part code review (Step 6a)                 │
 │  integration-reviewer — cross-boundary integration review              │
 │                                                                        │
-│  Guides: contract-definition, modular-monolith-definition              │
+│  Guides: code-quality-standard, contract-definition,                   │
+│          modular-monolith-definition                                   │
 └─────────────────────────────────────────────────────────────────────────┘
 
 ★ = architecture-final.md is the authoritative source of truth
@@ -120,6 +126,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `design-system-from-inventory` | UI Foundation | Derive a design system from an existing UI inventory (retrofit) |
 | `ui-inventory` | UI Foundation | Inventory existing UI surfaces, components, and tokens |
 | `ui-compliance-check` | Compliance | Verify UI implementation conforms to the design system |
+| `code-quality-reviewer` | Execution | Per-Part code review against the code quality standard (Step 6a) |
 
 ### Templates — `ai/templates/`
 
@@ -137,6 +144,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `retrofit-spec-template` | Used for retrofit migration slices |
 | `remediation-spec-template` | Used for remediation slices (`ui-remediation-workflow`) |
 | `slice-verification-checklist-template` | Integrated Slice Verification (engineering workflow Step 6b) |
+| `code-quality-checklist-template` | Part Quality Report emitted by `part-executor-tdd` per Part (Step 6) |
 | `project-claude-template` | Copied to a project repo as its root `CLAUDE.md` |
 
 ### Agents — `ai/agents/`
@@ -150,6 +158,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `qa-agent` | Testing strategy, coverage, regression |
 | `ai-testing-agent` | AI-specific testing, golden datasets, probabilistic validation |
 | `devops-agent` | CI/CD, containers, infrastructure, deployment |
+| `code-reviewer-agent` | Per-Part code review against the code quality standard (Step 6a) |
 | `integration-reviewer` | Cross-slice contract verification and drift detection |
 
 ### Skills — `.github/skills/`
@@ -172,6 +181,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `how-to-choose-entry-mode` | Decision guide for which workflow to use |
 | `how-feature-specs-are-used` | How feature specs bridge planning and implementation |
 | `definition-of-ready-and-done` | Readiness and completion criteria |
+| `code-quality-standard` | Implementation-quality rules enforced per Part (read-before-write, patterns, contracts, test quality) |
 | `operating-model` | Full operating model across all phases |
 | `ai-explainability-guide` | Explainability tiers, patterns, storage, and testing |
 | `ai-governance-checklist` | Governance checklist for AI features (transparency, oversight, bias, security) |

@@ -6,7 +6,7 @@ license: MIT
 compatibility: Designed for skills-compatible coding agents, including Claude Code and GitHub Copilot (VS Code). Assumes read/write access to the repository workspace.
 metadata:
   author: Gridcreative Holding B.V. by Jursley Koots
-  version: "2.2.0"
+  version: "2.3.0"
 ---
 
 # Plan Decomposer
@@ -125,9 +125,19 @@ Before writing any Part files:
    - the delivery plan
    - relevant architecture constraints
    - repo reality and touch points
+4) **Build a pattern inventory** (see `ai/guides/code-quality-standard.md` §1):
+   for each kind of artifact the slice will add (handler, endpoint, entity,
+   migration, component, API module, test class), name **concrete existing
+   files** that exemplify the project's current pattern — error handling and
+   error identifiers, validation split, logging/metrics/tracing, async +
+   cancellation usage, naming, test naming and assertion style. Executors must
+   read these files before writing code. If the project has no comparable code
+   yet, say so explicitly. If two existing files show conflicting patterns for
+   the same thing, record that as an open question — do not pick silently.
 
 Then write preflight results into:
-- `./ai-parts/OVERVIEW.md` (in the Preflight section)
+- `./ai-parts/OVERVIEW.md` (in the Preflight section, including a
+  `### Pattern Inventory` subsection)
 
 ---
 
@@ -185,6 +195,13 @@ OPTIONAL fields:
 - `e2e_verify` (array of strings; browser-based verification commands — e.g.,
   Playwright test commands, Cypress commands, or documented manual browser
   walkthrough steps. **Required for the final Part of any UI slice.**)
+- `existing_patterns` (array of strings; concrete existing files from the
+  Preflight pattern inventory the executor must read before writing code —
+  **include this whenever comparable code exists in the repo**)
+- `contracts_touched` (array of strings; which of the four contract surfaces —
+  `public-api`, `database-schema`, `events`, `ui-behavior` — this Part is
+  expected to change, or `["none"]`. The executor's quality report §7 must be
+  consistent with this or explain the difference.)
 
 ---
 
@@ -315,6 +332,10 @@ Use this exact structure in `./ai-parts/OVERVIEW.md`:
 ### Repo Reality Check
 - ...
 
+### Pattern Inventory
+- <artifact kind>: follow `<existing file path>` (and its tests: `<test file path>`)
+- ...
+
 ### Top Risks
 - ...
 
@@ -336,6 +357,12 @@ Use this exact structure in `./ai-parts/OVERVIEW.md`:
 - Execute exactly **one Part per run**: take the next non-DONE Part from the
   Execution Order, open its file, and execute it strictly using TDD.
 - Use the selected slice feature spec if it exists.
+- Read the Pattern Inventory files before writing code
+  (`ai/guides/code-quality-standard.md` §1).
+- Each Part ends with a Part Quality Report
+  (`ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`) followed by the
+  Part code review (engineering workflow Step 6a). Do not start the next Part
+  until the review verdict is APPROVED or APPROVED WITH NOTES.
 - After each Part completes, update its Status here and in the Part file
   before starting the next Part.
 

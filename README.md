@@ -41,7 +41,7 @@ The shortest path from prototype to implementation. Each step means prompting yo
 7. Prompt with `ai/prompts/delivery-planner.md` → `architecture/delivery-plan.md`
 8. Prompt with `ai/prompts/feature-spec-generator.md` → `architecture/feature-specs/<slice-id>-<slice-name>.md`
 9. Use `.github/skills/plan-decomposer` → `ai-parts/<slice-id>/OVERVIEW.md` and `ai-parts/<slice-id>/PXX-*.md`
-10. Use `.github/skills/part-executor-tdd` → execute one Part at a time with strict TDD
+10. Use `.github/skills/part-executor-tdd` → execute one Part at a time with strict TDD; each Part ends with a Part Quality Report and a code review (`ai/prompts/code-quality-reviewer.md`) before the next Part starts
 
 Implementation begins at **step 10**, after you have both the selected slice
 feature spec and `ai-parts/<slice-id>/OVERVIEW.md` plus the specific
@@ -207,6 +207,7 @@ Structured prompts for each workflow step:
 | `design-system-from-inventory` | Derive a design system from an existing UI inventory |
 | `ui-inventory` | Inventory existing UI surfaces, components, and tokens |
 | `ui-compliance-check` | Verify UI implementation conforms to the design system |
+| `code-quality-reviewer` | Per-Part code review against the code quality standard (engineering workflow Step 6a) |
 
 ### Agents — `ai/agents/`
 
@@ -221,6 +222,7 @@ Specialist AI agents for different concerns:
 | `qa-agent` | Quality assurance |
 | `ai-testing-agent` | AI-specific testing and golden datasets |
 | `devops-agent` | CI/CD, infrastructure, deployment |
+| `code-reviewer-agent` | Per-Part code review (engineering workflow Step 6a) |
 | `integration-reviewer` | Cross-boundary integration review |
 
 Copilot-format personas (with VS Code tool manifests) live in `.github/agents/`: `expert-dotnet-software-engineer`, `backend-agent`, and `devops-docker-traefik`.
@@ -249,6 +251,7 @@ Reusable templates for structured output:
 - **UI inventory** — `ui-inventory-template.md`
 - **Retrofit spec** — `retrofit-spec-template.md`
 - **Slice verification checklist** — `slice-verification-checklist-template.md`
+- **Part Quality Report** — `code-quality-checklist-template.md`
 - **Remediation spec** — `remediation-spec-template.md`
 
 ### Workflows — `ai/workflows/`
@@ -347,7 +350,16 @@ Output: ai-parts/<slice-id>/OVERVIEW.md and ai-parts/<slice-id>/PXX-*.md
 ```text
 Use .github/skills/part-executor-tdd/SKILL.md.
 Execute exactly one Part from ai-parts/<slice-id>/.
-Follow strict TDD.
+Follow strict TDD and ai/guides/code-quality-standard.md.
+End with the Part Quality Report (ai-parts/<slice-id>/reviews/<part-id>-quality-report.md).
+```
+
+After each Part, run the review (preferably in a fresh session):
+
+```text
+Use ai/prompts/code-quality-reviewer.md.
+Review the executed Part <part-id> of slice <slice-id> against its quality report and diff.
+Output: ai-parts/<slice-id>/reviews/<part-id>-review.md with a verdict.
 ```
 
 When needed, ask the agent to adopt a specialist role:
@@ -425,6 +437,7 @@ Record in the project's `CLAUDE.md` which toolkit version (see `VERSION.md`) the
 | `how-to-choose-entry-mode.md` | Decision guide for which workflow to use |
 | `how-feature-specs-are-used.md` | How feature specs bridge planning and implementation |
 | `definition-of-ready-and-done.md` | Readiness and completion criteria |
+| `code-quality-standard.md` | Implementation-quality rules enforced per Part (read-before-write, pattern precedence, contract surfaces, test quality) |
 | `operating-model.md` | Full operating model across all phases |
 | `ai-explainability-guide.md` | Explainability tiers, patterns, storage, and testing |
 | `ai-governance-checklist.md` | Governance checklist for AI features |

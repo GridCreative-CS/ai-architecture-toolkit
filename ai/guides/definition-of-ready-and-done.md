@@ -79,6 +79,18 @@ A slice, feature, or part is done when all of the following are true:
 - Verification commands pass.
 - No partial refactors are left behind.
 - No hidden TODO hacks are introduced.
+- The code follows `ai/guides/code-quality-standard.md`: nearby code and
+  tests were read before implementing; existing project patterns were
+  followed (or deviations justified); no unneeded dependencies or
+  abstractions were added; error handling, validation, logging, and
+  async/cancellation match the project's established patterns.
+- No prohibited outputs exist (code-quality standard §11): no placeholders,
+  stubs, fake implementations, dead/unused code, or commented-out code.
+- Tests prove observable behavior — no test passes purely by verifying mocks
+  or implementation details; TDD claims are backed by recorded red evidence.
+- All four contract surfaces (public API, database/schema, events/messages,
+  UI behavior) are explicitly declared changed or unchanged — no silent
+  contract changes.
 - If a design system exists, UI surfaces conform to the approved design
   system (tokens, components, patterns, accessibility baseline).
 
@@ -104,6 +116,14 @@ A slice, feature, or part is done when all of the following are true:
 ### Review completeness
 
 - Architecture compliance is checked for significant changes.
+- Every executed Part has a completed Part Quality Report
+  (`ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`, per
+  `ai/templates/code-quality-checklist-template.md`) ending in an explicit
+  DONE / NOT DONE statement.
+- Every executed Part has a Part code review (engineering workflow Step 6a,
+  `ai/prompts/code-quality-reviewer.md`) with a verdict of `APPROVED` or
+  `APPROVED WITH NOTES`. A Part with `REJECTED — MUST FIX` is not done until
+  the required fixes are applied and re-review approves.
 - Integration review is completed where cross-slice interaction exists.
 - Outstanding issues are either fixed or explicitly accepted.
 - Architecture-sourced doc comments and test descriptions cite the specific
