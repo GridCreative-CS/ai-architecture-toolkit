@@ -27,9 +27,10 @@ The correct place for a feature spec is:
 ```text
 Delivery Plan
 → Feature Spec
-→ Architecture Compliance (if needed)
-→ Feature Spec Reconciliation (if findings)
-→ Plan Decomposer
+→ Architecture Compliance (every slice — Step 4)
+→ UI Compliance (UI slices — Step 4a)
+→ Feature Spec Reconciliation (if findings — Step 4b)
+→ Plan Decomposer (Step 5)
 ```
 
 Not:
@@ -48,20 +49,24 @@ for that slice.
 
 ## Recommended per-slice operating model
 
-1. Generate the delivery plan.
-2. Select the next slice.
-3. Generate one feature spec for that slice.
-4. Optionally run architecture compliance.
-5. Reconcile the feature spec if compliance findings require changes.
-6. Decompose that slice into Parts.
-7. Execute Parts with TDD.
-8. Move to the next slice.
+(Engineering workflow step numbers in parentheses — those are canonical.)
+
+1. Generate the delivery plan (Step 1) and validate verticality (Step 1b).
+2. Select the next slice (Step 2).
+3. Generate one feature spec for that slice (Step 3).
+4. Run architecture compliance — every slice (Step 4); UI compliance for UI
+   slices (Step 4a).
+5. Reconcile the feature spec if compliance findings require changes (Step 4b).
+6. Decompose that slice into Parts (Step 5).
+7. Execute Parts with TDD (Step 6); Integrated Slice Verification for UI
+   slices (Step 6b).
+8. Move to the next slice (Step 8).
 
 ## Source priority
 
 For one slice, use these inputs in this practical order:
 
-1. `architecture/feature-specs/<slice-name>.md`
+1. `architecture/feature-specs/<slice-id>-<slice-name>.md`
 2. `architecture/delivery-plan.md`
 3. `architecture/architecture-final.md`
 4. `architecture/adr/*.md`

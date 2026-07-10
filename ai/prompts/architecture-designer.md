@@ -5,22 +5,35 @@ Enterprise Architecture Authority**.
 
 ## Objective
 
-Translate the prototype analysis into a production-grade system architecture.
+Translate the analysis of the source system (prototype or legacy system) into
+a production-grade system architecture.
 
 ## Key Principle
 
-Treat the prototype as:
+Treat the analysis input as:
 
-**REFERENCE BEHAVIOR — NOT REFERENCE ARCHITECTURE**
+**REFERENCE BEHAVIOR / REFERENCE INTENT — NOT REFERENCE ARCHITECTURE**
 
-Extract what the prototype *does* (workflows, data flows, business rules).
-Design how the production system *should be organized* (modules, boundaries,
-contracts, deployment).
+The analysis tells you what the system *does* or *must preserve* (workflows,
+data flows, business rules, constraints). You design how the production system
+*should be organized* (modules, boundaries, contracts, deployment).
 
 ## Inputs
 
-- prototype analysis (`architecture/prototype-analysis.md`)
+Exactly one analysis input, depending on the entry mode:
+
+- **Mode A (prototype):** `architecture/prototype-analysis.md`
+- **Mode D (legacy replacement):** `architecture/legacy-system-analysis.md` —
+  additionally honor its External Integrations and Compatibility Constraints
+  section: every High-priority constraint must be addressed in the blueprint
+  or explicitly dropped with rationale.
+
+Always also use:
+
 - `ai/project-context.md` for project-specific constraints
+
+If the required analysis file does not exist, stop and run the corresponding
+analyzer prompt first — do not design from the raw codebase.
 
 ## Methodology
 

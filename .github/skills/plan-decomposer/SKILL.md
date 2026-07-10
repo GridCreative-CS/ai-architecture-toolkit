@@ -6,7 +6,7 @@ license: MIT
 compatibility: Designed for skills-compatible coding agents, including Claude Code and GitHub Copilot (VS Code). Assumes read/write access to the repository workspace.
 metadata:
   author: Gridcreative Holding B.V. by Jursley Koots
-  version: "2.1.0"
+  version: "2.2.0"
 ---
 
 # Plan Decomposer
@@ -16,15 +16,15 @@ metadata:
 When the user provides an implementation plan, you will:
 1) **Preflight** the repository and plan for mismatches and risks
 2) **Decompose** the plan into small ordered **Parts**
-3) **Write files**:
-   - `./ai-parts/OVERVIEW.md` (index of all parts)
-   - `./ai-parts/P01-<slug>.md`, `P02-<slug>.md`, ... (one per part)
+3) **Write files** (one folder per slice — see Output location):
+   - `./ai-parts/<slice-id>/OVERVIEW.md` (index of all parts for this slice)
+   - `./ai-parts/<slice-id>/P01-<slug>.md`, `P02-<slug>.md`, ... (one per part)
 4) Ensure each part contains:
    - a **Status line** (machine-scannable)
    - strict, parseable `PART_SPEC` JSON (file-based handoff contract)
 
 
-## Feature Spec Awareness  ⬅ NEW
+## Feature Spec Awareness
 
 This skill may also receive a **slice-level feature specification** in addition to
 the broader implementation or delivery plan.
@@ -46,12 +46,12 @@ For definitions of "independently verifiable," "scope creep,"
 "decomposition-ready," and other key terms, see `ai/guides/glossary.md`.
 
 ### Typical feature spec location
-- `architecture/feature-specs/<slice-name>.md`
+- `architecture/feature-specs/<slice-id>-<slice-name>.md`
 
 
 ---
 
-## Reasoning Mode & Agent Scope  ⬅ NEW
+## Reasoning Mode & Agent Scope
 
 Apply the architectural, testing, and system-design principles of the
 **expert-dotnet-software-engineer** agent while decomposing the plan.
@@ -96,10 +96,18 @@ And apply the agent according to the rules above.
 ---
 
 ## Output location (required)
-Write all decomposition outputs into:
-- `./ai-parts/`
+Write all decomposition outputs into a per-slice folder:
 
-If `./ai-parts/` does not exist, create it.
+- `./ai-parts/<slice-id>/` — the slice ID from the delivery plan, matching
+  its casing exactly (e.g., `./ai-parts/S2.6/`, `./ai-parts/phase-1a/`). If
+  the project already uses a different consistent per-slice folder scheme
+  (e.g., `slice2.6`), match the existing scheme.
+
+Never mix Parts from two slices in one folder — one slice = one folder.
+If the folder does not exist, create it.
+
+Within the skill text below, `./ai-parts/<slice-id>/` is abbreviated as
+`./ai-parts/`.
 
 ---
 
@@ -215,6 +223,11 @@ For each Part:
 - Choose a short slug for filename
 - Write file: `./ai-parts/P<NN>-<slug>.md`
 
+If a Part must be **inserted later** between existing Parts (discovered scope
+that cannot wait), suffix a letter instead of renumbering: `P09b-<slug>.md`
+with `part_id` "P09b", dependencies on P09, and a new row + execution-order
+entry in OVERVIEW.md. Never renumber existing Part files.
+
 Each Part file MUST include:
 - `Status: TODO` at the top section
 - Summary bullets (Goal, Scope, Touch points)
@@ -248,7 +261,7 @@ Status: TODO
 - Test cases:
 - Expected Red (what fails and why):
 
-## ProjectReference Checklist (required for test project parts)
+## ProjectReference Checklist (required for test project parts — .NET default; substitute the project's stack equivalent)
 - [ ] Each `tests/<Module>.Tests.csproj` references `../../src/<Module>/<Module>.csproj`
 - [ ] `dotnet build <solution>` passes (full solution, not just target project)
 
@@ -320,9 +333,11 @@ Use this exact structure in `./ai-parts/OVERVIEW.md`:
 
 ## How to Execute
 - Use the `part-executor-tdd` skill.
-- Provide this OVERVIEW.md as input.
+- Execute exactly **one Part per run**: take the next non-DONE Part from the
+  Execution Order, open its file, and execute it strictly using TDD.
 - Use the selected slice feature spec if it exists.
-- The executor will iterate Parts in order, open each referenced file, and execute it strictly using TDD.
+- After each Part completes, update its Status here and in the Part file
+  before starting the next Part.
 
 ---
 
@@ -332,7 +347,7 @@ Use this exact structure in `./ai-parts/OVERVIEW.md`:
 - Be precise and file-path oriented
 
 
-## When a Feature Spec Is Provided  ⬅ NEW
+## When a Feature Spec Is Provided
 
 If a slice-level feature spec is provided, the decomposition must reflect it.
 
@@ -346,7 +361,7 @@ If a slice-level feature spec is provided, the decomposition must reflect it.
 ### Practical input set
 For slice-level decomposition, the preferred input set is:
 
-- `architecture/feature-specs/<slice-name>.md`
+- `architecture/feature-specs/<slice-id>-<slice-name>.md`
 - `architecture/delivery-plan.md`
 - `architecture/architecture-final.md`
 - `architecture/adr/*.md`

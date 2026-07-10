@@ -40,8 +40,9 @@ When sources conflict, resolve in this order:
 
 ## Output
 
-Return the corrected feature specification using the same section structure as
-the original.
+Write the corrected feature specification back to its existing file
+(`architecture/feature-specs/<slice-id>-<slice-name>.md`), keeping the same
+section structure as the original.
 
 At the end, add:
 

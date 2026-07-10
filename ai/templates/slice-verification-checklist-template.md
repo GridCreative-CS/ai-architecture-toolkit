@@ -8,7 +8,7 @@
 ## Metadata
 
 - **Slice name:**
-- **Feature spec:** `architecture/feature-specs/<slice-name>.md`
+- **Feature spec:** `architecture/feature-specs/<slice-id>-<slice-name>.md`
 - **Verification date:**
 - **Verified by:**
 

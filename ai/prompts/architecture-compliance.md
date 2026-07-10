@@ -16,6 +16,20 @@ code change still complies with the approved architecture.
 - relevant feature specs (when present)
 - the artifact under review (feature spec, part definition, or code change)
 
+## Modes
+
+This check runs in one of two modes, selected by the six binary trigger
+questions in engineering workflow Step 4:
+
+- **Full mode** (default; required when any trigger answer is "yes"): all
+  compliance dimensions below.
+- **Lightweight mode** (permitted only when all six trigger answers are
+  "no"): check only Boundary compliance, Verticality compliance, and — for
+  any contract the slice touches — Contract compliance. Skip the other
+  dimensions. The report must state `Level: Lightweight`, record the six
+  trigger answers, and still end with an approval status. If during the check
+  you discover a trigger answer was wrong, stop and run the full mode.
+
 ## Methodology
 
 ### 1. Scope the review
@@ -43,6 +57,15 @@ intersection between the artifact and the architecture.
 | **Critical** | Breaks a core architectural constraint, creates security vulnerability, or violates an ADR | Must fix before proceeding |
 | **Warning** | Deviates from architecture intent but does not break a hard constraint | Should fix; document rationale if deferred |
 | **Info** | Minor inconsistency or stylistic deviation | Fix if convenient; no blocking action needed |
+
+## Output
+
+Write to:
+
+- `architecture/compliance-reports/<slice-id>-<slice-name>.md` — matching the
+  feature spec filename of the slice or phase under review (e.g., the report
+  for `architecture/feature-specs/S2.6-structured-mse.md` is
+  `architecture/compliance-reports/S2.6-structured-mse.md`)
 
 ## Output Structure
 

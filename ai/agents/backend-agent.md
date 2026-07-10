@@ -20,7 +20,7 @@ AI-specific model integration.
 - `architecture/adr/*.md`
 - `architecture/delivery-plan.md`
 - `architecture/feature-specs/<slice>.md`
-- Part definition from `ai-parts/PXX-*.md` (where applicable)
+- Part definition from `ai-parts/<slice-id>/PXX-*.md` (where applicable)
 
 ## Methodology
 

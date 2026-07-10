@@ -97,6 +97,21 @@ hardening, monitoring dashboards.
 **Key distinction:** A phase is NOT a slice. Phases do not pass the verticality
 test and should be labelled as phases, not slices.
 
+**Execution:** Phases are specified and executed with the same machinery as
+slices — a phase spec (feature spec template with §5b/§11b/§12b marked N/A),
+a compliance check, decomposition into `ai-parts/<phase-id>/`, and TDD
+execution — but the UI gates (Steps 1b, 4a, 6b) do not apply.
+
+### Slice ID
+
+The short identifier a delivery plan assigns to each slice or phase (e.g.,
+`S1.1`, `S2.6`, `phase-1a`). Used to name the slice's feature spec
+(`architecture/feature-specs/<slice-id>-<slice-name>.md`), compliance reports,
+verification evidence, and parts folder (`ai-parts/<slice-id>/`).
+
+**Key distinction:** One slice ID = one spec file = one parts folder = one
+compliance report set. Never reuse an ID or mix two slices under one ID.
+
 ### Decomposition-Ready
 
 A slice or feature spec is decomposition-ready when: scope is bounded, acceptance
@@ -142,6 +157,22 @@ correctness (valid/invalid input handling, error codes, idempotency).
 
 Explicit verification that work conforms to the approved architecture and ADRs.
 Performed during review. A compliance failure is a detected violation.
+
+### Compliance Report
+
+The written output of a compliance check for one slice or phase. Architecture
+compliance reports live at
+`architecture/compliance-reports/<slice-id>-<slice-name>.md`; UI compliance
+reports use the same base name with an `-ui` suffix. Each report ends with an
+approval status: APPROVED, APPROVED WITH CHANGES, or REJECTED.
+
+### Verification Evidence
+
+The recorded outcome of Integrated Slice Verification for one slice: the
+completed checklist with pass/fail per criterion, the commands run, and
+observations. Lives at
+`architecture/slice-verification/<slice-id>-<slice-name>.md` — a single
+location per slice, not scattered across `ai-parts/`.
 
 ### Architecture Drift
 

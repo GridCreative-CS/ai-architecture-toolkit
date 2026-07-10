@@ -74,8 +74,10 @@ When sources conflict, resolve in this order:
 
 ## Output Instructions
 
-Return the corrected feature specification using the same structure as the
-existing feature spec.
+Write the corrected feature specification back to its existing file
+(`architecture/feature-specs/<slice-id>-<slice-name>.md`), keeping the same
+section structure. Do not create a new file and do not leave the corrected
+spec only in chat output.
 
 At the end, add this section:
 

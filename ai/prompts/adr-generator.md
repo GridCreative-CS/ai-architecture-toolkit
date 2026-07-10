@@ -58,9 +58,12 @@ When one ADR depends on or constrains another, include an explicit reference
 
 Write each ADR to `architecture/adr/` using the naming convention:
 
-- `adr-001-<topic>.md`
-- `adr-002-<topic>.md`
+- `ADR-001-<topic>.md`
+- `ADR-002-<topic>.md`
 - etc.
+
+If the project already has ADRs, match the existing filename casing and
+numbering instead of introducing a second scheme.
 
 ## Rules
 

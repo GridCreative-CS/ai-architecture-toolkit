@@ -42,8 +42,8 @@ A slice or feature is ready when all of the following are true:
 
 - The target files or modules are known.
 - A concrete execution handoff exists for the selected slice:
-  `architecture/feature-specs/<slice-name>.md`, `ai-parts/OVERVIEW.md`, and
-  `ai-parts/PXX-*.md`.
+  `architecture/feature-specs/<slice-id>-<slice-name>.md`,
+  `ai-parts/<slice-id>/OVERVIEW.md`, and `ai-parts/<slice-id>/PXX-*.md`.
 - The decomposition target is small enough to be executed safely.
 - Verification strategy is known.
 - Open questions are either resolved or explicitly recorded.
@@ -98,7 +98,8 @@ A slice, feature, or part is done when all of the following are true:
   regression).
 - If a design system exists, the UI compliance check passes with no critical
   findings.
-- Browser verification evidence is documented in the slice completion report.
+- Browser verification evidence is documented in
+  `architecture/slice-verification/<slice-id>-<slice-name>.md`.
 
 ### Review completeness
 

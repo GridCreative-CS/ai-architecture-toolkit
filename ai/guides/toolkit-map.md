@@ -11,12 +11,14 @@ A visual reference showing how all toolkit components connect — prompts, templ
 │  Inputs:          Prompts:                    Outputs:                  │
 │  ─────────        ────────                    ────────                  │
 │  prototype    →   prototype-analyzer      →   prototype-analysis.md    │
+│  legacy system →  legacy-system-analyzer  →   legacy-system-analysis.md│
 │  existing doc →   existing-arch-reviewer  →   existing-arch-review.md  │
 │                   arch-designer           →   architecture-blueprint.md│
 │                   arch-reviewer           →   review-report.md         │
 │                   arch-reconciler         →   architecture-final.md ★  │
 │                   adr-generator           →   adr/*.md                 │
 │                                                                        │
+│  Entry modes: A prototype · B prototype+doc · C doc only · D legacy    │
 │  Templates used: architecture-blueprint-template, adr-template         │
 │  Guides: how-to-choose-entry-mode, glossary                           │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -56,9 +58,9 @@ A visual reference showing how all toolkit components connect — prompts, templ
 │                                                                        │
 │  Prompts:                         Outputs:                             │
 │  ────────                         ────────                             │
-│  architecture-compliance      →   compliance-report.md                 │
+│  architecture-compliance      →   compliance-reports/<slice>.md        │
+│  ui-compliance-check          →   compliance-reports/<slice>-ui.md     │
 │  feature-spec-reconciler      →   updated feature-specs/<slice>.md     │
-│  ui-compliance-check          →   UI compliance findings (per slice)   │
 │                                                                        │
 │  Templates used: compliance-report-template                            │
 │  Guides: definition-of-ready-and-done                                  │
@@ -70,9 +72,10 @@ A visual reference showing how all toolkit components connect — prompts, templ
 │                                                                        │
 │  Skills:                          Outputs:                             │
 │  ───────                          ────────                             │
-│  plan-decomposer              →   ai-parts/OVERVIEW.md                 │
-│                                   ai-parts/PXX-*.md                    │
+│  plan-decomposer              →   ai-parts/<slice-id>/OVERVIEW.md      │
+│                                   ai-parts/<slice-id>/PXX-*.md         │
 │  part-executor-tdd            →   implemented code + tests             │
+│  (UI slices: Step 6b)         →   slice-verification/<slice>.md        │
 │                                                                        │
 │  Agents (adopt during execution):                                      │
 │  ─────────────────────────────                                         │
@@ -98,6 +101,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | Prompt | Phase | Purpose |
 |--------|-------|---------|
 | `prototype-analyzer` | Architecture | Extract behavior and intent from a prototype |
+| `legacy-system-analyzer` | Architecture | Extract business intent and constraints from a legacy system (Mode D) |
 | `architecture-designer` | Architecture | Design production architecture from analysis |
 | `architecture-reviewer` | Architecture | Review architecture for risks, gaps, and quality |
 | `architecture-reconciler` | Architecture | Reconcile reviewer feedback into final architecture |
@@ -107,6 +111,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `adr-generator` | Architecture | Generate Architecture Decision Records |
 | `delivery-planner` | Delivery | Create milestone-based delivery plan with vertical slices |
 | `feature-spec-generator` | Delivery | Generate detailed spec for one slice |
+| `slice-preparation-runner` | Delivery/Compliance | Run engineering workflow Steps 2–5 for one slice, stopping before execution |
 | `golden-dataset-generator` | Delivery | Generate test datasets for AI/business logic validation |
 | `architecture-compliance` | Compliance | Verify feature spec aligns with approved architecture |
 | `feature-spec-reconciler` | Compliance | Reconcile feature spec after compliance findings |
@@ -130,6 +135,9 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `design-system-template` | `design-system-generator`, `design-system-from-inventory` |
 | `ui-inventory-template` | `ui-inventory` |
 | `retrofit-spec-template` | Used for retrofit migration slices |
+| `remediation-spec-template` | Used for remediation slices (`ui-remediation-workflow`) |
+| `slice-verification-checklist-template` | Integrated Slice Verification (engineering workflow Step 6b) |
+| `project-claude-template` | Copied to a project repo as its root `CLAUDE.md` |
 
 ### Agents — `ai/agents/`
 
@@ -165,7 +173,6 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `how-feature-specs-are-used` | How feature specs bridge planning and implementation |
 | `definition-of-ready-and-done` | Readiness and completion criteria |
 | `operating-model` | Full operating model across all phases |
-| `conversation-summary` | Guidance for summarizing conversations |
 | `ai-explainability-guide` | Explainability tiers, patterns, storage, and testing |
 | `ai-governance-checklist` | Governance checklist for AI features (transparency, oversight, bias, security) |
 
@@ -173,13 +180,15 @@ A visual reference showing how all toolkit components connect — prompts, templ
 
 | Workflow | Purpose |
 |----------|---------|
-| `architecture-workflow` | Full prototype-to-architecture flow |
+| `architecture-workflow` | Entry-mode selector and finalization gate |
 | `architecture-workflow-prototype-only` | Mode A entry point |
 | `architecture-workflow-prototype-plus-architecture-doc` | Mode B entry point |
 | `architecture-workflow-architecture-doc-only` | Mode C entry point |
-| `engineering-workflow` | Slice-based implementation with TDD |
+| `architecture-workflow-legacy-system-replacement` | Mode D entry point |
+| `engineering-workflow` | Slice-based implementation with TDD (canonical step numbering) |
 | `ui-foundation-workflow` | Greenfield UI — create design system before delivery planning |
 | `ui-retrofit-workflow` | Retrofit UI — inventory, derive design system, migrate existing slices |
+| `ui-remediation-workflow` | Revalidate and fix slices completed without browser-based verification |
 
 ### Examples — `ai/examples/`
 
@@ -189,6 +198,8 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `modular-monolith-patterns` | Module boundary patterns |
 | `contract-patterns` | API contract examples |
 | `feature-spec-driven-slice-flow` | Walkthrough from spec to implementation |
+| `example-adr-modular-monolith` | Sample ADR — expected shape and depth |
+| `example-adr-prototype-interpretation` | Sample ADR — expected shape and depth |
 | `example-compliance-report` | Sample compliance report |
 | `example-feature-spec-outline` | Sample feature spec |
 | `example-golden-dataset-case.json` | Sample golden dataset case |

@@ -15,9 +15,16 @@ Generate a feature specification for one slice or capability.
 
 ## Output
 
-Write each feature spec under:
+Write each feature spec to:
 
-- `architecture/feature-specs/`
+- `architecture/feature-specs/<slice-id>-<slice-name>.md` — slice ID from the
+  delivery plan plus the slice name in kebab-case (e.g.,
+  `S2.6-structured-mse-session-comparison.md`)
+
+Use the structure from `ai/templates/feature-spec-template.md`. For a
+**phase** (not a slice), use the same template with §5b, §11b, and §12b marked
+"N/A — phase, no human workflow surfaces" and name the file
+`phase-<id>-<name>.md`.
 
 ## Required Sections
 

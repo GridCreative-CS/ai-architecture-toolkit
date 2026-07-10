@@ -44,6 +44,12 @@ review. Do not review UI outside the slice boundary.
 
 ### 4. Produce the report
 
+Write to:
+
+- `architecture/compliance-reports/<slice-id>-<slice-name>-ui.md` — the same
+  base name as the slice's architecture compliance report, with an `-ui`
+  suffix (lowercase)
+
 Include:
 
 1. **Compliance Summary** — overall assessment in 2–3 sentences

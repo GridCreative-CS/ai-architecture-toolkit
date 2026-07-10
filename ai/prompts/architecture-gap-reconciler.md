@@ -6,9 +6,13 @@ specification**.
 ## Inputs
 
 - existing architecture document
-- architecture review report
+- architecture review report (`architecture/existing-architecture-review.md`)
+- **Mode B only:** the alignment report
+  (`architecture/prototype-architecture-alignment.md`) — treat its Critical
+  and Important findings as gaps/inconsistencies to reconcile, with the
+  prototype evidence weighed as behavioral fact
 
-There is no prototype in this mode.
+In Mode C there is no prototype; work from the document and review alone.
 
 ## Objective
 

@@ -5,7 +5,7 @@ license: MIT
 compatibility: Designed for skills-compatible coding agents, including Claude Code and GitHub Copilot (VS Code). Assumes write access to the repository workspace and ability to run tests/build commands.
 metadata:
   author: Gridcreative Holding B.V.  by Jursley Koots
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Part Executor (TDD)
@@ -19,7 +19,7 @@ Given exactly **one Part** in the **Part Handoff Contract** format, you will:
 - deliver a completion report with verification commands and TDD evidence
 
 
-## Feature Spec Awareness  ⬅ NEW
+## Feature Spec Awareness
 
 This skill may also receive or be expected to consult a **slice-level feature specification**
 for the Part being executed.
@@ -35,7 +35,7 @@ together with the Part definition, especially for:
 - test implications
 
 ### Typical feature spec location
-- `architecture/feature-specs/<slice-name>.md`
+- `architecture/feature-specs/<slice-id>-<slice-name>.md`
 
 ### Priority rule
 The `PART_SPEC` JSON remains the immediate execution contract.
@@ -52,11 +52,18 @@ For definitions of "TDD," "scope creep," "contract," and other key terms, see
 ## Input contract (required)
 You only accept Parts provided as:
 
-- A heading: `### Part PNN — <title>`
+- A heading: `# Part PNN — <title>` (one to three leading `#` accepted —
+  `plan-decomposer` writes Part files with a single `#`)
+- A `Status:` line (TODO | IN_PROGRESS | DONE | BLOCKED)
 - A `PART_SPEC` JSON block
 
-If either is missing or malformed:
+If the heading or the PART_SPEC is missing or malformed:
 - stop and request a corrected Part definition (do not guess)
+
+If the Part's `Status` is already `DONE`, stop and ask which Part to execute
+instead. When you start executing, set the Part file's Status to
+`IN_PROGRESS`; when the completion report is delivered and all gates pass, set
+it to `DONE` and update the matching row in `ai-parts/<slice-id>/OVERVIEW.md`.
 
 The JSON is the source of truth.
 
@@ -123,7 +130,8 @@ A Part is “Done” only if:
 - acceptance criteria met
 - no conflict with the relevant feature spec remains unresolved
 - no partial refactors left behind
-- no commented-out hacks / untracked TODOs- architecture / layer-dependency tests are comprehensive: if the Part adds or modifies
+- no commented-out hacks / untracked TODOs
+- architecture / layer-dependency tests are comprehensive: if the Part adds or modifies
   cross-layer boundaries, verify that architecture tests cover **all** prohibited dependency
   directions (e.g. Domain must not reference Api, Worker, Application, Infrastructure — not
   just a subset). Check the existing architecture tests and add any missing guardrails.
@@ -133,7 +141,10 @@ A Part is “Done” only if:
 - for the **final Part of a UI slice** (or a dedicated verification Part):
   the running application must be started and the user flow must be verified
   in a browser or via E2E browser tests. Passing component-level or unit
-  tests alone is insufficient for slice-level UI verification.
+  tests alone is insufficient for slice-level UI verification. Record the
+  completed checklist as verification evidence in
+  `architecture/slice-verification/<slice-id>-<slice-name>.md`
+  (engineering workflow Step 6b) — not scattered across `ai-parts/`.
 - if `e2e_verify` is present in the PART_SPEC, those commands must be
   executed and pass.
 If a gate fails:
@@ -176,7 +187,7 @@ At the end of the Part, output exactly:
 - “Consume the PART_SPEC below and implement it; then give the completion report.”
 
 
-## When a Feature Spec Exists  ⬅ NEW
+## When a Feature Spec Exists
 
 If a relevant feature spec exists for the selected slice, execution must remain aligned with it.
 

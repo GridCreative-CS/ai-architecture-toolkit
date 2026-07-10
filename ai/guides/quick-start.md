@@ -23,6 +23,7 @@ Your starting point depends on what you have:
 | A prototype, no architecture doc | Mode A | `ai/workflows/architecture-workflow-prototype-only.md` |
 | A prototype + an architecture doc | Mode B | `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md` |
 | An architecture doc, no prototype | Mode C | `ai/workflows/architecture-workflow-architecture-doc-only.md` |
+| A legacy system to replace, not repair | Mode D | `ai/workflows/architecture-workflow-legacy-system-replacement.md` |
 
 If unsure, see `ai/guides/how-to-choose-entry-mode.md`.
 
@@ -38,7 +39,7 @@ Prompt your AI agent with each step in the workflow for your entry mode. The typ
 
 After this step, `architecture/architecture-final.md` is your source of truth.
 
-## Step 3b — Create a design system (optional — UI projects)
+## Step 3b — Create a design system (UI projects — mandatory when the project has human-facing UI)
 
 If your project includes human-facing UI, create a design system before
 delivery planning:
@@ -56,13 +57,13 @@ The delivery plan organizes work into milestones and vertical slices. Each slice
 
 ## Step 5 — Pick your first slice and write a feature spec
 
-Select the first slice from the delivery plan, then prompt with `ai/prompts/feature-spec-generator.md` → `architecture/feature-specs/<slice-name>.md`
+Select the first slice from the delivery plan, then prompt with `ai/prompts/feature-spec-generator.md` → `architecture/feature-specs/<slice-id>-<slice-name>.md`
 
 The feature spec makes one slice precise enough to decompose and implement.
 
 ## Step 6 — Decompose and execute with TDD
 
-1. **Decompose** — use `.github/skills/plan-decomposer` to break the slice into independently verifiable Parts → `ai-parts/OVERVIEW.md` and `ai-parts/PXX-*.md`
+1. **Decompose** — use `.github/skills/plan-decomposer` to break the slice into independently verifiable Parts → `ai-parts/<slice-id>/OVERVIEW.md` and `ai-parts/<slice-id>/PXX-*.md`
 2. **Execute** — use `.github/skills/part-executor-tdd` to implement one Part at a time with strict red-green-refactor TDD
 
 Implementation starts at **Step 6.2** — when you execute a specific Part file.
@@ -78,9 +79,9 @@ Use these paths as your handoff trail from planning to implementation:
 | Stage | File(s) | What you find there |
 |------|---------|---------------------|
 | Delivery plan | `architecture/delivery-plan.md` | Ordered slices and milestones |
-| Selected slice spec | `architecture/feature-specs/<slice-name>.md` | Scope, acceptance criteria, contracts, test implications |
-| Decomposition overview | `ai-parts/OVERVIEW.md` | Part index, execution order, preflight notes |
-| Execution-ready work items | `ai-parts/PXX-*.md` | The exact Part to implement with TDD |
+| Selected slice spec | `architecture/feature-specs/<slice-id>-<slice-name>.md` | Scope, acceptance criteria, contracts, test implications |
+| Decomposition overview | `ai-parts/<slice-id>/OVERVIEW.md` | Part index, execution order, preflight notes |
+| Execution-ready work items | `ai-parts/<slice-id>/PXX-*.md` | The exact Part to implement with TDD |
 
 ## Five terms you need to know
 
@@ -109,7 +110,7 @@ See `ai/guides/glossary.md` for full definitions of all terms.
 If your project has human-facing UI, create a design system after architecture finalization. For new projects, use `ai/prompts/design-system-generator.md`. For existing projects with inconsistent UI, follow `ai/workflows/ui-retrofit-workflow.md`. Projects with no UI can skip this entirely.
 
 **When do I need a compliance check?**
-Run `ai/prompts/architecture-compliance.md` before decomposition when the slice touches security, contracts, or cross-cutting concerns — or whenever you want confidence that the feature spec aligns with the approved architecture.
+For every slice: run `ai/prompts/architecture-compliance.md` before decomposition (engineering workflow Step 4). Trivial slices that pass all six trigger questions in Step 4 may use the lightweight mode (boundaries, verticality, touched contracts only). For slices with human workflow surfaces, also run `ai/prompts/ui-compliance-check.md` (Step 4a — mandatory).
 
 **When do I use specialist agents?**
 During execution (Step 6). Ask your AI agent to adopt a specialist role: `ai/agents/backend-agent.md` for backend work, `ai/agents/frontend-agent.md` for UI, `ai/agents/qa-agent.md` for testing strategy, etc. See `ai/guides/toolkit-map.md` for the full list.
@@ -122,6 +123,12 @@ Use Mode B. The prototype-architecture alignment step will surface gaps and cont
 
 **What if I have an outdated architecture doc but no prototype?**
 Use Mode C. The existing-architecture-reviewer prompt will identify gaps and risks, and the gap reconciler will produce a corrected final architecture.
+
+**What if all I have is a legacy system I want to replace?**
+Use Mode D. The legacy-system-analyzer extracts business intent, workflows, and compatibility constraints (not the legacy architecture), and the architecture designer designs the replacement system from that analysis.
+
+**How do I prepare a slice without re-explaining the process each time?**
+Use `ai/prompts/slice-preparation-runner.md` — it runs engineering workflow Steps 2–5 for one slice in a single agent session and stops before implementation.
 
 ## Next steps
 
