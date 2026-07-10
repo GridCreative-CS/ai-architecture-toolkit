@@ -37,13 +37,14 @@ The shortest path from prototype to implementation. Each step means prompting yo
 3. Prompt with `ai/prompts/architecture-designer.md` → `architecture/architecture-blueprint.md`
 4. Prompt with `ai/prompts/architecture-reviewer.md` → `architecture/review-report.md`
 5. Prompt with `ai/prompts/architecture-reconciler.md` → `architecture/architecture-final.md`
-6. Prompt with `ai/prompts/adr-generator.md` → `architecture/adr/*.md`
-7. Prompt with `ai/prompts/delivery-planner.md` → `architecture/delivery-plan.md`
-8. Prompt with `ai/prompts/feature-spec-generator.md` → `architecture/feature-specs/<slice-id>-<slice-name>.md`
-9. Use `.github/skills/plan-decomposer` → `ai-parts/<slice-id>/OVERVIEW.md` and `ai-parts/<slice-id>/PXX-*.md`
-10. Use `.github/skills/part-executor-tdd` → execute one Part at a time with strict TDD; each Part ends with a Part Quality Report and a code review (`ai/prompts/code-quality-reviewer.md`) before the next Part starts
+6. In a fresh session, prompt with `ai/prompts/architecture-final-quality-gate.md` → `architecture/architecture-final-gate.md`; on `REJECTED — MUST FIX`, return to step 5 — continue only on `APPROVED` or `APPROVED WITH NOTES`
+7. Prompt with `ai/prompts/adr-generator.md` → `architecture/adr/*.md`
+8. Prompt with `ai/prompts/delivery-planner.md` → `architecture/delivery-plan.md`
+9. Prompt with `ai/prompts/feature-spec-generator.md` → `architecture/feature-specs/<slice-id>-<slice-name>.md`
+10. Use `.github/skills/plan-decomposer` → `ai-parts/<slice-id>/OVERVIEW.md` and `ai-parts/<slice-id>/PXX-*.md`
+11. Use `.github/skills/part-executor-tdd` → execute one Part at a time with strict TDD; each Part ends with a Part Quality Report and a code review (`ai/prompts/code-quality-reviewer.md`) before the next Part starts
 
-Implementation begins at **step 10**, after you have both the selected slice
+Implementation begins at **step 11**, after you have both the selected slice
 feature spec and `ai-parts/<slice-id>/OVERVIEW.md` plus the specific
 `ai-parts/<slice-id>/PXX-*.md` Part. The delivery plan is the roadmap; the Part
 files are the execution-ready handoff.
@@ -76,7 +77,7 @@ Your starting point depends on what you already have:
 
 Choose the mode based on the strongest available input. If you have an architecture document but are unsure whether it is trustworthy, use Mode B and validate it rather than assuming it is correct. If your only usable input is a legacy system that you want to replace, use Mode D.
 
-See `ai/guides/how-to-choose-entry-mode.md` for details. `ai/workflows/architecture-workflow.md` is the mode selector — all four modes converge on the same finalization gate (`architecture/architecture-final.md` + ADRs).
+See `ai/guides/how-to-choose-entry-mode.md` for details. `ai/workflows/architecture-workflow.md` is the mode selector — all four modes converge on the same finalization gate: `architecture/architecture-final.md` with an `APPROVED` or `APPROVED WITH NOTES` verdict from the architecture-final quality gate (`ai/prompts/architecture-final-quality-gate.md` → `architecture/architecture-final-gate.md`), plus ADRs.
 
 ### 2. Fill in project context
 
@@ -101,7 +102,9 @@ flowchart LR
     B --> C[Architecture Designer]
     C --> D[Architecture Reviewer]
     D --> E[Architecture Reconciler]
-    E --> F[ADR Generator]
+    E --> Q{Quality Gate}
+    Q -- REJECTED — MUST FIX --> E
+    Q -- APPROVED --> F[ADR Generator]
 ```
 
 </details>
@@ -116,7 +119,9 @@ flowchart LR
     B --> D[Prototype-Architecture Alignment]
     C --> D
     D --> E[Architecture Gap Reconciler]
-    E --> F[ADR Generator]
+    E --> Q{Quality Gate}
+    Q -- REJECTED — MUST FIX --> E
+    Q -- APPROVED --> F[ADR Generator]
 ```
 
 </details>
@@ -129,7 +134,9 @@ flowchart LR
     A[Existing Architecture Document] --> B[Existing Architecture Reviewer]
     B --> C[Architecture Gap Reconciler]
     C --> D[Final Architecture]
-    D --> E[ADR Generator]
+    D --> Q{Quality Gate}
+    Q -- REJECTED — MUST FIX --> C
+    Q -- APPROVED --> E[ADR Generator]
 ```
 
 </details>
@@ -143,7 +150,9 @@ flowchart LR
     B --> C[Architecture Designer]
     C --> D[Architecture Reviewer]
     D --> E[Architecture Reconciler]
-    E --> F[ADR Generator]
+    E --> Q{Quality Gate}
+    Q -- REJECTED — MUST FIX --> E
+    Q -- APPROVED --> F[ADR Generator]
 ```
 
 </details>
@@ -193,6 +202,7 @@ Structured prompts for each workflow step:
 | `architecture-reviewer` | Review architecture for risks and gaps |
 | `architecture-reconciler` | Reconcile reviewer feedback into a final architecture |
 | `architecture-gap-reconciler` | Reconcile gaps when starting from an existing doc |
+| `architecture-final-quality-gate` | Quality gate on `architecture-final.md` (fresh session, before ADR generation) — verdict `APPROVED` / `APPROVED WITH NOTES` / `REJECTED — MUST FIX` |
 | `existing-architecture-reviewer` | Review a pre-existing architecture document |
 | `prototype-architecture-alignment` | Align prototype behavior with architecture doc |
 | `adr-generator` | Generate Architecture Decision Records |
@@ -208,6 +218,7 @@ Structured prompts for each workflow step:
 | `ui-inventory` | Inventory existing UI surfaces, components, and tokens |
 | `ui-compliance-check` | Verify UI implementation conforms to the design system |
 | `code-quality-reviewer` | Per-Part code review against the code quality standard (engineering workflow Step 6a) |
+| `toolkit-sync-upgrade` | Upgrade a project repo's embedded toolkit copy to a newer toolkit version |
 
 ### Agents — `ai/agents/`
 
@@ -273,6 +284,7 @@ End-to-end process definitions:
 Per-project outputs generated by running the toolkit. In this source repository the directory contains **scaffold placeholders** showing each output's expected shape — they become real documents only in your project repo:
 
 - `architecture-final.md` — Authoritative architecture (source of truth)
+- `architecture-final-gate.md` — Quality gate verdict for `architecture-final.md`
 - `design-system.md` — Design system (authoritative for UI decisions, when present)
 - `ui-inventory.md` — UI inventory (retrofit track input)
 - `adr/` — Architecture Decision Records
@@ -354,7 +366,7 @@ Follow strict TDD and ai/guides/code-quality-standard.md.
 End with the Part Quality Report (ai-parts/<slice-id>/reviews/<part-id>-quality-report.md).
 ```
 
-After each Part, run the review (preferably in a fresh session):
+After each Part, run the review — **mandatory, and in a fresh session/subagent** (never the session that executed the Part):
 
 ```text
 Use ai/prompts/code-quality-reviewer.md.
@@ -467,6 +479,7 @@ For projects that already have UI slices implemented without browser-based verif
 - `example-adr-modular-monolith.md` — Sample ADR (modular monolith decision)
 - `example-adr-prototype-interpretation.md` — Sample ADR (prototype as reference behavior)
 - `example-compliance-report.md` — Sample compliance report
+- `example-architecture-final-gate-report.md` — Sample architecture-final quality gate report
 - `example-feature-spec-outline.md` — Sample feature spec outline
 - `example-golden-dataset-case.json` — Sample golden dataset case
 

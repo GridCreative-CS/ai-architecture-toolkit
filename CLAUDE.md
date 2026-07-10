@@ -76,7 +76,7 @@ Choose by the strongest available input. Details: `ai/guides/how-to-choose-entry
 | **C — Architecture Doc Only** | An architecture doc, no prototype | `ai/workflows/architecture-workflow-architecture-doc-only.md` |
 | **D — Legacy System Replacement** | A legacy system to replace (not repair) | `ai/workflows/architecture-workflow-legacy-system-replacement.md` |
 
-`ai/workflows/architecture-workflow.md` is the mode selector and finalization gate. All modes end with `architecture/architecture-final.md` + `architecture/adr/*.md`, then proceed to UI foundation (if the project has UI) and the engineering workflow.
+`ai/workflows/architecture-workflow.md` is the mode selector and finalization gate. All modes end with `architecture/architecture-final.md` — which must pass the **architecture-final quality gate** (`ai/prompts/architecture-final-quality-gate.md`, run in a fresh session before ADR generation; verdict `APPROVED` / `APPROVED WITH NOTES` / `REJECTED — MUST FIX` → `architecture/architecture-final-gate.md`) — + `architecture/adr/*.md`, then proceed to UI foundation (if the project has UI) and the engineering workflow.
 
 ## Engineering workflow (implementation)
 

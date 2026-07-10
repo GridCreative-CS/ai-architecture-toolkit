@@ -35,7 +35,8 @@ Prompt your AI agent with each step in the workflow for your entry mode. The typ
 2. **Design architecture** — prompt with `ai/prompts/architecture-designer.md` → `architecture/architecture-blueprint.md`
 3. **Review architecture** — prompt with `ai/prompts/architecture-reviewer.md` → `architecture/review-report.md`
 4. **Reconcile feedback** — prompt with `ai/prompts/architecture-reconciler.md` → `architecture/architecture-final.md`
-5. **Generate ADRs** — prompt with `ai/prompts/adr-generator.md` → `architecture/adr/*.md`
+5. **Run the quality gate** — in a fresh session, prompt with `ai/prompts/architecture-final-quality-gate.md` → `architecture/architecture-final-gate.md`. On `REJECTED — MUST FIX`, return to step 4 and re-run the gate; continue only on `APPROVED` or `APPROVED WITH NOTES`
+6. **Generate ADRs** — prompt with `ai/prompts/adr-generator.md` → `architecture/adr/*.md`
 
 After this step, `architecture/architecture-final.md` is your source of truth.
 

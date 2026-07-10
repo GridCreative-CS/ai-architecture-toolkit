@@ -74,6 +74,21 @@ Output:
 
 - `architecture/architecture-final.md`
 
+## Step 5b — Architecture-final quality gate
+
+Use (in a fresh agent session/subagent — never the session that wrote the
+final document):
+
+- `ai/prompts/architecture-final-quality-gate.md`
+
+Output:
+
+- `architecture/architecture-final-gate.md`
+
+Verdict `APPROVED` or `APPROVED WITH NOTES` → proceed to Step 6.
+Verdict `REJECTED — MUST FIX` → return to Step 5 with the gate report as
+additional input, then re-run this gate on the revised document.
+
 ## Step 6 — ADR generation
 
 Use:
@@ -87,8 +102,9 @@ Output:
 
 ## Done — finalization gate
 
-`architecture/architecture-final.md` and `architecture/adr/*.md` now exist and
-are authoritative. Continue per "After the gate" in
+`architecture/architecture-final.md` (gate verdict `APPROVED` or
+`APPROVED WITH NOTES` in `architecture/architecture-final-gate.md`) and
+`architecture/adr/*.md` now exist and are authoritative. Continue per "After the gate" in
 `ai/workflows/architecture-workflow.md`: UI foundation first for UI-inclusive
 projects, then `ai/workflows/engineering-workflow.md` Step 1 (delivery
 planning).

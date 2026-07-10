@@ -11,14 +11,18 @@ Entry depends on the mode (see `ai/workflows/architecture-workflow.md` and
 
 | Mode | Prompts (in order) | Mode-specific outputs |
 | --- | --- | --- |
-| **A — Prototype Only** | `prototype-analyzer` → `architecture-designer` → `architecture-reviewer` → `architecture-reconciler` → `adr-generator` | `architecture/prototype-analysis.md`, `architecture/architecture-blueprint.md`, `architecture/review-report.md` |
-| **B — Prototype + Doc** | `prototype-analyzer` → `existing-architecture-reviewer` → `prototype-architecture-alignment` → `architecture-gap-reconciler` → `adr-generator` | `architecture/prototype-analysis.md`, `architecture/existing-architecture-review.md`, `architecture/prototype-architecture-alignment.md` |
-| **C — Doc Only** | `existing-architecture-reviewer` → `architecture-gap-reconciler` → `adr-generator` | `architecture/existing-architecture-review.md` |
-| **D — Legacy Replacement** | `legacy-system-analyzer` → `architecture-designer` → `architecture-reviewer` → `architecture-reconciler` → `adr-generator` | `architecture/legacy-system-analysis.md`, `architecture/architecture-blueprint.md`, `architecture/review-report.md` |
+| **A — Prototype Only** | `prototype-analyzer` → `architecture-designer` → `architecture-reviewer` → `architecture-reconciler` → `architecture-final-quality-gate` → `adr-generator` | `architecture/prototype-analysis.md`, `architecture/architecture-blueprint.md`, `architecture/review-report.md` |
+| **B — Prototype + Doc** | `prototype-analyzer` → `existing-architecture-reviewer` → `prototype-architecture-alignment` → `architecture-gap-reconciler` → `architecture-final-quality-gate` → `adr-generator` | `architecture/prototype-analysis.md`, `architecture/existing-architecture-review.md`, `architecture/prototype-architecture-alignment.md` |
+| **C — Doc Only** | `existing-architecture-reviewer` → `architecture-gap-reconciler` → `architecture-final-quality-gate` → `adr-generator` | `architecture/existing-architecture-review.md` |
+| **D — Legacy Replacement** | `legacy-system-analyzer` → `architecture-designer` → `architecture-reviewer` → `architecture-reconciler` → `architecture-final-quality-gate` → `adr-generator` | `architecture/legacy-system-analysis.md`, `architecture/architecture-blueprint.md`, `architecture/review-report.md` |
 
 All prompts live in `ai/prompts/`. All modes converge on the finalization gate:
 
 - `architecture/architecture-final.md`
+- `architecture/architecture-final-gate.md` — quality gate report with verdict
+  `APPROVED` or `APPROVED WITH NOTES` (`architecture-final-quality-gate`, run
+  in a fresh session; `REJECTED — MUST FIX` returns the document to the
+  reconciliation step before ADRs may be generated)
 - `architecture/adr/*.md`
 
 ## Phase 1b — UI Foundation (Conditional)

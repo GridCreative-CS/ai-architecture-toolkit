@@ -247,9 +247,10 @@ Additionally include (from the PART_SPEC):
 - **Next part** (name only; do not start it)
 
 After delivering the report, the Part goes to the Part code review
-(engineering workflow Step 6a, `ai/prompts/code-quality-reviewer.md`). Do not
-start the next Part until the review verdict is `APPROVED` or
-`APPROVED WITH NOTES`.
+(engineering workflow Step 6a, `ai/prompts/code-quality-reviewer.md`). The
+review **must run in a fresh agent session/subagent — never in this
+session**; do not review your own Part. Do not start the next Part until the
+review verdict is `APPROVED` or `APPROVED WITH NOTES`.
 
 ---
 

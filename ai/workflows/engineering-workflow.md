@@ -13,7 +13,10 @@ numbering below. Do not renumber steps when summarizing this workflow.
 ## Preconditions
 
 - `architecture/architecture-final.md` and `architecture/adr/*.md` exist as
-  real content (see `ai/workflows/architecture-workflow.md`, finalization gate).
+  real content and the finalization gate is passed (see
+  `ai/workflows/architecture-workflow.md`; for newly finalized architectures
+  this includes an `APPROVED` or `APPROVED WITH NOTES` verdict in
+  `architecture/architecture-final-gate.md`).
 - `ai/project-context.md` is filled in.
 
 If a precondition is missing, stop and complete the architecture phase first.
@@ -295,8 +298,10 @@ Inputs:
 - `architecture/feature-specs/<slice-id>-<slice-name>.md`
 - `ai/guides/code-quality-standard.md`
 
-Prefer running the review in a fresh session/context from the one that
-executed the Part.
+**The review must run in a fresh agent session/context** (a new session or a
+subagent), not in the session that executed the Part — the reviewer judges
+the code and diff, not the execution narrative. A review produced by the
+executing session does not satisfy this step.
 
 Write:
 

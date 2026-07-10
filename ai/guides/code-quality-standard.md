@@ -229,11 +229,15 @@ review rejection.**
 
 ## 13. Documentation in code
 
-- Match the surrounding code's documentation density and style. If nearby
-  public members carry doc comments, new public members do too.
-- When a doc comment or test description states an architecture- or
-  spec-sourced rule, cite the owning document specifically (spec section,
-  ADR number) — see the Definition of Done review-completeness rules.
+- Match the surrounding code's documentation density and style. Where the
+  project's instruction files mandate doc comments on public members (the
+  .NET default in `.github/instructions/csharp.instructions.md` does), that
+  is a hard rule — a new public member without one fails review.
+- **Traceability is a hard rule:** when a doc comment or test description
+  states an architecture- or spec-sourced rule, it must cite the owning
+  source specifically — slice ID, spec section (e.g. "spec §6 rule 4"), ADR
+  number, and the stable error code where one applies. Generic phrases like
+  "per the architecture" without a traceable citation fail review.
 - Comments state constraints the code cannot show; they do not narrate the
   code or justify the change to a reviewer.
 

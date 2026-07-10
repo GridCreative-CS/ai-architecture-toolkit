@@ -69,16 +69,39 @@ For every boundary between modules or external systems, define the contract
 (schema, behavior, non-functional expectations). See
 `ai/guides/contract-definition.md`.
 
+### 5. Write to the quality bar
+
+The final document derived from this blueprint must pass
+`ai/prompts/architecture-final-quality-gate.md`. Design to that bar from the
+start — the template's **Writing rules** section is binding:
+
+- every material claim traces to the analysis input, `ai/project-context.md`,
+  or an explicit user statement — or becomes an assumption with an ID in the
+  assumptions register; never silently invent domain facts, constraints, or
+  preferences
+- quantify the context that shapes the design (users, concurrency, data
+  volume, latency targets, team size, budget); unknown numbers are recorded
+  as assumptions, not omitted
+- banned vague terms ("scalable", "robust", "maintainable", "flexible",
+  "secure", "performant", "production-ready", and similar) may appear only
+  next to the mechanism that achieves the quality and how it is verified
+- assign every capability to exactly one module — no orphan capabilities
+- state forbidden dependencies explicitly and name the enforcement mechanism
+- give every external dependency a defined failure behavior
+
 ## Output
 
 Write to `architecture/architecture-blueprint.md` using the template:
 
 - `ai/templates/architecture-blueprint-template.md`
 
+Fill every template section (or mark it "Not applicable — [reason]").
+
 ## Rules
 
 - do not copy the prototype's code structure as architecture
-- do not leave trade-off decisions implicit — state them
+- do not leave trade-off decisions implicit — state them, with rejected
+  alternatives and their costs (they seed the ADRs)
 - do not omit AI governance if the system includes AI components
 - every module boundary must have a defined contract
 - reference `ai/guides/glossary.md` for precise term definitions
@@ -86,6 +109,7 @@ Write to `architecture/architecture-blueprint.md` using the template:
 ## References
 
 - Blueprint template: `ai/templates/architecture-blueprint-template.md`
+- Quality bar the final document must meet: `ai/prompts/architecture-final-quality-gate.md`
 - Modular monolith: `ai/guides/modular-monolith-definition.md`
 - Contract definition: `ai/guides/contract-definition.md`
 - Glossary: `ai/guides/glossary.md`

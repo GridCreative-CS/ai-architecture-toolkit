@@ -15,9 +15,10 @@ Do NOT use this agent for cross-slice boundary review (use the integration
 reviewer), for architecture compliance of the spec (Step 4), or to fix code —
 this agent reports findings; the executor fixes them.
 
-Prefer running this agent in a **fresh session/context** from the one that
-executed the Part, so the review judges the code rather than the execution
-narrative.
+This agent **must run in a fresh session/context** (a new session or a
+subagent) — never in the session that executed the Part — so the review
+judges the code rather than the execution narrative. A same-session review
+does not satisfy engineering workflow Step 6a.
 
 ## Inputs
 
@@ -76,6 +77,7 @@ Before delivering the review, verify:
 
 ## Forbidden Actions
 
+- do not review a Part in the same session/context that executed it
 - do not fix the code yourself — report findings for the executor
 - do not approve a Part whose quality report is missing or incomplete
 - do not accept claimed verification without evidence (commands + results)

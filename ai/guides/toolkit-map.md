@@ -16,6 +16,9 @@ A visual reference showing how all toolkit components connect — prompts, templ
 │                   arch-designer           →   architecture-blueprint.md│
 │                   arch-reviewer           →   review-report.md         │
 │                   arch-reconciler         →   architecture-final.md ★  │
+│                   final-quality-gate      →   architecture-final-gate  │
+│                     (fresh session; gates ★    .md (verdict)           │
+│                      before ADR generation)                            │
 │                   adr-generator           →   adr/*.md                 │
 │                                                                        │
 │  Entry modes: A prototype · B prototype+doc · C doc only · D legacy    │
@@ -112,6 +115,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `architecture-reviewer` | Architecture | Review architecture for risks, gaps, and quality |
 | `architecture-reconciler` | Architecture | Reconcile reviewer feedback into final architecture |
 | `architecture-gap-reconciler` | Architecture | Reconcile gaps when starting from an existing doc |
+| `architecture-final-quality-gate` | Architecture | Quality gate on `architecture-final.md` (fresh session, before ADR generation) — verdict `APPROVED` / `APPROVED WITH NOTES` / `REJECTED — MUST FIX` |
 | `existing-architecture-reviewer` | Architecture | Review a pre-existing architecture document |
 | `prototype-architecture-alignment` | Architecture | Align prototype behavior with architecture doc |
 | `adr-generator` | Architecture | Generate Architecture Decision Records |
@@ -127,12 +131,13 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `ui-inventory` | UI Foundation | Inventory existing UI surfaces, components, and tokens |
 | `ui-compliance-check` | Compliance | Verify UI implementation conforms to the design system |
 | `code-quality-reviewer` | Execution | Per-Part code review against the code quality standard (Step 6a) |
+| `toolkit-sync-upgrade` | Maintenance | Upgrade a project repo's embedded toolkit copy to a newer toolkit version |
 
 ### Templates — `ai/templates/`
 
 | Template | Used by |
 |----------|---------|
-| `architecture-blueprint-template` | `architecture-designer` |
+| `architecture-blueprint-template` | `architecture-designer`; its structure and Writing rules also bind `architecture-reconciler`, `architecture-gap-reconciler`, and `architecture-final-quality-gate` |
 | `adr-template` | `adr-generator` |
 | `feature-spec-template` | `feature-spec-generator` |
 | `compliance-report-template` | `architecture-compliance` |
@@ -190,7 +195,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 
 | Workflow | Purpose |
 |----------|---------|
-| `architecture-workflow` | Entry-mode selector and finalization gate |
+| `architecture-workflow` | Entry-mode selector and finalization gate (includes the architecture-final quality gate) |
 | `architecture-workflow-prototype-only` | Mode A entry point |
 | `architecture-workflow-prototype-plus-architecture-doc` | Mode B entry point |
 | `architecture-workflow-architecture-doc-only` | Mode C entry point |
@@ -211,6 +216,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `example-adr-modular-monolith` | Sample ADR — expected shape and depth |
 | `example-adr-prototype-interpretation` | Sample ADR — expected shape and depth |
 | `example-compliance-report` | Sample compliance report |
+| `example-architecture-final-gate-report` | Sample architecture-final quality gate report — expected shape and depth |
 | `example-feature-spec-outline` | Sample feature spec |
 | `example-golden-dataset-case.json` | Sample golden dataset case |
 | `ai-explainability-patterns` | Good vs. bad explainability patterns with concrete examples |

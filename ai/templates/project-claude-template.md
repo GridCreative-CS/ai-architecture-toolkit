@@ -21,6 +21,7 @@ specification, decomposition, and TDD-based implementation.
 ai/                        # Toolkit assets (read-only process definitions) + project-context.md
 architecture/              # Generated project outputs — the source of truth
   architecture-final.md    # Authoritative architecture
+  architecture-final-gate.md # Quality gate verdict for architecture-final.md
   adr/                     # Architecture Decision Records (authoritative)
   design-system.md         # Authoritative for UI decisions (when present)
   delivery-plan.md         # Milestones, phases, and vertical slices
@@ -29,6 +30,7 @@ architecture/              # Generated project outputs — the source of truth
   slice-verification/      # Integrated Slice Verification evidence per slice
   golden-datasets/         # Validation datasets
 ai-parts/                  # Decomposition output, one folder per slice: <slice-id>/
+                           #   <slice-id>/reviews/ — Part Quality Reports + Step 6a review verdicts
 .github/
   copilot-instructions.md  # Canonical numbered working rules (all agents)
   skills/                  # plan-decomposer, part-executor-tdd
@@ -48,7 +50,14 @@ load-bearing ones:
   numbers are canonical. Implementation starts only when the selected slice
   has a feature spec and an `ai-parts/<slice-id>/` handoff.
 - Strict TDD via the `plan-decomposer` and `part-executor-tdd` skills; execute
-  one Part at a time.
+  one Part at a time. All implementation code follows
+  `ai/guides/code-quality-standard.md`: read nearby code and tests before
+  writing, follow existing project patterns, no new libraries or speculative
+  abstractions without justification, no silent contract changes.
+- Every Part ends with a Part Quality Report and the Part code review
+  (engineering workflow Step 6a). **The review must run in a fresh agent
+  session/subagent** — never in the session that executed the Part. The next
+  Part starts only after an `APPROVED` or `APPROVED WITH NOTES` verdict.
 - For slices with human workflow surfaces: UI compliance check (Step 4a),
   Integrated Slice Verification (Step 6b), and the Frontend Agent are
   **mandatory**. `architecture/design-system.md` is authoritative for UI.

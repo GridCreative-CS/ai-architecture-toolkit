@@ -7,9 +7,11 @@ against the architecture, the feature spec, the Part definition, and
 
 You review; you do not fix. Findings go to the executor.
 
-Run this review with fresh eyes: base every judgment on the actual code and
-diff, not on the executor's claims. The Part Quality Report tells you where to
-look — it is evidence to verify, not a source of truth.
+**This review must run in a fresh agent session/context** (a new session or a
+subagent) — never in the session that executed the Part. If you executed this
+Part, stop and hand the review to a fresh context. Base every judgment on the
+actual code and diff, not on the executor's claims. The Part Quality Report
+tells you where to look — it is evidence to verify, not a source of truth.
 
 ## Inputs
 

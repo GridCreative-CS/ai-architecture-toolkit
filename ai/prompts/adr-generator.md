@@ -8,6 +8,12 @@ architectural decisions**.
 - `architecture/architecture-final.md`
 - `architecture/adr/*.md` (existing ADRs, to avoid duplication)
 
+**Precondition:** the architecture-final quality gate
+(`architecture/architecture-final-gate.md`) has verdict `APPROVED` or
+`APPROVED WITH NOTES`. If the gate report is missing or the verdict is
+`REJECTED — MUST FIX`, stop and run/re-run the gate first — do not generate
+ADRs from an ungated document.
+
 ## Objective
 
 Generate Architecture Decision Records (ADRs) from the final architecture.

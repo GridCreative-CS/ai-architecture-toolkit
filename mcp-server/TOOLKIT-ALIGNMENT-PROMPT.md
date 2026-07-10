@@ -1,17 +1,18 @@
-# MCP Server — Toolkit v4.3.0 Alignment Prompt
+# MCP Server — Toolkit v4.3.0+ Alignment Prompt
 
 <!-- One-time implementation prompt. Paste into your AI agent when you are    -->
-<!-- ready to align the MCP server with toolkit v4.3.0. Delete this file      -->
-<!-- after the work is done (per CLAUDE.md: no executed plan documents in     -->
-<!-- the repo).                                                                -->
+<!-- ready to align the MCP server with the current toolkit version. Delete   -->
+<!-- this file after the work is done (per CLAUDE.md: no executed plan        -->
+<!-- documents in the repo).                                                   -->
 
 Act as a **Senior .NET Backend Engineer** working on
 `mcp-server/AiArchitectureToolkit.McpServer`.
 
 ## Objective
 
-Align the MCP server with toolkit **v4.3.0** (see `VERSION.md`). The toolkit
-changed several output paths and added new assets; the server still serves the
+Align the MCP server with the current toolkit version (see `VERSION.md`;
+items 1–8 below cover v4.3.0, item 9 covers v4.5.0). The toolkit changed
+several output paths and added new assets; the server still serves the
 pre-4.3.0 layout. Follow strict TDD (red-green-refactor) per
 `.github/skills/part-executor-tdd/SKILL.md` quality gates: tests first for
 every behavioral change, run `dotnet build` and `dotnet test` on
@@ -71,6 +72,16 @@ Work through these in order. For each, write the failing test first.
 
 8. **README sync.** Update `mcp-server/README.md` resource/tool tables for
    everything above.
+
+9. **Architecture-final quality gate (toolkit v4.5.0).** Add an MCP prompt in
+   `ToolkitPrompts.cs` that bundles
+   `ai/prompts/architecture-final-quality-gate.md` with the project's
+   `architecture/architecture-final.md` and `ai/project-context.md` (mirror
+   `architecture_reconciler`); add `architecture/architecture-final-gate.md`
+   to `ProjectContentService` artifact listing and a
+   `project://architecture-final-gate` resource; insert the gate between the
+   reconcile and ADR steps in the workflow-step sequences hardcoded in
+   `ProjectTools.cs` (`architecture-reconciler` → gate → `adr-generator`).
 
 ## Definition of done
 

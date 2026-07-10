@@ -30,6 +30,7 @@ applyTo: '**/*.cs'
 - Use pattern matching and switch expressions wherever possible.
 - Use `nameof` instead of string literals when referring to member names.
 - Ensure that XML doc comments are created for any public APIs. When applicable, include `<example>` and `<code>` documentation in the comments.
+- **Traceability in doc comments (hard rule):** every public type and member carries an XML doc comment, and whenever the documented behavior implements a rule from the architecture, an ADR, or a feature spec, the comment cites the owning source specifically — slice ID, spec section (e.g. "spec §6 rule 4"), ADR number (e.g. "ADR-08"), and the stable error code where one applies (e.g. `422 CRISIS_ESCALATION_REQUIRED`). The same applies to test-class doc comments: state which contract or spec rules the tests lock. Generic phrases like "per the architecture" or "as specified" without a traceable citation are not acceptable.
 
 ## Project Setup and Structure
 

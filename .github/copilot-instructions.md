@@ -10,6 +10,7 @@ When working in this repository:
    - `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md` — Mode B: prototype + architecture doc
    - `ai/workflows/architecture-workflow-architecture-doc-only.md` — Mode C: architecture doc only
    - `ai/workflows/architecture-workflow-legacy-system-replacement.md` — Mode D: legacy system replacement
+   Every mode ends with the architecture-final quality gate (`ai/prompts/architecture-final-quality-gate.md`, run in a fresh agent session after reconciliation): `architecture/architecture-final.md` must reach verdict `APPROVED` or `APPROVED WITH NOTES` in `architecture/architecture-final-gate.md` before ADR generation and delivery planning.
 3. For implementation work, follow:
    - `ai/workflows/engineering-workflow.md` (its step numbers are canonical — cite them exactly)
 4. Use `ai/project-context.md` as additional context.

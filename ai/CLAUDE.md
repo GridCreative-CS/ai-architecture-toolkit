@@ -13,7 +13,7 @@ Read the root `CLAUDE.md` — in particular the **Toolkit maintenance rules** (s
 - `prompts/` — Prompts that drive specific workflow steps (architecture design, delivery planning, feature spec generation, compliance checking, reconciliation, UI, golden datasets, legacy analysis, slice preparation). Each prompt specifies its inputs and its output file path.
 - `templates/` — Templates for generated artifacts (feature specs, ADRs, compliance reports, golden datasets, project context, project CLAUDE.md, design system, UI inventory, retrofit/remediation specs, slice verification checklist). Prompts reference these templates.
 - `workflows/` — End-to-end workflow definitions:
-  - `workflows/architecture-workflow.md` — entry-mode selector and finalization gate; variants for Modes A–D
+  - `workflows/architecture-workflow.md` — entry-mode selector and finalization gate (includes the architecture-final quality gate, `prompts/architecture-final-quality-gate.md`); variants for Modes A–D
   - `workflows/engineering-workflow.md` — implementation loop (canonical step numbering: 0b, 1, 1b, 2, 3, 3b, 4, 4a, 4b, 5, 6, 6a, 6b, 7, 8)
   - `workflows/ui-foundation-workflow.md`, `workflows/ui-retrofit-workflow.md`, `workflows/ui-remediation-workflow.md` — UI tracks
 - `examples/` — Concrete good/bad pattern examples (vertical vs horizontal slices, modular monolith patterns, contract patterns, feature-spec-driven flows, explainability patterns).
@@ -29,3 +29,4 @@ Many files in this directory reference each other. When editing a file, check wh
 - `guides/glossary.md` is referenced by most prompts, agents, and skills — define terms there, not inline
 - `.github/skills/plan-decomposer/SKILL.md` and `.github/skills/part-executor-tdd/SKILL.md` share the Part Handoff Contract — changing one requires checking the other
 - `guides/code-quality-standard.md` section numbers (§1–§13) are cited by both skills, `prompts/code-quality-reviewer.md`, `templates/code-quality-checklist-template.md`, `agents/code-reviewer-agent.md`, the backend/frontend/qa/integration-reviewer agents, and `guides/definition-of-ready-and-done.md` — renumbering its sections requires updating all of them
+- `templates/architecture-blueprint-template.md` (structure + Writing rules) binds `prompts/architecture-designer.md`, both reconcilers, and `prompts/architecture-final-quality-gate.md`; the gate's checks are cited by `prompts/architecture-reviewer.md`, `prompts/existing-architecture-reviewer.md`, both reconcilers, `prompts/adr-generator.md` (precondition), the four mode workflows, and `workflows/architecture-workflow.md` — changing the gate's checks or verdict vocabulary requires updating all of them

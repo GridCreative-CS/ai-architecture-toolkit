@@ -39,7 +39,16 @@ A mode is complete only when all of the following exist as real content (not
 placeholders):
 
 - `architecture/architecture-final.md` — the authoritative architecture
+- `architecture/architecture-final-gate.md` — the **architecture-final
+  quality gate** report (`ai/prompts/architecture-final-quality-gate.md`)
+  with verdict `APPROVED` or `APPROVED WITH NOTES`
 - `architecture/adr/*.md` — one ADR per major decision
+
+The quality gate runs in a fresh agent session/subagent after the mode's
+reconciliation step and **before** ADR generation. A `REJECTED — MUST FIX`
+verdict returns the document to the reconciliation step with the gate report
+as additional input; the gate re-runs on the revised document until approved.
+Do not generate ADRs from an ungated or rejected document.
 
 From this point, rule 1 applies: these files are authoritative for all
 downstream work.
