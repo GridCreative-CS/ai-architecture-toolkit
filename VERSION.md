@@ -1,10 +1,17 @@
 # Version
 
-AI Architecture Toolkit — **v4.5.0**
+AI Architecture Toolkit — **v4.5.1**
 
 Projects adopting the toolkit should record this version in their project `CLAUDE.md`. Breaking workflow changes (renumbered steps, renamed output paths, changed handoff contracts) are marked **BREAKING** below, with the migration action a project must take.
 
 ## Changelog
+
+### v4.5.1 — 2026-07-11
+
+Gate calibration release. The v4.5.0 quality gate was run retroactively against the reference project's `architecture-final.md` (verdict: `REJECTED — MUST FIX` on checks 5, 7, 11, 13 — all enumeration-completeness gaps the original human review missed, confirming the gate adds value; the orphan-capability scan independently re-found the failure class behind the review's DG-5 finding plus seven unflagged instances). The run's calibration feedback (C1–C5) is folded back into the toolkit. Check count and numbering unchanged (16); wording refinements only — no migration needed.
+
+- `architecture-final-quality-gate`: companion documents cited by path now count toward content coverage (uncited companions do not), and they are listed as gate inputs (Modes B/C); check 3 — a document-level citation suffices for a register wholly sourced from one named input; check 9 — the client-side-logic prohibition may be established by structural guarantees the document identifies as enforcing it (mere absence of client-side logic from the design is not enough); check 14 — where authoritative ADR files already exist (Modes B/C), decisions referencing their ADRs satisfy ADR-readiness.
+- `architecture-reconciler` and `architecture-gap-reconciler`: new **sweep-for-the-class rule** — a finding that identifies one instance of a failure class (orphan capability, missing failure-mode row, unstated entity ownership) requires sweeping the whole document for that class and fixing every instance; for the gap-reconciler this is explicitly in scope (still reconciliation, not redesign).
 
 ### v4.5.0 — 2026-07-10
 

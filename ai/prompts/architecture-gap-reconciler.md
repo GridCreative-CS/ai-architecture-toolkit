@@ -53,6 +53,10 @@ When the existing architecture and the review disagree:
 - content areas required by `ai/prompts/architecture-final-quality-gate.md`
   that the document lacks count as identified gaps (the reviewer checks
   completeness against the gate) — filling them is in scope
+- a finding that identifies one instance of a failure class (an orphan
+  capability, a missing failure-mode row, unstated ownership of one entity)
+  licenses sweeping the whole document for that class and fixing every
+  instance — that is still reconciliation, not redesign
 - do not remove sections that the review did not flag
 - limit new content to filling identified gaps and resolving identified issues
 

@@ -29,6 +29,10 @@ verdict is `APPROVED` or `APPROVED WITH NOTES`.
   existing architecture document (Modes B/C)
 - `ai/templates/architecture-blueprint-template.md` — the content bar,
   including its Writing rules
+- Companion documents that `architecture/architecture-final.md` cites by path
+  (common in Modes B/C, e.g. supplementary test plans or go-live checklists
+  carried over from the prior spec) — read them where a check's content is
+  claimed to live there
 
 If `architecture/architecture-final.md` is missing or still a placeholder,
 stop — there is nothing to gate.
@@ -36,7 +40,9 @@ stop — there is nothing to gate.
 The checks below are **content-based, not structure-based**: a document that
 keeps a different section layout (common in Modes B/C) passes if the content
 is present, findable, and unambiguous. Judge coverage by content, never by
-section numbers.
+section numbers. Content may live in a companion document only if the final
+document cites that document by path for that purpose — an uncited companion
+does not count, however good it is.
 
 ## Checks (all required)
 
@@ -60,7 +66,9 @@ may be N/A individually. A bare "N/A" without a reason is a FAIL.
 3. **Evidence and assumptions** — Material claims trace to an input (analysis
    document, project context, existing doc, user statement) or appear in an
    assumptions register with IDs. Constraints (budget, team, timeline,
-   technology mandates) are listed with their source. Exclusions — what the
+   technology mandates) are listed with their source — a document-level
+   citation suffices for a register wholly sourced from one named input;
+   per-row citations are not required in that case. Exclusions — what the
    system deliberately does not do — are stated. Nothing project-shaping is
    invented.
 4. **System boundary** — Inside vs outside is explicit; every external actor
@@ -85,7 +93,11 @@ may be N/A individually. A bare "N/A" without a reason is a FAIL.
    concrete. "Industry-standard security" and equivalents are a FAIL.
 9. **Frontend/backend boundary** — N/A only if the system has no human-facing
    UI. Otherwise: frontend stack; how the frontend consumes backend contracts;
-   state/session/token handling; what logic is forbidden client-side.
+   state/session/token handling; what logic is forbidden client-side — stated
+   explicitly, or established by structural guarantees (e.g., a server-side
+   gateway boundary, network egress controls) that the document identifies as
+   enforcing the prohibition; the mere absence of client-side logic from the
+   design is not enough.
 10. **AI decision architecture** — N/A only if the system has no AI
     components. Otherwise: where AI decisions occur; deterministic and
     probabilistic responsibilities separated; confidence thresholds and how
@@ -107,9 +119,11 @@ may be N/A individually. A bare "N/A" without a reason is a FAIL.
     gates with binary pass criteria.
 14. **Decisions, risks, open questions** — Every major decision has rejected
     alternatives and rationale (ADR-ready: context, alternatives, and
-    consequences are extractable); risk register with impact, likelihood, and
-    mitigation; open questions with impact and resolution path. Trade-offs
-    name their cost, not only their benefit.
+    consequences are extractable — or, where authoritative ADR files already
+    exist (Modes B/C), every major decision references its ADR); risk
+    register with impact, likelihood, and mitigation; open questions with
+    impact and resolution path. Trade-offs name their cost, not only their
+    benefit.
 15. **Specificity and language** — Scan the document for banned vague terms:
     "scalable", "robust", "maintainable", "flexible", "secure", "performant",
     "production-ready", "highly available", "enterprise-grade",

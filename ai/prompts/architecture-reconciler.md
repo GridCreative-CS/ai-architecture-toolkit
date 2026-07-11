@@ -50,6 +50,12 @@ When the blueprint and review disagree:
 - incorporate accepted improvements into the architecture
 - remove duplication and inconsistencies
 - fill gaps identified by the review (missing sections, unclear boundaries)
+- **sweep for the class, not just the instance**: when a finding identifies
+  one instance of a failure class (an orphan capability with no owning
+  module, a missing failure-mode row for one dependency, unstated ownership
+  of one entity), scan the entire document for further instances of that
+  class and fix them all — repairing only the flagged instance leaves the
+  class defect in place for the quality gate to reject
 - ensure every major decision is stated explicitly
 - preserve a single coherent narrative — not a patchwork of two documents
 
