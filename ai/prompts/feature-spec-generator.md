@@ -45,12 +45,24 @@ Use the structure from `ai/templates/feature-spec-template.md`. For a
 12b. Browser Verification Steps
 13. Open Questions / Assumptions
 
+For criteria in §6, §9, §11, and §11b, emit a stable append-only identifier:
+`DR-nn`, `SEC-nn`, `AC-nn`, or `UIAC-nn` respectively. Assign IDs once, never
+renumber or reuse them, and keep a withdrawn criterion in place as
+`WITHDRAWN — <reason>`.
+
 ## Section 5b Instructions
 
 Section 5b (Human Workflow Surfaces) is **mandatory**. If the architecture
 defines human interaction for this capability and the spec omits a UI surface,
 flag it as a gap. If the slice is purely automated with no human interaction,
 cite the architecture or ADR that confirms this.
+
+## Section 6 and Section 9 Instructions
+
+Prefix every domain rule with the next free `DR-nn` ID and every
+security/authorization constraint with the next free `SEC-nn` ID. Make each
+rule binary and testable, and do not reuse an ID from an earlier version of the
+spec.
 
 ## Section 11b Instructions
 
@@ -76,6 +88,8 @@ When no design system exists, §11b must specify:
 - accessibility baseline (semantic HTML, keyboard navigation, labels,
   sufficient contrast)
 
+Prefix every criterion in §11b with the next free `UIAC-nn` ID.
+
 If the slice has no human workflow surfaces and §5b confirms this with an
 architecture or ADR citation, state: "N/A — this slice has no human workflow
 surfaces per [citation]."
@@ -88,6 +102,8 @@ Acceptance criteria in section 11 must be:
 - **Testable** — each criterion maps to at least one automated or manual test
 - **Specific** — no vague language like "should work correctly" or "handles
   errors gracefully"
+- **Stable** — prefix each criterion with the next free `AC-nn` ID; IDs are
+  append-only, never renumbered or reused
 
 ## Decomposition Readiness
 

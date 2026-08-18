@@ -54,10 +54,18 @@ load-bearing ones:
   `ai/guides/code-quality-standard.md`: read nearby code and tests before
   writing, follow existing project patterns, no new libraries or speculative
   abstractions without justification, no silent contract changes.
+- Feature-spec criteria in §§6, 9, 11, and 11b use stable append-only IDs.
+  Step 5 must produce an OVERVIEW Requirement Coverage Map with no unowned
+  criteria, and each Part records its owned IDs in §3b.
 - Every Part ends with a Part Quality Report and the Part code review
   (engineering workflow Step 6a). **The review must run in a fresh agent
   session/subagent** — never in the session that executed the Part. The next
-  Part starts only after an `APPROVED` or `APPROVED WITH NOTES` verdict.
+  Part starts only after an `APPROVED` or `APPROVED WITH NOTES` verdict. The
+  report includes a frozen snapshot, implementation/positive/negative-edge/
+  verification matrix, and mutation evidence for authorization guards, cache
+  invalidation/refetch, cancellation/supersession, and error-to-message
+  mapping. Step 6a runs all twelve checks, including D1–D9 and requirement
+  coverage; rejected Parts require §10b remediation and a fresh re-review.
 - For slices with human workflow surfaces: UI compliance check (Step 4a),
   Integrated Slice Verification (Step 6b), and the Frontend Agent are
   **mandatory**. `architecture/design-system.md` is authoritative for UI.

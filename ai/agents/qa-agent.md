@@ -54,6 +54,27 @@ Apply the test-quality rules from `ai/guides/code-quality-standard.md` §10:
 - existing tests are never weakened, deleted, or skipped to make new code
   pass without recorded justification
 
+#### Structural vs. behavioral tests
+
+Reject tests that only prove a component exists, a catalogue key is present,
+or a mock was configured. Require observable behavior:
+
+- denied roles produce no request and no forbidden effect
+- display tests assert the mapped domain value for every supported locale
+- cancellation tests separately cover supersession, clear/reset, and unmount
+- cache-refresh tests fail when invalidation or refetch is removed
+- gating tests prove actions are unavailable while required data is pending or
+  failed
+
+#### Mutation checks
+
+When a Part implements an authorization guard, cache invalidation/refetch,
+cancellation/supersession, or error-to-message mapping, require a recorded
+mutation check: break the behavior temporarily, run the focused test and
+capture the expected failure, restore the implementation, and rerun green.
+The Part Quality Report must identify the mutated `file:line`, observed
+failure, and restoration result. Never commit the mutation.
+
 ### 2. Apply the test pyramid
 
 Organize test effort by level:

@@ -5,7 +5,7 @@ license: MIT
 compatibility: Designed for skills-compatible coding agents, including Claude Code and GitHub Copilot (VS Code). Assumes write access to the repository workspace and ability to run tests/build commands.
 metadata:
   author: Gridcreative Holding B.V.  by Jursley Koots
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # Part Executor (TDD)
@@ -118,6 +118,13 @@ If a relevant feature spec is available, use it to interpret the Part safely.
   - observability requirements
   - test implications
 
+At Part start, capture a review snapshot: base commit SHA, current HEAD, the
+reproducible committed-diff command, uncommitted Part worktree files, and any
+generated or untracked Part files. Build §3b of the Part Quality Report from
+the feature spec and the OVERVIEW Requirement Coverage Map, not from memory.
+Record `PART_SPEC.part_type`; when it is absent, derive the Part type from
+`file_touch_points` and record the classification used.
+
 ### 2) Preconditions (required)
 - Ensure baseline build/tests are green.
 - If baseline is broken, stop and propose **a Baseline Fix Part** (do not proceed).
@@ -151,6 +158,12 @@ Before writing any test or production code:
    - Improve structure while staying green
    - Re-run tests
 
+After the focused tests are green, run and record a mutation check for each
+applicable trigger: authorization guard, cache invalidation/refetch,
+cancellation/supersession, and error-to-message mapping. Temporarily break the
+named behavior, observe the expected test failure, restore the worktree, and
+re-run the focused suite green. Never commit a mutation.
+
 ### If tests are not feasible
 You must justify why and use the best alternative verification:
 - integration/contract tests
@@ -175,6 +188,12 @@ A Part is “Done” only if:
 - tests prove behavior, not implementation: no test passes purely by
   verifying mocks were called or by mirroring internal steps; TDD claims are
   backed by recorded red evidence (command + observed failure)
+- the review snapshot is complete and matches the actual Part diff
+- §3b is complete: every required criterion is present, every cell is filled,
+  status vocabulary is valid, and no `COVERED-*` row lacks behavior evidence
+  or a named workflow deferral
+- every applicable mutation trigger is recorded; the final Part of a slice has
+  zero `NOT-YET` rows and any remaining `DEFERRED` row names Step 6b
 - no existing test was weakened, deleted, or skipped to get to green (a
   legitimately obsolete test is removed with justification in the quality
   report)
@@ -203,6 +222,16 @@ If a gate fails:
 - fix it now, or
 - roll back and propose a smaller Part/spike.
 
+### Remediation after `REJECTED — MUST FIX`
+
+Fix rejected findings within the same Part while keeping TDD discipline. Add
+§10b with the fix, each prior finding's test re-run and result, explicit
+confirmation that no prior assertion was weakened or deleted, every
+remediation branch touched, and the isolated remediation diff. Update §3b and
+capture a new review snapshot before handing the Part back for re-review. The
+Part remains `IN_PROGRESS` until a fresh review returns `APPROVED` or
+`APPROVED WITH NOTES`.
+
 ---
 
 ## Required completion report — the Part Quality Report
@@ -221,6 +250,8 @@ The report must contain (see the template for the full structure):
 2. **Files changed** — every file, with change type and purpose
 3. **Tests added or updated** — plus TDD evidence: red observed (command +
    exact failure) and green achieved (command + result)
+  - include the §3b requirement coverage matrix and applicable mutation-check
+    evidence
 4. **Checks run** — every command actually executed (`verify`, `e2e_verify`,
    build, linters) with its real result — not intentions
 5. **Architecture rules verified** — boundaries touched, dependency direction,
@@ -233,6 +264,7 @@ The report must contain (see the template for the full structure):
 8. **Dependencies** — new libraries added: NONE or name + justification
 9. **Deviations from existing patterns** — each with the reason, or "none"
 10. **Remaining risks** — or "none" only if true
+  - on a re-run after rejection, include the §10b remediation log
 11. **Prohibited-output check** — PASS/FAIL lines per code-quality standard §11
 12. **Verdict** — explicit **Part status: DONE / NOT DONE** statement
 

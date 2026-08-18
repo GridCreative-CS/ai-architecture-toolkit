@@ -37,6 +37,12 @@ A slice or feature is ready when all of the following are true:
   criteria reference it (§11b of the feature spec).
 - Security and observability requirements are identified.
 - Test implications are identified.
+- Criteria in §6, §9, §11, and §11b use stable append-only IDs (`DR-nn`,
+  `SEC-nn`, `AC-nn`, `UIAC-nn`) or an explicitly documented pre-ID fallback.
+- The decomposition Requirement Coverage Map assigns every criterion to at
+  least one owning Part; no criterion is unowned.
+- Each Part has a classification and identifies its owned criteria for the
+  Part Quality Report §3b matrix.
 
 ### Execution readiness
 
@@ -88,6 +94,13 @@ A slice, feature, or part is done when all of the following are true:
   stubs, fake implementations, dead/unused code, or commented-out code.
 - Tests prove observable behavior — no test passes purely by verifying mocks
   or implementation details; TDD claims are backed by recorded red evidence.
+- The Part Quality Report §3b matrix covers every applicable criterion with an
+  implementation location, positive test, negative/edge test, and verification
+  evidence. `COVERED-*` rows have behavior-proving evidence; the final Part has
+  zero `NOT-YET` rows and any remaining `DEFERRED` row names Step 6b.
+- Mutation checks are recorded when a Part implements an authorization guard,
+  cache invalidation/refetch, cancellation/supersession, or error-to-message
+  mapping.
 - All four contract surfaces (public API, database/schema, events/messages,
   UI behavior) are explicitly declared changed or unchanged — no silent
   contract changes.
@@ -124,6 +137,8 @@ A slice, feature, or part is done when all of the following are true:
   `ai/prompts/code-quality-reviewer.md`) with a verdict of `APPROVED` or
   `APPROVED WITH NOTES`. A Part with `REJECTED — MUST FIX` is not done until
   the required fixes are applied and re-review approves.
+- The Step 6a review records a frozen snapshot and completes all twelve checks,
+  including the D1–D9 dimension audit and the requirement coverage audit.
 - Integration review is completed where cross-slice interaction exists.
 - Outstanding issues are either fixed or explicitly accepted.
 - Architecture-sourced doc comments and test descriptions cite the specific

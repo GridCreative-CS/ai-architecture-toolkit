@@ -39,7 +39,7 @@
 <!-- - Warning: deviates from intent but not a hard constraint — should fix    -->
 <!-- - Info: minor inconsistency — fix if convenient                           -->
 
-- **Identifier:** <!-- e.g., AC-001 -->
+- **Identifier:** <!-- e.g., CV-001 -->
 - **Description:**
 - **Violated source:** <!-- Which architecture section or ADR? -->
 - **Severity:** Critical / Warning / Info

@@ -236,6 +236,12 @@ Write:
 - `ai-parts/<slice-id>/OVERVIEW.md`
 - `ai-parts/<slice-id>/PXX-*.md`
 
+The OVERVIEW must include a **Requirement Coverage Map** derived from every
+§6, §9, §11, and §11b criterion in the feature spec. Each stable criterion ID
+must map to one or more owning Parts; a criterion without an owner blocks Step
+5 completion. Each Part's `PART_SPEC` should repeat its owned IDs in
+`criteria_covered` when the field is applicable.
+
 Implementation does **not** start from `architecture/delivery-plan.md` alone.
 Execution starts only after the selected slice has a concrete implementation
 handoff:
@@ -272,6 +278,14 @@ Every Part execution ends with a **Part Quality Report**
 explicit **DONE / NOT DONE** verdict. A Part without a completed quality
 report is not done.
 
+At the start of each Part, capture the report's Review Snapshot. During
+execution, build §3b from the feature spec and the OVERVIEW Requirement
+Coverage Map, record the Part classification, and run the applicable mutation
+checks for authorization guards, cache invalidation/refetch,
+cancellation/supersession, and error-to-message mapping. The final Part of a
+slice must have zero `NOT-YET` rows; any remaining `DEFERRED` row must name
+Step 6b and its owner.
+
 **If implementation reality conflicts with the architecture or the feature
 spec** (a boundary cannot be respected, a contract cannot be implemented as
 specified), stop the Part, report the conflict as a compliance finding or open
@@ -293,6 +307,8 @@ Inputs:
 
 - the executed Part file and its quality report
   (`ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`)
+- prior Part quality reports and reviews when this Part claims
+  `COVERED-EARLIER (Pxx)` or relies on an earlier cross-Part contract
 - the actual diff / changed files
 - `architecture/architecture-final.md`, `architecture/adr/*.md`
 - `architecture/feature-specs/<slice-id>-<slice-name>.md`
@@ -303,6 +319,12 @@ subagent), not in the session that executed the Part — the reviewer judges
 the code and diff, not the execution narrative. A review produced by the
 executing session does not satisfy this step.
 
+The reviewer freezes a snapshot before inspection and restarts if the
+worktree, diff, or generated review evidence changes. The review performs all
+twelve required checks: checks 1–10, the D1–D9 dimension audit, and the
+requirement coverage audit. A `COVERED-*` claim requires behavior-proving
+evidence; source inspection alone is insufficient.
+
 Write:
 
 - `ai-parts/<slice-id>/reviews/<part-id>-review.md`
@@ -311,7 +333,8 @@ The review ends in exactly one verdict: `APPROVED`, `APPROVED WITH NOTES`, or
 `REJECTED — MUST FIX`. On rejection, the Part goes back to the executor with
 the review's concrete required fixes; the Part's Status returns to
 `IN_PROGRESS` and it may not be marked `DONE` (and the next Part may not
-start) until a re-review returns `APPROVED` or `APPROVED WITH NOTES`.
+start) until the executor updates §3b and §10b, captures a fresh snapshot, and
+a re-review returns `APPROVED` or `APPROVED WITH NOTES`.
 
 ## Step 6b — Integrated Slice Verification (Mandatory for UI Slices)
 
@@ -333,6 +356,10 @@ Procedure:
 3. Walk through the Slice Completion Verification Checklist.
 4. Verify all acceptance criteria from §11 and §11b against the running
    application.
+  Roll up every §3b criterion row in the completed slice-verification file.
+  There must be zero `NOT-YET` rows. Any `DEFERRED` row must be verified by
+  this Step 6b browser evidence and changed to a completed status in the
+  rollup.
 5. Check that previously completed slices still render and function correctly.
 
 If any checklist item fails, the slice is **not done**. Fix the issue and

@@ -64,7 +64,9 @@ Include:
 6. **Accessibility Audit** — assessment against design system §6
 7. **Runtime Audit** — assessment of UI behavior in the running application
    (interactive elements, navigation, shared layout integrity, error handling)
-8. **Findings** — each with severity, description, and recommended correction
+8. **Findings** — each with severity, the related `UIAC-nn` criterion ID from
+   feature spec §11b, description, and recommended correction. If a finding is
+   not related to a UI acceptance criterion, state `N/A — no related UIAC ID`.
 9. **Approval Status** — APPROVED, APPROVED WITH CHANGES, or REJECTED
 
 ## Rules
@@ -72,6 +74,8 @@ Include:
 - review what exists against the approved design system — do not propose new
   design system patterns
 - findings must cite the specific design system section being violated
+- findings related to feature-spec UI acceptance criteria must cite the stable
+   `UIAC-nn` ID, not only the section number
 - do not flag implementation choices that the design system intentionally
   leaves open
 - severity must be justified, not assumed

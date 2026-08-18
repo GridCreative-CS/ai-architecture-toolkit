@@ -37,6 +37,9 @@ When sources conflict, resolve in this order:
 - do not change the architecture or ADRs
 - keep the feature spec decomposition-ready (see `ai/guides/glossary.md`
   for what "decomposition-ready" means)
+- preserve existing `DR-nn`, `SEC-nn`, `AC-nn`, and `UIAC-nn` IDs verbatim;
+  reworded criteria keep their IDs, new criteria receive the next free number,
+  and withdrawn criteria remain in place as `WITHDRAWN — <reason>`
 
 ## Output
 
@@ -55,6 +58,10 @@ At the end, add:
 ### Open Questions
 
 List any ambiguities that need resolution before decomposition.
+
+When the current spec predates stable IDs, do not invent replacement IDs during
+this lightweight pass. The downstream matrix uses the section-plus-verbatim-
+criterion fallback until the next explicit reconciliation assigns IDs.
 
 ## References
 

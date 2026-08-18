@@ -113,9 +113,13 @@ Before handing off to specialist agents, verify:
 
 After each Part's quality report is delivered, the orchestrator must ensure
 the Part code review (`ai/prompts/code-quality-reviewer.md`, persona
-`ai/agents/code-reviewer-agent.md`) runs before the next Part starts. A Part
-with a `REJECTED — MUST FIX` verdict returns to the executor and may not be
-marked DONE until re-review approves.
+`ai/agents/code-reviewer-agent.md`) runs in a fresh context before the next
+Part starts. The review must freeze a snapshot, verify all twelve checks
+(including the D1–D9 dimension audit and requirement coverage audit), and
+compare §3b with the OVERVIEW Requirement Coverage Map. A Part with a
+`REJECTED — MUST FIX` verdict returns to the executor; the executor updates
+§3b/§10b and captures a fresh snapshot, and the Part may not be marked DONE
+until re-review approves.
 
 ### Step 6b — Integrated Slice Verification
 
@@ -124,6 +128,8 @@ After all Parts in a slice are executed, the orchestrator must ensure Step 6b
 surfaces. This step uses `ai/templates/slice-verification-checklist-template.md`
 and is **mandatory** before proceeding to the next slice. See
 `ai/workflows/engineering-workflow.md` for the full procedure.
+The completed checklist must roll up every Part §3b criterion row, contain no
+unowned or `NOT-YET` criteria, and close deferred rows with Step 6b evidence.
 
 ## Forbidden Actions
 

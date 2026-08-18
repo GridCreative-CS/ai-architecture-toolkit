@@ -6,7 +6,7 @@ license: MIT
 compatibility: Designed for skills-compatible coding agents, including Claude Code and GitHub Copilot (VS Code). Assumes read/write access to the repository workspace.
 metadata:
   author: Gridcreative Holding B.V. by Jursley Koots
-  version: "2.3.0"
+  version: "2.4.0"
 ---
 
 # Plan Decomposer
@@ -136,8 +136,14 @@ Before writing any Part files:
    the same thing, record that as an open question — do not pick silently.
 
 Then write preflight results into:
-- `./ai-parts/OVERVIEW.md` (in the Preflight section, including a
+- `./ai-parts/<slice-id>/OVERVIEW.md` (in the Preflight section, including a
   `### Pattern Inventory` subsection)
+
+In the same preflight, enumerate every §6/§9/§11/§11b criterion from the
+feature spec and assign it to one or more owning Parts. Use stable criterion
+IDs when present. For a spec that predates IDs, use the section-plus-verbatim-
+criterion fallback. A criterion with no owner is a decomposition defect and
+blocks Step 5 completion.
 
 ---
 
@@ -145,10 +151,10 @@ Then write preflight results into:
 The decomposition MUST be represented by files so that an executor can consume them without ambiguity.
 
 ## Required files
-1) `./ai-parts/OVERVIEW.md`
+1. `./ai-parts/<slice-id>/OVERVIEW.md`
 2) One file per part:
-   - `./ai-parts/P01-<slug>.md`
-   - `./ai-parts/P02-<slug>.md`
+  - `./ai-parts/<slice-id>/P01-<slug>.md`
+  - `./ai-parts/<slice-id>/P02-<slug>.md`
    - ...
 
 ## Required Part Status line (new requirement)
@@ -195,6 +201,11 @@ OPTIONAL fields:
 - `e2e_verify` (array of strings; browser-based verification commands — e.g.,
   Playwright test commands, Cypress commands, or documented manual browser
   walkthrough steps. **Required for the final Part of any UI slice.**)
+- `part_type` (string: `backend` | `frontend` | `shared-contract` |
+  `infrastructure`; makes the Part classification explicit for dimension
+  applicability)
+- `criteria_covered` (array of stable feature-spec criterion IDs; use the
+  section-plus-verbatim-text fallback for a spec that predates IDs)
 - `existing_patterns` (array of strings; concrete existing files from the
   Preflight pattern inventory the executor must read before writing code —
   **include this whenever comparable code exists in the repo**)
@@ -206,13 +217,16 @@ OPTIONAL fields:
 ---
 
 ## Required structure: OVERVIEW.md
-`./ai-parts/OVERVIEW.md` MUST include:
+`./ai-parts/<slice-id>/OVERVIEW.md` MUST include:
 
 1) `# AI Parts Overview`
 2) `## Preflight` (Plan summary, repo reality check, risks, open questions)
-3) `## Parts Index` (a table listing all parts)
-4) `## Execution Order` (ordered list of part IDs)
-5) `## How to Execute` (instructions to feed this overview to the executor skill)
+3) `## Requirement Coverage Map` — every §6/§9/§11/§11b feature-spec
+  criterion ID maps to at least one owning Part. A criterion with no owner is
+  a decomposition defect and blocks Step 5 completion.
+4) `## Parts Index` (a table listing all parts)
+5) `## Execution Order` (ordered list of part IDs)
+6) `## How to Execute` (instructions to feed this overview to the executor skill)
 
 ### Parts Index table columns (required)
 - Part ID
@@ -229,7 +243,7 @@ Status values:
 ## Writing the decomposition files (required procedure)
 
 ### 1) Create OVERVIEW.md skeleton first
-Write `./ai-parts/OVERVIEW.md` with:
+Write `./ai-parts/<slice-id>/OVERVIEW.md` with:
 - Preflight section filled out
 - Parts Index table header
 - Execution Order list (initially can be empty if you still need to write parts)
@@ -238,7 +252,7 @@ Write `./ai-parts/OVERVIEW.md` with:
 For each Part:
 - Choose `part_id`: P01..PNN
 - Choose a short slug for filename
-- Write file: `./ai-parts/P<NN>-<slug>.md`
+- Write file: `./ai-parts/<slice-id>/P<NN>-<slug>.md`
 
 If a Part must be **inserted later** between existing Parts (discovered scope
 that cannot wait), suffix a letter instead of renumbering: `P09b-<slug>.md`
@@ -321,7 +335,7 @@ This Part's PART_SPEC must include:
 ---
 
 ## Overview file template (required)
-Use this exact structure in `./ai-parts/OVERVIEW.md`:
+Use this exact structure in `./ai-parts/<slice-id>/OVERVIEW.md`:
 
 # AI Parts Overview
 
@@ -342,10 +356,19 @@ Use this exact structure in `./ai-parts/OVERVIEW.md`:
 ### Open Questions / Assumptions
 - ...
 
+## Requirement Coverage Map
+
+| Requirement | Source | Owning Part(s) | Status |
+|---|---|---|---|
+| `DR-01` / fallback text | Feature spec §6 | P01 | TODO |
+
+Every §6/§9/§11/§11b criterion must appear exactly as a stable ID or the
+section-plus-verbatim-text fallback and must have at least one owning Part.
+
 ## Parts Index
 | Part ID | Title | File | Dependencies | Status |
 |---|---|---|---|---|
-| P01 | ... | ./ai-parts/P01-....md | (none) | TODO |
+| P01 | ... | ./ai-parts/<slice-id>/P01-....md | (none) | TODO |
 
 ## Execution Order
 1. P01
@@ -357,6 +380,8 @@ Use this exact structure in `./ai-parts/OVERVIEW.md`:
 - Execute exactly **one Part per run**: take the next non-DONE Part from the
   Execution Order, open its file, and execute it strictly using TDD.
 - Use the selected slice feature spec if it exists.
+- Treat the Requirement Coverage Map as a required handoff: every criterion
+  must have an owner before execution starts.
 - Read the Pattern Inventory files before writing code
   (`ai/guides/code-quality-standard.md` §1).
 - Each Part ends with a Part Quality Report

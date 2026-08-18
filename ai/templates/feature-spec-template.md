@@ -4,6 +4,10 @@
 <!-- If this spec covers multiple slices, split it.                            -->
 <!-- Reference: ai/guides/glossary.md for term definitions.                    -->
 <!-- Reference: ai/guides/how-feature-specs-are-used.md for the workflow.      -->
+<!-- Stable criterion IDs are append-only: assign each criterion an ID using  -->
+<!-- the section prefix (DR-nn, SEC-nn, AC-nn, or UIAC-nn), never renumber or  -->
+<!-- reuse an ID, and keep a withdrawn criterion in place as                  -->
+<!-- "WITHDRAWN — <reason>".                                                   -->
 
 ## 1. Feature Name
 
@@ -41,8 +45,10 @@
 
 ## 6. Domain Rules
 
-<!-- List business rules that this slice must enforce. Each rule should be     -->
-<!-- testable. Example: "Recommendation must include an explanation summary."  -->
+<!-- List business rules that this slice must enforce. Prefix each rule with   -->
+<!-- its stable append-only ID: DR-01, DR-02, ... Each rule should be          -->
+<!-- testable. Example: "DR-01: Recommendation must include an explanation    -->
+<!-- summary."                                                                 -->
 
 ## 7. API / Contract Expectations
 
@@ -59,7 +65,8 @@
 ## 9. Security / Authorization Constraints
 
 <!-- Who can access this capability? What roles or policies apply? How are    -->
-<!-- secrets managed?                                                          -->
+<!-- secrets managed? Prefix each constraint with its stable append-only ID:   -->
+<!-- SEC-01, SEC-02, ...                                                       -->
 
 ## 10. Observability Requirements
 
@@ -72,8 +79,10 @@
 <!-- - Binary: met or not met (no subjective judgment)                        -->
 <!-- - Testable: maps to at least one automated or manual test                -->
 <!-- - Specific: no vague language ("should work correctly")                   -->
+<!-- Prefix each criterion with its stable append-only ID: AC-01, AC-02, ...   -->
+<!-- Never renumber or reuse an ID after reconciliation.                        -->
 <!-- Example: "Endpoint returns 200 with approved contract shape for valid    -->
-<!-- input." "Unauthorized users receive 403."                                 -->
+<!-- input." "AC-02: Unauthorized users receive 403."                         -->
 
 ## 11b. UI/UX Acceptance Criteria
 
@@ -101,6 +110,8 @@
 <!--                                                                           -->
 <!-- Each criterion must be binary, testable, and specific — same rules as     -->
 <!-- §11.                                                                       -->
+<!-- Prefix each criterion with its stable append-only ID: UIAC-01, UIAC-02,   -->
+<!-- ... Never renumber or reuse an ID after reconciliation.                    -->
 <!-- Reference: architecture/design-system.md                                  -->
 <!-- Reference: ai/templates/design-system-template.md                         -->
 

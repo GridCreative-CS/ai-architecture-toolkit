@@ -84,6 +84,20 @@ Before completing, verify that the implementation:
 - follows patterns established in the ADRs
 - does not introduce unauthorized architectural drift
 
+### 6. Record execution-time dimensions
+
+For every backend Part, explicitly cover these dimensions in the Part Quality
+Report §3b matrix and the Step 6a dimension audit:
+
+- **D1** — domain and business invariants
+- **D4** — API, data, and integration contracts
+- **D7** — authorization and security boundaries
+- **D8** — error handling and observability
+
+Each applicable dimension needs behavior-proving positive and negative/edge
+evidence, including mutation evidence when the Part implements an
+authorization guard or error-to-message mapping.
+
 ## Required Output
 
 | Field | Description |

@@ -53,6 +53,10 @@ When sources conflict, resolve in this order:
 7. If the feature spec conflicts with architecture or ADRs, reconcile it in
    favor of the higher-priority source.
 8. Keep the result implementation-ready and decomposition-ready.
+10. Preserve every existing criterion ID verbatim. A reworded criterion keeps
+   its ID; a new criterion receives the next free number for its section; an
+   ID is never renumbered or reused. If a criterion is removed, keep its row in
+   place as `WITHDRAWN — <reason>`.
 
 ## Effort Constraints
 
@@ -98,6 +102,15 @@ List:
 - Do not rewrite unrelated sections.
 - Keep the output suitable for the next step: updated decomposition for this
   slice.
+
+## Criterion ID Preservation
+
+The feature spec's stable IDs are part of the handoff contract. Preserve
+`DR-nn`, `SEC-nn`, `AC-nn`, and `UIAC-nn` exactly while reconciling. Do not
+renumber criteria because wording changed or because a criterion was inserted.
+For a spec that predates IDs, leave existing criteria in place and assign IDs
+only during an explicit reconciliation; until then, downstream matrices use
+the section-plus-verbatim-text fallback.
 
 ## Expected Use
 

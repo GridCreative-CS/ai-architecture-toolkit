@@ -94,6 +94,10 @@ spec as primary input.
 
 Write `ai-parts/<slice-id>/OVERVIEW.md` and `ai-parts/<slice-id>/PXX-*.md`.
 
+The OVERVIEW must contain a Requirement Coverage Map for every §6, §9, §11,
+and §11b criterion in the feature spec, with each criterion assigned to one or
+more owning Parts. Do not complete Step 5 while any criterion is unowned.
+
 For a UI slice, the final Part must be the Terminal Verification Part required
 by the skill.
 
@@ -106,6 +110,8 @@ Do not execute any Part. End the run with the summary below.
 - **Slice:** ID + name
 - **Dependencies verified:** each dependency → the file/type that proves it
 - **Artifacts produced:** every file written, with its path
+- **Requirement coverage map:** every criterion ID (or pre-ID fallback) →
+  owning Part(s), with no unowned criteria
 - **Compliance status:** approval status of each report; Critical findings and
   how the spec was reconciled
 - **Open questions:** anything that blocks execution readiness

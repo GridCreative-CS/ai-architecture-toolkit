@@ -1,4 +1,4 @@
-# CLAUDE.md — AI Architecture Toolkit
+# AGENTS.md — AI Architecture Toolkit
 
 ## What this repository is
 
@@ -33,7 +33,7 @@ ai/                          # Core toolkit (reusable assets)
 architecture/                # SCAFFOLD ONLY in this repo — per-project output location (see below)
 docs/                        # Toolkit-repo documentation (design history); not copied into projects
 mcp-server/                  # MCP server exposing the toolkit to LLM tooling (only application code in this repo)
-CLAUDE.md                    # This file — primary instruction file for Claude and compatible agents
+AGENTS.md                    # This file — primary instruction file for Codex and compatible agents
 README.md                    # Human-facing overview; must stay in sync with this file
 VERSION.md                   # Toolkit version and changelog of workflow-affecting changes
 ```
@@ -199,11 +199,11 @@ When you change one of these, update all files in its row before finishing:
 
 | If you change… | You must also update… |
 | --- | --- |
-| Engineering workflow steps or numbering | `CLAUDE.md`, `README.md`, `.github/copilot-instructions.md`, `ai/guides/operating-model.md`, `ai/guides/quick-start.md`, `ai/guides/how-feature-specs-are-used.md`, both skills |
+| Engineering workflow steps or numbering | `AGENTS.md`, `README.md`, `.github/copilot-instructions.md`, `ai/guides/operating-model.md`, `ai/guides/quick-start.md`, `ai/guides/how-feature-specs-are-used.md`, both skills |
 | A prompt's inputs/outputs | The workflow step that invokes it, `ai/guides/toolkit-map.md`, `ai/guides/operating-model.md` |
 | A template's sections (e.g., feature spec §5b/§11b/§12b) | Every prompt, skill, and checklist that cites those section numbers |
 | Skill handoff contract (Part heading, PART_SPEC schema, output paths) | The other skill, engineering workflow Step 5/6, `README.md` usage examples |
-| Entry modes | `README.md`, `CLAUDE.md`, `ai/guides/how-to-choose-entry-mode.md`, `ai/guides/quick-start.md`, `ai/guides/toolkit-map.md`, `ai/workflows/architecture-workflow.md` |
+| Entry modes | `README.md`, `AGENTS.md`, `ai/guides/how-to-choose-entry-mode.md`, `ai/guides/quick-start.md`, `ai/guides/toolkit-map.md`, `ai/workflows/architecture-workflow.md` |
 | Glossary terms | Any file that defines the term inline (remove the duplicate; link instead) |
 | Anything user-visible | `README.md` structure lists and `VERSION.md` |
 

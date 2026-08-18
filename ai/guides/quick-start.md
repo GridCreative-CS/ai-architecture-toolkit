@@ -64,9 +64,9 @@ The feature spec makes one slice precise enough to decompose and implement.
 
 ## Step 6 — Decompose and execute with TDD
 
-1. **Decompose** — use `.github/skills/plan-decomposer` to break the slice into independently verifiable Parts → `ai-parts/<slice-id>/OVERVIEW.md` and `ai-parts/<slice-id>/PXX-*.md`
-2. **Execute** — use `.github/skills/part-executor-tdd` to implement one Part at a time with strict red-green-refactor TDD, following `ai/guides/code-quality-standard.md` (read nearby code first, follow existing patterns). Every Part ends with a Part Quality Report → `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`
-3. **Review** — run the Part code review (engineering workflow Step 6a, `ai/prompts/code-quality-reviewer.md`) → `ai-parts/<slice-id>/reviews/<part-id>-review.md`. Start the next Part only after an `APPROVED` or `APPROVED WITH NOTES` verdict
+1. **Decompose** — use `.github/skills/plan-decomposer` to break the slice into independently verifiable Parts → `ai-parts/<slice-id>/OVERVIEW.md` and `ai-parts/<slice-id>/PXX-*.md`. The overview must include a Requirement Coverage Map assigning every feature-spec criterion to an owning Part.
+2. **Execute** — use `.github/skills/part-executor-tdd` to implement one Part at a time with strict red-green-refactor TDD, following `ai/guides/code-quality-standard.md` (read nearby code first, follow existing patterns). Capture the review snapshot, complete the §3b matrix, and record mutation evidence for applicable triggers. Every Part ends with a Part Quality Report → `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`
+3. **Review** — run the Part code review (engineering workflow Step 6a, `ai/prompts/code-quality-reviewer.md`) → `ai-parts/<slice-id>/reviews/<part-id>-review.md`. The reviewer runs all twelve checks, including D1–D9 and requirement coverage. Start the next Part only after an `APPROVED` or `APPROVED WITH NOTES` verdict
 
 Implementation starts at **Step 6.2** — when you execute a specific Part file.
 Approving the delivery plan alone does not start implementation; it only tells
@@ -84,7 +84,7 @@ Use these paths as your handoff trail from planning to implementation:
 | Selected slice spec | `architecture/feature-specs/<slice-id>-<slice-name>.md` | Scope, acceptance criteria, contracts, test implications |
 | Decomposition overview | `ai-parts/<slice-id>/OVERVIEW.md` | Part index, execution order, preflight notes |
 | Execution-ready work items | `ai-parts/<slice-id>/PXX-*.md` | The exact Part to implement with TDD |
-| Part quality gate | `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md` and `<part-id>-review.md` | The executor's quality report and the reviewer's verdict per Part |
+| Part quality gate | `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md` and `<part-id>-review.md` | Snapshot, §3b matrix, mutation evidence, twelve-check review, and verdict per Part |
 
 ## Five terms you need to know
 

@@ -70,6 +70,23 @@
 - [ ] E2E test results documented (if automated tests exist)
 - [ ] Pass/fail recorded for each criterion above
 
+## Requirement Coverage Rollup
+
+Roll up every row from every Part Quality Report §3b matrix. Use the stable
+criterion ID (`DR-nn`, `SEC-nn`, `AC-nn`, `UIAC-nn`) or the section-plus-
+verbatim-text fallback for pre-ID specs. Step 6b must supply the browser or
+integrated evidence for any row previously marked `DEFERRED`.
+
+| Requirement | Owning Part(s) | Implementation | Positive test | Negative/edge test | Step 6b evidence | Final status |
+| --- | --- | --- | --- | --- | --- | --- |
+| `DR-01` / fallback text | Pxx | | | | | COVERED / N-A |
+
+- [ ] Every §6/§9/§11/§11b criterion appears in the rollup
+- [ ] No criterion is unowned
+- [ ] No `NOT-YET` rows remain
+- [ ] Every deferred row is resolved with Step 6b evidence or recorded as a
+    blocking failure
+
 ## Result
 
 - **Status:** PASS / FAIL

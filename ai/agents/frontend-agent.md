@@ -105,6 +105,24 @@ Apply baseline accessibility:
 - sufficient color contrast
 - meaningful alt text for images
 
+### 7. Record execution-time dimensions
+
+For every frontend Part, explicitly cover these dimensions in the Part Quality
+Report §3b matrix and the Step 6a dimension audit:
+
+- **D2** — rendering and display mapping
+- **D3** — interaction and state transitions
+- **D5** — accessibility, design-system, and responsive behavior
+- **D6** — lifecycle, loading, cache, cancellation, and action gating
+
+Add **D7** when the feature spec or Part includes authorization, role/ABAC, or
+request-gating behavior. Add **D8** when the feature spec or design system
+defines error mapping, trace-reference display, or observable failure
+presentation. Each applicable dimension needs behavior-proving positive and
+negative/edge evidence, not source inspection alone.
+
+A component existence assertion or catalogue-key parity is not enough.
+
 ## Required Output
 
 | Field | Description |

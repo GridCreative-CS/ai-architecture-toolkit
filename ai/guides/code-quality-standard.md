@@ -192,6 +192,39 @@ and do not "fix" the old code inside an unrelated Part.
   accessibility assertions where the project has them); slice-level UI proof
   is browser-based (engineering workflow Step 6b), never unit tests alone.
 
+### Structural vs. behavioral tests
+
+The existence of a component, query, catalogue key, or mock setup is not a
+behavioral test. A test must fail when the implementation is removed or broken.
+In particular:
+
+- a role/authorization test proves that a denied role causes no request and no
+  forbidden effect
+- a display-mapping test asserts the rendered domain value in every supported
+  locale, not merely catalogue-key parity
+- a cancellation test covers supersession, clear/reset, and unmount/teardown
+  as separate cases
+- a cache-refresh test fails when invalidation or refetch is removed
+- a gating test proves the action is unavailable while required data is
+  pending or failed
+
+### Mutation check protocol
+
+Mutation checks are mandatory when a Part implements an authorization guard,
+cache invalidation/refetch, cancellation/supersession, or error-to-message
+mapping. Temporarily break the named behavior, run the focused test, observe
+the expected failure, restore the implementation, and run the suite green
+again. Record the mutated `file:line`, temporary change, observed failure, and
+restoration result in the Part Quality Report. Never commit the mutation.
+
+### Claim-evidence rule
+
+Every completeness or behavior claim names its evidence. Catalogue/key parity
+does not prove rendered output; a test's existence does not prove a lifecycle
+branch; and implementation inspection does not prove refresh behavior. A claim
+without a command, test result, browser step, or recorded mutation reference
+is not evidence.
+
 ## 11. Prohibited outputs
 
 None of the following may exist when a Part is reported complete:

@@ -1,10 +1,72 @@
 # Version
 
-AI Architecture Toolkit — **v4.5.1**
+AI Architecture Toolkit — **v4.6.0**
 
 Projects adopting the toolkit should record this version in their project `CLAUDE.md`. Breaking workflow changes (renumbered steps, renamed output paths, changed handoff contracts) are marked **BREAKING** below, with the migration action a project must take.
 
 ## Changelog
+
+### v4.6.0 — BREAKING
+
+Requirement traceability and edge-case evidence release. Step 6a remains the
+same workflow step and Part Quality Report section numbers remain unchanged,
+but implementation cannot proceed as complete without criterion ownership,
+behavior evidence, and a systematic twelve-check review. This is a breaking
+contract upgrade for feature specs, decomposition handoffs, Part reports, and
+reviews.
+
+- Feature-spec criteria now use append-only stable IDs: `DR-nn` for §6,
+	`SEC-nn` for §9, `AC-nn` for §11, and `UIAC-nn` for §11b. IDs are never
+	renumbered or reused; withdrawn criteria remain visible as
+	`WITHDRAWN — <reason>`.
+- Every slice OVERVIEW now includes a **Requirement Coverage Map** assigning
+	every feature-spec criterion to an owning Part and recording the required
+	positive, negative/edge, and verification evidence.
+- Every Part Quality Report now includes §3b, the **Requirement Coverage
+	Matrix**, with implementation, positive-test, negative/edge-test,
+	verification, status, and Part-classification evidence. The final Part must
+	have no `NOT-YET` rows; any remaining `DEFERRED` row must name Step 6b.
+- The Part report records mutation evidence for authorization guards, cache
+	invalidation/refetch, cancellation/supersession, and error-to-message
+	mapping whenever those triggers apply.
+- Step 6a now freezes a review snapshot containing base SHA, HEAD, committed
+	diff, worktree files, and generated/untracked files. The fresh-session
+	reviewer performs all twelve checks, including the D1–D9 dimension audit and
+	the requirement coverage audit. Changed evidence requires a new snapshot
+	and a restarted review.
+- `plan-decomposer` is upgraded to v2.4.0 and emits the coverage-map and
+	criterion-ownership fields required by the executor handoff.
+- `part-executor-tdd` is upgraded to v1.4.0 and requires the §3b matrix,
+	mutation evidence, snapshot inputs, and review-gated completion state.
+- Rejected Parts require isolated remediation evidence in §10b, confirmation
+	that prior assertions were not weakened or deleted, a regenerated report,
+	and a fresh Step 6a review.
+- Calibration against the preserved `psychassist-goggles` P12 review rounds
+	confirmed that the seven later findings are catchable when the matrix is
+	complete and dimensions are audited rigorously. Step 6a now requires D7 for
+	frontend Parts with authorization/role/ABAC/request-gating behavior, D8 for
+	frontend Parts with specified error/trace/failure presentation, one matrix
+	row per criterion with exact test names and evidence types, and a concrete
+	D1–D9 evidence checklist.
+- Step 6b rolls up criterion status, deferred ownership, mutation evidence,
+	and D1–D9 results across the completed slice; UI slices retain the required
+	browser and responsive verification.
+- Added fictional examples: `ai/examples/example-part-quality-report.md` and
+	`ai/examples/example-part-review.md`.
+- Synced the feature-spec templates and reconcilers, compliance and slice
+	verification templates, quality and reviewer prompts, engineering workflow,
+	guides, quick start, operating model, specialist personas, project
+	instruction templates, root instruction mirrors, README, and execution
+	skills.
+
+**Migration from v4.5.1:** regenerate or reconcile active feature specs with
+stable criterion IDs; add the OVERVIEW Requirement Coverage Map; update each
+PART_SPEC with criterion ownership and Part classification; produce the §3b
+matrix with positive and negative/edge tests; record applicable mutation
+checks; capture the review snapshot; run all twelve Step 6a checks including
+D1–D9 and requirement coverage; complete the Step 6b rollup for UI slices;
+upgrade `plan-decomposer` to v2.4.0 and `part-executor-tdd` to v1.4.0. Keep
+completed historical reports unchanged unless they are being re-reviewed.
 
 ### v4.5.1 — 2026-07-11
 
@@ -35,7 +97,7 @@ Code-quality release. Second audit pass against the reference project, focused o
 
 - New guide: `ai/guides/code-quality-standard.md` — the implementation-quality rules enforced per Part: read-before-write protocol, source precedence, dependency and abstraction discipline, boundaries/dependency direction, error handling with stable error identifiers, validation split, logging/observability, async + cancellation, test quality (no mock-only/fake tests, truth-table coverage for rule matrices, contract tests), prohibited outputs, the four contract surfaces, and the ambiguity rule (stop and list, don't invent a style).
 - New template: `ai/templates/code-quality-checklist-template.md` — the **Part Quality Report** every Part execution must produce (`ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`): files changed, tests + TDD evidence, checks run, architecture rules verified, patterns followed, contract surfaces declared changed/unchanged, dependencies, deviations, risks, explicit DONE/NOT DONE.
-- New prompt + agent: `ai/prompts/code-quality-reviewer.md` and `ai/agents/code-reviewer-agent.md` — per-Part code review with ten required checks and a single verdict (`APPROVED` / `APPROVED WITH NOTES` / `REJECTED — MUST FIX`) → `ai-parts/<slice-id>/reviews/<part-id>-review.md`.
+- New prompt + agent: `ai/prompts/code-quality-reviewer.md` and `ai/agents/code-reviewer-agent.md` — per-Part code review with required checks and a single verdict (`APPROVED` / `APPROVED WITH NOTES` / `REJECTED — MUST FIX`) → `ai-parts/<slice-id>/reviews/<part-id>-review.md`.
 - **Engineering workflow: new mandatory Step 6a — Part Code Review** (between Step 6 and Step 6b; per Part, also applies to phases). A rejected Part returns to `IN_PROGRESS`; the next Part starts only after approval. Migration: none for completed Parts; apply from the next Part onward.
 - `part-executor-tdd` v1.3.0: new required "Read before write" protocol step; non-negotiable rules extended (no new libraries without justification, no unneeded abstractions, no silent contract changes, stop on unclear patterns); quality gates extended (prohibited outputs, behavior-not-mocks tests, no weakened tests, contract-surface declaration); completion report replaced by the Part Quality Report; DONE now additionally gated on the Step 6a review verdict.
 - `plan-decomposer` v2.3.0: preflight now builds a **Pattern Inventory** (concrete existing files per artifact kind, written to OVERVIEW.md); new optional PART_SPEC fields `existing_patterns` and `contracts_touched` (additive — existing Part files remain valid).

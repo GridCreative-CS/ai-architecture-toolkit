@@ -47,6 +47,25 @@ unless no feature spec exists yet.
 If a feature spec exists for a slice, use it as a primary input to decomposition
 for that slice.
 
+### Criterion traceability
+
+Criteria in feature spec §§6, 9, 11, and 11b carry stable append-only IDs:
+`DR-nn`, `SEC-nn`, `AC-nn`, and `UIAC-nn`. Generators assign the next free ID;
+reconcilers preserve existing IDs and leave withdrawn criteria in place. The
+IDs then flow through the engineering workflow:
+
+```text
+Feature spec criterion IDs
+→ OVERVIEW Requirement Coverage Map (owning Part(s))
+→ Part Quality Report §3b (implementation + positive + negative/edge test + verification)
+→ Step 6a review (D1–D9 dimension audit + requirement coverage audit)
+→ Step 6b criterion rollup (UI slices)
+```
+
+Every criterion must have an owner before Step 5 completes. A `COVERED-*` row
+requires behavior-proving evidence; a final Part cannot retain `NOT-YET`, and a
+deferred row must identify the workflow step and owner that will prove it.
+
 ## Recommended per-slice operating model
 
 (Engineering workflow step numbers in parentheses — those are canonical.)

@@ -30,21 +30,30 @@ does not satisfy engineering workflow Step 6a.
 - `architecture/feature-specs/<slice-id>-<slice-name>.md`
 - `architecture/design-system.md` (UI Parts)
 - `ai/guides/code-quality-standard.md`
+- prior Part Quality Reports and reviews for the same slice when a
+  `COVERED-EARLIER (Pxx)` row is present
 - nearby comparable project code (read it before judging pattern adherence)
 
 ## Methodology
 
-Follow `ai/prompts/code-quality-reviewer.md` exactly: run all ten checks
+Follow `ai/prompts/code-quality-reviewer.md` exactly: run all twelve checks
 (architecture alignment, feature spec alignment, Part scope, code quality,
 test quality, integration risks, overengineering, shortcut implementations,
-hidden contract changes, missing verification), classify findings by severity
-(Blocker / Major / Minor), and emit exactly one verdict.
+hidden contract changes, missing verification, the D1–D9 dimension audit, and
+the requirement coverage audit), classify findings by severity (Blocker / Major
+/ Minor), and emit exactly one verdict.
 
 Key stances:
 
 - **Verify, don't trust.** The quality report's claims (TDD evidence, checks
   run, "unchanged" contract surfaces) are checked against the diff and by
   re-running verification commands where feasible.
+- **Freeze the evidence.** Capture the review snapshot before inspection and
+  restart from a fresh snapshot if the worktree, diff, or generated evidence
+  changes.
+- **Coverage is behavioral.** Do not approve an incomplete §3b matrix or a
+  `COVERED-*` row that lacks a behavior-proving positive and negative/edge test
+  (or a named workflow deferral that will prove it).
 - **Hidden contract changes are automatic rejections.** Diff every public API,
   schema/migration, event, and UI contract surface against quality report §7.
 - **Fake work is a Blocker.** Tests that only verify mocks, implementations
@@ -70,10 +79,14 @@ Before delivering the review, verify:
 
 - [ ] the actual diff was read (not just the quality report)
 - [ ] comparable nearby project code was read
-- [ ] all ten checks were performed and reported (passed checks listed too)
+- [ ] all twelve checks were performed and reported (passed checks listed too)
+- [ ] the D1–D9 dimension audit and §3b requirement coverage audit are complete
+- [ ] the review snapshot is recorded and remained unchanged
 - [ ] every Blocker/Major finding names a concrete required fix
 - [ ] contract surfaces were independently diffed against quality report §7
 - [ ] exactly one verdict is stated
+- [ ] rejected Parts have a concrete remediation path, fresh snapshot, and
+  re-review requirement
 
 ## Forbidden Actions
 

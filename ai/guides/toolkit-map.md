@@ -77,12 +77,17 @@ A visual reference showing how all toolkit components connect — prompts, templ
 │  ───────                          ────────                             │
 │  plan-decomposer              →   ai-parts/<slice-id>/OVERVIEW.md      │
 │                                   ai-parts/<slice-id>/PXX-*.md         │
+│                                   Requirement Coverage Map             │
 │  part-executor-tdd            →   implemented code + tests +           │
 │                                   ai-parts/<slice-id>/reviews/         │
 │                                     <part-id>-quality-report.md        │
+│                                   snapshot + §3b matrix + mutation      │
+│                                   evidence                              │
 │  code-quality-reviewer        →   ai-parts/<slice-id>/reviews/         │
 │  (per Part: Step 6a)                <part-id>-review.md                │
+│                                   twelve checks + D1–D9 + coverage audit │
 │  (UI slices: Step 6b)         →   slice-verification/<slice>.md        │
+│                                   criterion rollup + browser evidence   │
 │                                                                        │
 │  Agents (adopt during execution):                                      │
 │  ─────────────────────────────                                         │
@@ -148,8 +153,8 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `ui-inventory-template` | `ui-inventory` |
 | `retrofit-spec-template` | Used for retrofit migration slices |
 | `remediation-spec-template` | Used for remediation slices (`ui-remediation-workflow`) |
-| `slice-verification-checklist-template` | Integrated Slice Verification (engineering workflow Step 6b) |
-| `code-quality-checklist-template` | Part Quality Report emitted by `part-executor-tdd` per Part (Step 6) |
+| `slice-verification-checklist-template` | Integrated Slice Verification, criterion rollup, and browser evidence (engineering workflow Step 6b) |
+| `code-quality-checklist-template` | Part Quality Report with snapshot, §3b coverage matrix, mutation evidence, and quality gates (Step 6) |
 | `project-claude-template` | Copied to a project repo as its root `CLAUDE.md` |
 
 ### Agents — `ai/agents/`
@@ -163,7 +168,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `qa-agent` | Testing strategy, coverage, regression |
 | `ai-testing-agent` | AI-specific testing, golden datasets, probabilistic validation |
 | `devops-agent` | CI/CD, containers, infrastructure, deployment |
-| `code-reviewer-agent` | Per-Part code review against the code quality standard (Step 6a) |
+| `code-reviewer-agent` | Per-Part twelve-check review with D1–D9 dimension and requirement coverage audits (Step 6a) |
 | `integration-reviewer` | Cross-slice contract verification and drift detection |
 
 ### Skills — `.github/skills/`
