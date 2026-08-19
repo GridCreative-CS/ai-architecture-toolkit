@@ -44,7 +44,10 @@ Follow the numbered rules in `.github/copilot-instructions.md`. The
 load-bearing ones:
 
 - `architecture/architecture-final.md` and `architecture/adr/*.md` are
-  **authoritative**. Do not introduce new architecture without review —
+  **authoritative** once `architecture/architecture-final-gate.md` records
+  verdict `APPROVED` or `APPROVED WITH NOTES`; until then the final
+  architecture is a draft and must not drive ADRs, delivery planning, feature
+  specs, or implementation. Do not introduce new architecture without review —
   surface the need as a compliance finding or open question.
 - For implementation, follow `ai/workflows/engineering-workflow.md`. Its step
   numbers are canonical. Implementation starts only when the selected slice

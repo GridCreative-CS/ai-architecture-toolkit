@@ -4,7 +4,7 @@ These are the canonical working rules for repositories using the AI Architecture
 
 When working in this repository:
 
-1. Treat `architecture/architecture-final.md` and `architecture/adr/*.md` as authoritative once they exist as real project outputs (scaffold placeholders do not count).
+1. Treat `architecture/architecture-final.md` and `architecture/adr/*.md` as authoritative once they exist as real project outputs (scaffold placeholders do not count) **and** `architecture/architecture-final-gate.md` records verdict `APPROVED` or `APPROVED WITH NOTES`. Until then the document is a draft: do not use it as the source of truth for ADR generation, delivery planning, feature specs, compliance checks, decomposition, or implementation.
 2. For architecture work, follow the workflow for your entry mode (`ai/workflows/architecture-workflow.md` is the mode selector):
    - `ai/workflows/architecture-workflow-prototype-only.md` — Mode A: prototype only
    - `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md` — Mode B: prototype + architecture doc

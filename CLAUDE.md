@@ -48,7 +48,7 @@ VERSION.md                   # Toolkit version and changelog of workflow-affecti
 
 The canonical numbered rules live in `.github/copilot-instructions.md` and apply to ALL work in a repo that uses this toolkit. Summary (keep the two files in sync):
 
-1. Treat `architecture/architecture-final.md` and `architecture/adr/*.md` as authoritative once they exist **as real project outputs** (scaffold stubs do not count).
+1. Treat `architecture/architecture-final.md` and `architecture/adr/*.md` as authoritative once they exist **as real project outputs** (scaffold stubs do not count) **and** `architecture/architecture-final-gate.md` records verdict `APPROVED` or `APPROVED WITH NOTES`. Until then the document is a draft: do not use it as the source of truth for ADR generation, delivery planning, feature specs, compliance checks, decomposition, or implementation.
 2. For architecture work, follow the workflow for your entry mode (see table below).
 3. For implementation work, follow `ai/workflows/engineering-workflow.md`.
 4. Use `ai/project-context.md` as context for all project-specific work.
