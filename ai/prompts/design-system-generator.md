@@ -76,7 +76,7 @@ Standardize the four states every API-backed interaction must handle:
 
 - **Loading** — skeleton, spinner, or shimmer
 - **Success** — result display or confirmation
-- **Error** — error message display (map to RFC 7807 where applicable)
+- **Error** — error message display (map to RFC 9457 where applicable)
 - **Empty** — first-use empty vs. filtered-to-empty
 
 ### 6. Define accessibility baseline

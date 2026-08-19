@@ -47,8 +47,11 @@ public async Task CreateJob_DuplicateTitle_Returns409WithProblemDetails()
     var duplicate = await _client.PostAsJsonAsync("/api/jobs", new { Title = "Engineer" });
 
     Assert.Equal(HttpStatusCode.Conflict, duplicate.StatusCode);
+    Assert.Equal("application/problem+json", duplicate.Content.Headers.ContentType?.MediaType);
+
     var problem = await duplicate.Content.ReadFromJsonAsync<ProblemDetails>();
-    Assert.Equal("https://tools.ietf.org/html/rfc7807", problem.Type);
+    Assert.Equal((int)HttpStatusCode.Conflict, problem.Status);
+    Assert.False(string.IsNullOrWhiteSpace(problem.Title));
 }
 
 [Fact]

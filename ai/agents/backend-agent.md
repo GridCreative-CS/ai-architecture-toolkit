@@ -117,7 +117,7 @@ Before marking work complete, verify:
 - [ ] nearby code and tests were read first; existing patterns followed or
       deviations justified (`ai/guides/code-quality-standard.md` §1)
 - [ ] error handling follows the project's established error flow, with
-      stable error identifiers matching existing errors (RFC 7807/9457
+      stable error identifiers matching existing errors (RFC 9457
       problem details at the API boundary)
 - [ ] validation split respected: request-shape checks at the boundary,
       business rules in the domain (code-quality standard §7)

@@ -91,7 +91,7 @@ Every API-backed interaction must handle:
 - **Loading** — visual indicator while waiting for a response
 - **Success** — display the result or confirmation
 - **Error** — display a meaningful message using the error shape from the
-  contract (RFC 7807 problem details where applicable), preserving the trace
+  contract (RFC 9457 problem details where applicable), preserving the trace
   reference so a reported error can be traced back
 - **Empty** — handle the case where no data exists yet
 

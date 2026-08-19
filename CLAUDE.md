@@ -155,7 +155,7 @@ Before writing any code, read the full guidance in `.github/instructions/`. Thes
 - **Secrets:** Never commit real credentials. Use placeholders and `dotnet user-secrets` or `.env`. Fail fast on missing required configuration at startup.
 - **Serilog redaction:** Use enrichers matching on property names, not CLR type names.
 - **Data access:** EF Core with repository pattern. Explain different DB options for dev/prod. Proper migrations and seeding.
-- **Validation:** Data annotations or FluentValidation. RFC 7807 problem details for error responses.
+- **Validation:** Data annotations or FluentValidation. RFC 9457 problem details (obsoletes RFC 7807) for error responses.
 
 ### Docker (`.github/instructions/dockerfile.instructions.md`)
 
