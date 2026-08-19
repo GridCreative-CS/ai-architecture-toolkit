@@ -374,6 +374,45 @@ public sealed class ToolkitPrompts
     /// <summary>
     /// Assembles a complete existing architecture review prompt.
     /// </summary>
+    /// <summary>
+    /// Assembles the architecture-final quality gate prompt (toolkit v4.5.0) —
+    /// run in a fresh session between reconciliation and ADR generation.
+    /// </summary>
+    [McpServerPrompt, Description("Generates a complete prompt for running the architecture-final quality gate (toolkit v4.5.0). Includes the 16-check gate prompt, architecture-final.md, and the project context. Run this in a fresh session after reconciliation and before ADR generation.")]
+    public static string ArchitectureFinalQualityGate(
+        ToolkitContentService toolkitService,
+        ProjectContentService projectService)
+    {
+        ArgumentNullException.ThrowIfNull(toolkitService);
+        ArgumentNullException.ThrowIfNull(projectService);
+
+        var prompt = toolkitService.GetContent("prompts", "architecture-final-quality-gate") ?? "";
+        var architecture = projectService.GetArchitecture() ?? "(no architecture-final.md found)";
+        var projectContext = projectService.GetProjectContext() ?? "(no project-context.md found)";
+
+        return $"""
+            {prompt}
+
+            ---
+
+            ## Context: Project Context
+
+            {projectContext}
+
+            ---
+
+            ## Artifact Under Review: architecture-final.md
+
+            {architecture}
+
+            ---
+
+            ## Task
+
+            Run the quality gate against architecture-final.md above. Record exactly one verdict — `APPROVED`, `APPROVED WITH NOTES`, or `REJECTED — MUST FIX` — in architecture/architecture-final-gate.md. ADR generation must not start until the verdict is APPROVED or APPROVED WITH NOTES.
+            """;
+    }
+
     [McpServerPrompt, Description("Generates a complete prompt for reviewing an existing architecture document (no prototype). Includes the existing-architecture-reviewer prompt and the architecture document.")]
     public static string ExistingArchitectureReviewer(
         ToolkitContentService toolkitService,

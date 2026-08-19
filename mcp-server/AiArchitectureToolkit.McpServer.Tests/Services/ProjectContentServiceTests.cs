@@ -26,6 +26,11 @@ public sealed class ProjectContentServiceTests : IDisposable
         CreateFile("architecture/adr", "ADR-002-vertical-slices.md", "# ADR-002\n\nUse vertical slices.");
         CreateFile("architecture/feature-specs", "user-registration.md", "# User Registration\n\nFeature spec content.");
         CreateFile("ai", "project-context.md", "# Project Context\n\nThis is a project.");
+        CreateFile("architecture", "legacy-system-analysis.md", "# Legacy System Analysis\n\nMode D findings.");
+        CreateFile("architecture", "architecture-final-gate.md", "# Gate Report\n\nVerdict: APPROVED WITH NOTES.");
+        CreateFile("architecture/compliance-reports", "user-registration.md", "# Compliance\n\nArchitecture compliance findings.");
+        CreateFile("architecture/compliance-reports", "user-registration-ui.md", "# UI Compliance\n\nUI compliance findings.");
+        CreateFile("architecture/slice-verification", "user-registration.md", "# Slice Verification\n\nBrowser evidence.");
 
         // Don't create design-system.md (to test missing file behavior)
 
@@ -215,6 +220,121 @@ public sealed class ProjectContentServiceTests : IDisposable
 
         Assert.Contains("remediation-audit", artifacts.Keys);
         Assert.False(artifacts["remediation-audit"][0].Exists);
+    }
+
+    [Fact]
+    public void GetLegacySystemAnalysis_ReturnsContent()
+    {
+        var content = _service.GetLegacySystemAnalysis();
+
+        Assert.NotNull(content);
+        Assert.Contains("Mode D findings", content);
+    }
+
+    [Fact]
+    public void GetArchitectureFinalGate_ReturnsContent()
+    {
+        var content = _service.GetArchitectureFinalGate();
+
+        Assert.NotNull(content);
+        Assert.Contains("APPROVED WITH NOTES", content);
+    }
+
+    [Fact]
+    public void GetSliceVerification_ReturnsContent()
+    {
+        var content = _service.GetSliceVerification("user-registration");
+
+        Assert.NotNull(content);
+        Assert.Contains("Browser evidence", content);
+    }
+
+    [Fact]
+    public void GetSliceVerification_MissingSlice_ReturnsNull()
+    {
+        Assert.Null(_service.GetSliceVerification("nonexistent"));
+    }
+
+    [Fact]
+    public void GetSliceVerification_PathTraversal_ReturnsNull()
+    {
+        Assert.Null(_service.GetSliceVerification("../../etc/passwd"));
+    }
+
+    [Fact]
+    public void GetComplianceReport_ReturnsArchitectureReportNotUiReport()
+    {
+        var content = _service.GetComplianceReport("user-registration");
+
+        Assert.NotNull(content);
+        Assert.Contains("Architecture compliance findings", content);
+        Assert.DoesNotContain("UI compliance findings", content);
+    }
+
+    [Fact]
+    public void GetUiComplianceReport_ReturnsUiReport()
+    {
+        var content = _service.GetUiComplianceReport("user-registration");
+
+        Assert.NotNull(content);
+        Assert.Contains("UI compliance findings", content);
+    }
+
+    [Fact]
+    public void GetUiComplianceReport_MissingSlice_ReturnsNull()
+    {
+        Assert.Null(_service.GetUiComplianceReport("nonexistent"));
+    }
+
+    [Fact]
+    public void GetUiComplianceReport_ForASliceWhoseNameEndsInUi_StillAppendsTheUiSuffix()
+    {
+        // A slice may legitimately be named '…-ui'; its UI report is still
+        // '<slice>-ui.md', never the architecture report '<slice>.md'.
+        CreateFile("architecture/compliance-reports", "s3-admin-ui.md", "# Compliance\n\nArchitecture findings for admin UI.");
+        CreateFile("architecture/compliance-reports", "s3-admin-ui-ui.md", "# UI Compliance\n\nUI findings for admin UI.");
+
+        var uiReport = _service.GetUiComplianceReport("s3-admin-ui");
+
+        Assert.NotNull(uiReport);
+        Assert.Contains("UI findings for admin UI", uiReport);
+        Assert.DoesNotContain("Architecture findings for admin UI", uiReport);
+    }
+
+    [Fact]
+    public void ListArtifacts_SeparatesUiComplianceReportsFromArchitectureOnes()
+    {
+        var artifacts = _service.ListArtifacts();
+
+        Assert.Equal(["user-registration"], artifacts["compliance-reports"].Select(a => a.Name));
+        Assert.Equal(["user-registration-ui"], artifacts["ui-compliance-reports"].Select(a => a.Name));
+    }
+
+    [Fact]
+    public void ListArtifacts_IncludesSliceVerificationEvidence()
+    {
+        var artifacts = _service.ListArtifacts();
+
+        Assert.Equal(["user-registration"], artifacts["slice-verification"].Select(a => a.Name));
+    }
+
+    [Fact]
+    public void ListArtifacts_IncludesLegacySystemAnalysisAndFinalGate()
+    {
+        var artifacts = _service.ListArtifacts();
+
+        Assert.True(artifacts["legacy-system-analysis"][0].Exists);
+        Assert.True(artifacts["architecture-final-gate"][0].Exists);
+    }
+
+    [Fact]
+    public void ListArtifacts_IncludesAiPartsSliceFolders()
+    {
+        Directory.CreateDirectory(Path.Combine(_tempDir, "ai-parts", "s1-user-registration"));
+
+        var artifacts = _service.ListArtifacts();
+
+        Assert.Equal(["s1-user-registration"], artifacts["ai-parts"].Select(a => a.Name));
     }
 
     public void Dispose()

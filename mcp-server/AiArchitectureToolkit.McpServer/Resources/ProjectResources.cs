@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Text;
 using ModelContextProtocol.Server;
 
 namespace AiArchitectureToolkit.McpServer.Resources;
@@ -93,5 +94,79 @@ public sealed class ProjectResources
     {
         return service.GetRemediationAudit()
             ?? "remediation-audit.md not found in this workspace.";
+    }
+
+    [McpServerResource(UriTemplate = "project://legacy-system-analysis"), Description("The legacy system analysis (architecture Mode D)")]
+    public static string GetLegacySystemAnalysis(ProjectContentService service)
+    {
+        ArgumentNullException.ThrowIfNull(service);
+
+        return service.GetLegacySystemAnalysis()
+            ?? "legacy-system-analysis.md not found in this workspace.";
+    }
+
+    [McpServerResource(UriTemplate = "project://architecture-final-gate"), Description("The architecture-final quality gate report — architecture-final.md is authoritative only once this records APPROVED or APPROVED WITH NOTES")]
+    public static string GetArchitectureFinalGate(ProjectContentService service)
+    {
+        ArgumentNullException.ThrowIfNull(service);
+
+        return service.GetArchitectureFinalGate()
+            ?? "architecture-final-gate.md not found in this workspace.";
+    }
+
+    [McpServerResource(UriTemplate = "project://slice-verification/{name}"), Description("Integrated Slice Verification evidence (engineering workflow Step 6b) for a slice")]
+    public static string GetSliceVerification(ProjectContentService service, string name)
+    {
+        ArgumentNullException.ThrowIfNull(service);
+
+        return service.GetSliceVerification(name)
+            ?? $"Slice verification evidence for '{name}' not found.";
+    }
+
+    /// <summary>
+    /// Renders a slice's decomposition output: <c>OVERVIEW.md</c>, each Part's
+    /// Status line, its Step 6 / Step 6a review state, and the warnings that
+    /// decide whether the next Part may start.
+    /// </summary>
+    [McpServerResource(UriTemplate = "project://ai-parts/{sliceId}"), Description("The decomposition output for a slice (ai-parts/<slice-id>/): OVERVIEW.md, each Part's Status, its Part Quality Report and Part Code Review verdict, and warnings blocking the next Part")]
+    public static string GetAiParts(ProjectContentService service, string sliceId)
+    {
+        ArgumentNullException.ThrowIfNull(service);
+
+        var decomposition = service.GetDecomposition(sliceId);
+        if (decomposition is null)
+        {
+            return $"Decomposition for slice '{sliceId}' not found under ai-parts/.";
+        }
+
+        var sb = new StringBuilder();
+        sb.AppendLine($"# Decomposition: {decomposition.SliceId}");
+        sb.AppendLine();
+
+        DecompositionReport.Append(sb, decomposition, "## Parts");
+
+        var overview = service.GetPartsOverview(decomposition.SliceId);
+        sb.AppendLine("---");
+        sb.AppendLine("## OVERVIEW.md");
+        sb.AppendLine();
+        sb.AppendLine(overview ?? "(no OVERVIEW.md in this slice folder)");
+        sb.AppendLine();
+
+        foreach (var part in decomposition.Parts)
+        {
+            var content = service.GetPart(decomposition.SliceId, part.FileName);
+            if (content is null)
+            {
+                continue;
+            }
+
+            sb.AppendLine("---");
+            sb.AppendLine($"## {part.FileName}.md");
+            sb.AppendLine();
+            sb.AppendLine(content);
+            sb.AppendLine();
+        }
+
+        return sb.ToString();
     }
 }

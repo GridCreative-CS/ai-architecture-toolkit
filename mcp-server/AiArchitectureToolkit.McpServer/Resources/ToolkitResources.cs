@@ -53,6 +53,13 @@ public sealed class ToolkitResources
             ?? $"Example '{name}' not found.";
     }
 
+    [McpServerResource(UriTemplate = "toolkit://skills/{name}"), Description("An execution skill definition from .github/skills/<name>/SKILL.md (plan-decomposer, part-executor-tdd) — these define the Part handoff contract")]
+    public static string GetSkill(ToolkitContentService service, string name)
+    {
+        return service.GetContent("skills", name)
+            ?? $"Skill '{name}' not found.";
+    }
+
     [McpServerResource(UriTemplate = "toolkit://instructions/{name}"), Description("A coding instruction document from .github/instructions/")]
     public static string GetInstruction(ToolkitContentService service, string name)
     {
