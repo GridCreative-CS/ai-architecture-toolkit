@@ -69,8 +69,9 @@ During slice execution, the design system integrates at these points:
    Compliance dimension.
 3. **Frontend agent** — the frontend agent consumes
    `architecture/design-system.md` as an authoritative input.
-4. **UI compliance check** — optionally run `ai/prompts/ui-compliance-check.md`
-   per slice to verify design system conformance.
+4. **UI compliance check** — run `ai/prompts/ui-compliance-check.md` for every
+   slice with human workflow surfaces (engineering workflow Step 4a —
+   **mandatory** for UI slices) to verify design system conformance.
 
 ## Step 4 — Evolve the Design System
 
@@ -99,8 +100,9 @@ Delivery Planning
 Slice Execution Loop (engineering-workflow.md)
   → Feature Spec (with §11b UI/UX acceptance criteria)
   → Compliance Check (with Design System dimension)
+  → UI Compliance Check (mandatory for UI slices — Step 4a)
   → Decompose → TDD Execute
-  → UI Compliance Check (optional per slice)
+  → Integrated Slice Verification (mandatory for UI slices — Step 6b)
   → Next Slice
 ```
 

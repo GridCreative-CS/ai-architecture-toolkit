@@ -30,6 +30,7 @@ applyTo: '**/*.cs'
 - Use pattern matching and switch expressions wherever possible.
 - Use `nameof` instead of string literals when referring to member names.
 - Ensure that XML doc comments are created for any public APIs. When applicable, include `<example>` and `<code>` documentation in the comments.
+- **Traceability in doc comments (hard rule):** every public type and member carries an XML doc comment, and whenever the documented behavior implements a rule from the architecture, an ADR, or a feature spec, the comment cites the owning source specifically — slice ID, spec section (e.g. "spec §6 rule 4"), ADR number (e.g. "ADR-08"), and the stable error code where one applies (e.g. `422 CRISIS_ESCALATION_REQUIRED`). The same applies to test-class doc comments: state which contract or spec rules the tests lock. Generic phrases like "per the architecture" or "as specified" without a traceable citation are not acceptable.
 
 ## Project Setup and Structure
 
@@ -73,7 +74,7 @@ applyTo: '**/*.cs'
 - Explain the validation pipeline and how to customize validation responses.
 - Demonstrate a global exception handling strategy using middleware.
 - Show how to create consistent error responses across the API.
-- Explain problem details (RFC 7807) implementation for standardized error responses.
+- Explain problem details (RFC 9457, which obsoletes RFC 7807) implementation for standardized error responses.
 
 ## API Versioning and Documentation
 
@@ -86,6 +87,8 @@ applyTo: '**/*.cs'
 ## Logging and Monitoring
 
 - Guide the implementation of structured logging using Serilog or other providers.
+- Use message templates with named properties (`"SessionId={SessionId}"`), never string interpolation, in log calls.
+- Log identifiers, never sensitive payloads: no PII, secrets, tokens, or free-text user content unless the project has an explicit redaction mechanism and the log site uses it.
 - Explain the logging levels and when to use each.
 - Demonstrate integration with Application Insights for telemetry collection.
 - Show how to implement custom telemetry and correlation IDs for request tracking.
@@ -105,6 +108,19 @@ applyTo: '**/*.cs'
 - Demonstrate how to mock dependencies for effective testing.
 - Show how to test authentication and authorization logic.
 - Explain test-driven development principles as applied to API development.
+
+## Async and Cancellation
+
+- Every async public method accepts a `CancellationToken` and passes it to every awaited call down to the I/O layer. Do not accept a token and drop it, and do not add `CancellationToken.None` where a real token is in scope.
+- Use `ConfigureAwait(false)` on awaits in library/application-layer code (non-UI, non-ASP.NET-request-context code); follow the convention visible in nearby files.
+- No `async void` (except event handlers), no sync-over-async (`.Result`, `.Wait()`, `.GetAwaiter().GetResult()`), no fire-and-forget tasks outside an established background-work mechanism (hosted service, queue).
+- Timeouts, retries, and resilience use the project's existing mechanism (e.g., `Microsoft.Extensions.Http.Resilience`/Polly) — do not hand-roll retry loops.
+
+## Error Handling and Results
+
+- Follow the project's established error flow: if handlers/services return a result type (e.g., `Result<T>` with an error kind), new code uses it for expected failures — reserve exceptions for unexpected faults.
+- Give every externally visible error a stable error identifier (e.g., an `UPPER_SNAKE` code prefix in the error message or a problem-details `type`), formatted exactly like existing errors, so contracts and tests can rely on it.
+- Map infrastructure exceptions to the contract's documented error responses at the boundary where the project does so; never swallow exceptions or fall back silently.
 
 ## Performance Optimization
 

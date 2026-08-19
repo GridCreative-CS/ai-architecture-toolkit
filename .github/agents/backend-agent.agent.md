@@ -122,7 +122,7 @@ Before marking work complete, verify:
 - [ ] TDD cycle was followed for behavioral changes
 - [ ] contracts match the feature spec §7 (API / Contract Expectations)
 - [ ] module boundaries are respected (no cross-module data access)
-- [ ] error handling follows RFC 7807 problem details pattern
+- [ ] error handling follows the RFC 9457 problem details pattern
 - [ ] no unauthorized architecture drift introduced
 
 ## Forbidden Actions

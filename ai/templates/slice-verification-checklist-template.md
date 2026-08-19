@@ -8,7 +8,7 @@
 ## Metadata
 
 - **Slice name:**
-- **Feature spec:** `architecture/feature-specs/<slice-name>.md`
+- **Feature spec:** `architecture/feature-specs/<slice-id>-<slice-name>.md`
 - **Verification date:**
 - **Verified by:**
 
@@ -62,6 +62,25 @@
 - [ ] Form inputs have associated labels
 - [ ] Sufficient color contrast for text
 - [ ] Focus indicator visible on interactive elements
+
+## Requirement Coverage Rollup
+
+Take the final Part's quality report §3b requirement coverage matrix and close
+it out. Nothing may leave this step unproven.
+
+| Criterion | Status in final Part §3b | Verified here | Evidence |
+| --- | --- | --- | --- |
+| | | | |
+
+- [ ] Every criterion in the feature spec (§6 `DR-nn`, §9 `SEC-nn`, §11
+      `AC-nn`, §11b `UIAC-nn`) appears in the rollup
+- [ ] Zero criteria remain `NOT-YET`
+- [ ] Every row marked `DEFERRED (Step 6b, …)` has been verified here, with
+      the observed result recorded
+- [ ] Every `N/A` row still has a reason that holds for the slice as built
+
+A criterion arriving here unowned or unproven is a **slice failure**, not a
+note: it means no Part ever implemented it and no review ever caught that.
 
 ## Evidence
 

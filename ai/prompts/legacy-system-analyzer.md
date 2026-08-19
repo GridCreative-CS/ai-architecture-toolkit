@@ -53,6 +53,15 @@ For each finding, classify:
 - **Intent / Constraint** — what the system must preserve, support, or remain compatible with
 - **Implementation** — how the legacy system currently does it (do not assume this is the right approach for the replacement)
 
+## Output
+
+Write to:
+
+- `architecture/legacy-system-analysis.md`
+
+This file is the input for `ai/prompts/architecture-designer.md` in Mode D.
+Do not leave the analysis only in chat output.
+
 ## Output Structure
 
 1. Legacy System Purpose

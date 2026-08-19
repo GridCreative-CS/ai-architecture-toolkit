@@ -38,6 +38,19 @@ For every contract that crosses a slice or module boundary:
 Use the contract definition from `ai/guides/contract-definition.md` as the
 reference for what constitutes a complete contract.
 
+Check all four contract surfaces for **hidden changes** — changes the Part
+Quality Reports (`ai-parts/<slice-id>/reviews/`) declared as "unchanged" or
+did not declare at all (`ai/guides/code-quality-standard.md` §12):
+
+- **Public API** — endpoints, request/response shapes, status codes, stable
+  error identifiers, auth requirements
+- **Database/schema** — migrations, tables/columns, constraints, data ownership
+- **Events/messages** — schemas, topics/queues, ordering and delivery semantics
+- **UI behavior** — routes, user-visible flows, shared component contracts
+
+A cross-boundary contract change that no quality report declares is a
+**Critical** finding.
+
 ### 2. Verify data consistency
 
 At integration boundaries, check:
@@ -115,6 +128,8 @@ For each finding, classify the risk:
 Before completing the review, verify:
 
 - [ ] all cross-slice contracts are compatible (producer and consumer agree)
+- [ ] all four contract surfaces (API, database/schema, events, UI) were
+      diffed against the Part Quality Reports — no hidden contract changes
 - [ ] data ownership is clear at every integration boundary
 - [ ] no unauthorized architecture drift was introduced
 - [ ] correlation IDs and observability are maintained across boundaries
@@ -137,6 +152,7 @@ Before completing the review, verify:
 
 ## References
 
+- Code quality standard (contract surfaces: §12): `ai/guides/code-quality-standard.md`
 - Contract definition: `ai/guides/contract-definition.md`
 - Modular monolith boundaries: `ai/guides/modular-monolith-definition.md`
 - Glossary (architecture drift, contract violation): `ai/guides/glossary.md`

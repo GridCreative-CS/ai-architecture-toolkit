@@ -28,7 +28,7 @@ but it introduces one contract drift issue and one observability omission.
 
 ## 4. Violations Detected
 
-- Identifier: AC-001
+- Identifier: CV-001
 - Description: Response DTO includes a field not present in the approved contract.
 - Violated source: feature specification and API contract expectation
 - Severity: Medium
@@ -36,7 +36,7 @@ but it introduces one contract drift issue and one observability omission.
 - Recommended correction: align DTO with the approved contract or update the spec
   through review
 
-- Identifier: AC-002
+- Identifier: CV-002
 - Description: Required metric for recommendation generation latency is missing.
 - Violated source: operational architecture
 - Severity: Low

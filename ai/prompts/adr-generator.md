@@ -8,6 +8,12 @@ architectural decisions**.
 - `architecture/architecture-final.md`
 - `architecture/adr/*.md` (existing ADRs, to avoid duplication)
 
+**Precondition:** the architecture-final quality gate
+(`architecture/architecture-final-gate.md`) has verdict `APPROVED` or
+`APPROVED WITH NOTES`. If the gate report is missing or the verdict is
+`REJECTED — MUST FIX`, stop and run/re-run the gate first — do not generate
+ADRs from an ungated document.
+
 ## Objective
 
 Generate Architecture Decision Records (ADRs) from the final architecture.
@@ -58,9 +64,12 @@ When one ADR depends on or constrains another, include an explicit reference
 
 Write each ADR to `architecture/adr/` using the naming convention:
 
-- `adr-001-<topic>.md`
-- `adr-002-<topic>.md`
+- `ADR-001-<topic>.md`
+- `ADR-002-<topic>.md`
 - etc.
+
+If the project already has ADRs, match the existing filename casing and
+numbering instead of introducing a second scheme.
 
 ## Rules
 

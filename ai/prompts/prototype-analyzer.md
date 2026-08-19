@@ -49,6 +49,16 @@ For each finding, classify:
 - **Implementation** — how the prototype does it (do not assume this is the
   right approach for production)
 
+## Output
+
+Write to:
+
+- `architecture/prototype-analysis.md`
+
+This file is the input for `ai/prompts/architecture-designer.md` (Mode A) and
+`ai/prompts/prototype-architecture-alignment.md` (Mode B). Do not leave the
+analysis only in chat output.
+
 ## Output Structure
 
 1. Prototype Purpose

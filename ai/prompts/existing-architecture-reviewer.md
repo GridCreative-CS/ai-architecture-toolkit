@@ -23,7 +23,19 @@ flag the ambiguity as a finding — do not resolve it by inventing content.
 Evaluate:
 
 - architectural integrity
-- completeness — are all required sections present and substantive?
+- completeness — are all required sections present and substantive? Judge
+  required content against the checks in
+  `ai/prompts/architecture-final-quality-gate.md` (the bar the final document
+  must pass) — by content, not by section layout. File a Design Gap finding
+  for every content area the gate requires that the document lacks (module
+  dependency rules incl. forbidden dependencies and enforcement, data
+  ownership and schema evolution, API versioning policy, per-dependency
+  failure behavior, security mechanisms, observability, deployment,
+  testing strategy, risks, assumptions, open questions, exclusions)
+- specificity — flag vague quality terms ("scalable", "robust", "secure",
+  "production-ready", ...) with no stated mechanism and verification;
+  unquantified scale/load context; capabilities assigned to no module;
+  claims with no evidence or recorded assumption behind them
 - scalability
 - maintainability
 - security

@@ -1,106 +1,143 @@
 # CLAUDE.md — AI Architecture Toolkit
 
-## Project overview
+## What this repository is
 
-This repository uses the AI Architecture Toolkit — a set of reusable prompts, agents, workflows, templates, guides, and skills for AI-assisted architecture design, delivery planning, feature specification, decomposition, and TDD-based implementation. The toolkit is copied into project repositories and adapted to each project's needs.
+This is the **source repository of the AI Architecture Toolkit** — reusable prompts, agents, workflows, templates, guides, and skills for AI-assisted architecture design, delivery planning, feature specification, decomposition, and TDD-based implementation. It is **not an application repository**. The toolkit is copied into project repositories (whole or minimal), where it drives the delivery of an actual application.
 
-## Toolkit structure
+There are therefore two working contexts. Determine yours before doing anything:
 
-This toolkit is designed to be copied into other repositories as a foundation for AI-assisted architecture and engineering. The toolkit files live in these directories:
+| Context | You are in it when | What you do |
+| --- | --- | --- |
+| **A — Maintaining the toolkit** | The repo is `ai-architecture-toolkit` itself: `ai/project-context.md` is a stub, `architecture/` contains scaffold placeholders, and the only code is `mcp-server/` | Improve toolkit assets. Follow [Toolkit maintenance rules](#toolkit-maintenance-rules-context-a). |
+| **B — Using the toolkit in a project** | The toolkit was copied into an application repo: `ai/project-context.md` is filled in and real `src/`/`tests/` exist | Build the application by following the workflows. Follow [Working rules](#working-rules). |
+
+If you cannot tell which context applies, ask — do not guess.
+
+## Repository structure
 
 ```text
-ai/                          # Core toolkit
-  agents/                    # Specialist agent personas (backend, frontend, QA, DevOps, etc.)
-  guides/                    # Reference guides (glossary, vertical slices, contracts, etc.)
-  prompts/                   # Prompts for architecture, delivery, compliance, etc.
-  templates/                 # Templates for feature specs, ADRs, compliance reports, etc.
-  workflows/                 # End-to-end workflow definitions
+ai/                          # Core toolkit (reusable assets)
+  agents/                    # Specialist agent personas (orchestrator, backend, frontend, AI, QA, AI-testing, DevOps, integration reviewer)
+  guides/                    # Reference guides (glossary, vertical slices, contracts, DoR/DoD, operating model, quick-start, toolkit map, ...)
+  prompts/                   # Prompts for each workflow step (architecture, delivery, specs, compliance, UI, golden datasets, legacy analysis)
+  templates/                 # Templates for generated artifacts (feature specs, ADRs, compliance reports, design system, verification checklist, ...)
+  workflows/                 # End-to-end workflow definitions (architecture Modes A–D, engineering, UI foundation/retrofit/remediation)
   examples/                  # Concrete good/bad pattern examples
-  project-context.md         # Project-specific context (fill per project)
+  project-context.md         # Per-project context (stub here; filled per project from the template)
 .github/
-  instructions/              # File-type coding conventions (C#, Docker, Compose)
-  skills/                    # Decomposition and execution skills
-  agents/                    # .NET engineer agent persona
-  prompts/                   # Planning prompts
-  copilot-instructions.md    # Cross-tool instructions (also applies to Claude)
+  instructions/              # File-type coding conventions (C#, Dockerfile, Docker Compose)
+  skills/                    # Execution skills: plan-decomposer, part-executor-tdd
+  agents/                    # Copilot agent personas (.NET expert, backend, Docker/Traefik DevOps)
+  prompts/                   # Reusable Copilot prompts
+  copilot-instructions.md    # Canonical numbered working rules (cross-tool; this file mirrors them)
+architecture/                # SCAFFOLD ONLY in this repo — per-project output location (see below)
+docs/                        # Toolkit-repo documentation (design history); not copied into projects
+mcp-server/                  # MCP server exposing the toolkit to LLM tooling (only application code in this repo)
+CLAUDE.md                    # This file — primary instruction file for Claude and compatible agents
+README.md                    # Human-facing overview; must stay in sync with this file
+VERSION.md                   # Toolkit version and changelog of workflow-affecting changes
 ```
 
-The `architecture/` directory is an output location created per project (blueprints, ADRs, delivery plans, feature specs, compliance reports). The rest of the project structure depends on the application being built.
+## Asset classes — what you may and may not edit
+
+1. **Reusable toolkit assets** — everything under `ai/` (except `ai/project-context.md`), `.github/`, and `mcp-server/`. In context B, treat these as read-only process definitions: do not casually modify them to make a task easier; propose changes to the toolkit maintainer instead. In context A, modify them only per the maintenance rules below.
+2. **Per-project outputs** — everything under `architecture/`, `ai-parts/`, and the filled `ai/project-context.md`. Generated by running the toolkit in a project. In this source repo, `architecture/` holds only scaffold placeholder files that show each output's expected shape (`architecture/adr/` is empty by design — sample ADRs live in `ai/examples/`); never put real decisions in the scaffold.
+3. **Application code** — `src/`, `tests/`, and infra files exist only in project repos (here, only `mcp-server/`). Governed by the architecture outputs and `.github/instructions/`.
 
 ## Working rules
 
-These rules apply to ALL work in this repository (sourced from `.github/copilot-instructions.md`):
+The canonical numbered rules live in `.github/copilot-instructions.md` and apply to ALL work in a repo that uses this toolkit. Summary (keep the two files in sync):
 
-1. Treat `architecture/architecture-final.md` and `architecture/adr/*.md` as authoritative once they exist.
-2. For architecture work, follow `ai/workflows/architecture-workflow.md` (or its variants).
+1. Treat `architecture/architecture-final.md` and `architecture/adr/*.md` as authoritative once they exist **as real project outputs** (scaffold stubs do not count) **and** `architecture/architecture-final-gate.md` records verdict `APPROVED` or `APPROVED WITH NOTES`. Until then the document is a draft: do not use it as the source of truth for ADR generation, delivery planning, feature specs, compliance checks, decomposition, or implementation.
+2. For architecture work, follow the workflow for your entry mode (see table below).
 3. For implementation work, follow `ai/workflows/engineering-workflow.md`.
-4. Use `ai/project-context.md` as additional context for any project-specific work.
-5. Prefer vertical slices. See `ai/guides/vertical-slice-definition.md` for the definition and verticality test.
-6. Prefer modular monolith unless another pattern is explicitly justified. See `ai/guides/modular-monolith-definition.md`.
-7. Do not introduce new architecture without review.
-8. Respect TDD and the decomposition/execution skills (plan-decomposer, part-executor-tdd).
-9. If a feature spec exists for the selected slice, treat it as a primary input for decomposition and implementation.
-10. See `ai/guides/glossary.md` for definitions of key terms used throughout the toolkit.
-11. Do not make assumptions about the project context beyond what is stated in `ai/project-context.md`. Prefer asking for clarification over assuming. For every question you ask, provide advice.
+4. Use `ai/project-context.md` as context for all project-specific work.
+5. Prefer vertical slices — `ai/guides/vertical-slice-definition.md` defines the verticality test.
+6. Prefer modular monolith unless another pattern is explicitly justified — `ai/guides/modular-monolith-definition.md`.
+7. Do not introduce new architecture without review. Surface the need as a compliance finding or open question instead of deciding it yourself.
+8. Respect TDD and the decomposition/execution skills (`plan-decomposer`, `part-executor-tdd`). Implementation starts only when the selected slice has a feature spec and an `ai-parts/<slice-id>/` handoff (OVERVIEW plus Part files).
+9. If a feature spec exists for the selected slice, it is the primary input for decomposition and implementation.
+10. Use `ai/guides/glossary.md` definitions for all load-bearing terms.
+11. Do not assume project context beyond `ai/project-context.md`. Prefer asking over assuming; state any assumption you must make; for every question you ask, provide advice.
 12. Treat `architecture/design-system.md` as authoritative for UI decisions when it exists.
 13. For UI-inclusive projects, follow `ai/workflows/ui-foundation-workflow.md` (greenfield) or `ai/workflows/ui-retrofit-workflow.md` (retrofit).
-14. For slices with human workflow surfaces, UI compliance check (Step 4a), Integrated Slice Verification (Step 6b), and the Frontend Agent are **mandatory** — not optional.
-15. For projects with UI slices completed under an older toolkit version, use `ai/workflows/ui-remediation-workflow.md` to revalidate before resuming.
+14. For slices with human workflow surfaces, the UI compliance check (engineering workflow Step 4a), Integrated Slice Verification (Step 6b), and the Frontend Agent are **mandatory**.
+15. For projects with UI slices completed under an older toolkit version, run `ai/workflows/ui-remediation-workflow.md` before resuming new slices.
+16. All implementation code follows `ai/guides/code-quality-standard.md`: read nearby code and tests before writing, follow existing project patterns over model defaults, no new libraries or speculative abstractions without justification, no silent contract changes, no TODOs/placeholders/fake implementations. Every Part ends with a Part Quality Report and passes the Part code review (engineering workflow Step 6a) before the next Part starts.
+17. Every acceptance criterion is traceable end to end: each feature spec criterion (§6 `DR-nn`, §9 `SEC-nn`, §11 `AC-nn`, §11b `UIAC-nn`) gets an owning Part in the decomposition's Requirement Coverage Map, a row in the Part Quality Report §3b matrix, and an audit at Step 6a. A criterion counts as covered only when a test fails if the implementation is removed — proven by a mutation check for authorization guards, cache invalidation, cancellation/supersession, and error→message mapping.
 
-## Workflows
+## Entry modes (architecture phase)
 
-### Architecture workflow
+Choose by the strongest available input. Details: `ai/guides/how-to-choose-entry-mode.md`.
 
-Follow `ai/workflows/architecture-workflow.md`. Variants:
-- `ai/workflows/architecture-workflow-architecture-doc-only.md` — when working from an architecture doc without a prototype
-- `ai/workflows/architecture-workflow-prototype-only.md` — when working from a prototype
-- `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md` — both available
+| Mode | You have | Workflow |
+| --- | --- | --- |
+| **A — Prototype Only** | A prototype, no useful architecture doc | `ai/workflows/architecture-workflow-prototype-only.md` |
+| **B — Prototype + Architecture Doc** | Both | `ai/workflows/architecture-workflow-prototype-plus-architecture-doc.md` |
+| **C — Architecture Doc Only** | An architecture doc, no prototype | `ai/workflows/architecture-workflow-architecture-doc-only.md` |
+| **D — Legacy System Replacement** | A legacy system to replace (not repair) | `ai/workflows/architecture-workflow-legacy-system-replacement.md` |
 
-### Engineering workflow (implementation)
+`ai/workflows/architecture-workflow.md` is the mode selector and finalization gate. All modes end with `architecture/architecture-final.md` — which must pass the **architecture-final quality gate** (`ai/prompts/architecture-final-quality-gate.md`, run in a fresh session before ADR generation; verdict `APPROVED` / `APPROVED WITH NOTES` / `REJECTED — MUST FIX` → `architecture/architecture-final-gate.md`) — + `architecture/adr/*.md`, then proceed to UI foundation (if the project has UI) and the engineering workflow.
 
-Follow `ai/workflows/engineering-workflow.md`. The sequence is:
+## Engineering workflow (implementation)
 
-1. Delivery planning (`ai/prompts/delivery-planner.md`)
-2. Validate delivery plan verticality
-3. Select next slice
-4. Generate feature spec (`ai/prompts/feature-spec-generator.md` + `ai/templates/feature-spec-template.md`)
-5. Architecture compliance check (`ai/prompts/architecture-compliance.md`)
-5a. UI compliance check — **mandatory for UI slices** (`ai/prompts/ui-compliance-check.md`)
-6. Reconcile feature spec if compliance findings exist (`ai/prompts/feature-spec-reconciler.md`)
-7. Decompose the slice (use `/plan-decomposer` skill)
-8. Execute parts with TDD (use `/part-executor-tdd` skill)
-8b. Integrated Slice Verification — **mandatory for UI slices** (`ai/templates/slice-verification-checklist-template.md`)
-9. Repeat per slice
+Follow `ai/workflows/engineering-workflow.md`. Its step numbers are canonical — always cite them exactly as below:
 
-### UI workflows
+- **Step 0b** — UI foundation (conditional: mandatory when the project has human-facing UI and no design system exists)
+- **Step 1** — Delivery planning (`ai/prompts/delivery-planner.md` → `architecture/delivery-plan.md`)
+- **Step 1b** — Validate delivery plan verticality (mandatory for the initial plan)
+- **Step 2** — Select the next slice
+- **Step 3** — Generate the feature spec (`ai/prompts/feature-spec-generator.md` + template → `architecture/feature-specs/<slice-id>-<slice-name>.md`)
+- **Step 3b** — Golden dataset (conditional: mandatory for slices with AI decision paths or critical business rules → `architecture/golden-datasets/`)
+- **Step 4** — Architecture compliance check, full or lightweight per the six trigger questions in the workflow (`ai/prompts/architecture-compliance.md` → `architecture/compliance-reports/<slice-id>-<slice-name>.md`)
+- **Step 4a** — UI compliance check — **mandatory for UI slices** (`ai/prompts/ui-compliance-check.md` → `architecture/compliance-reports/<slice-id>-<slice-name>-ui.md`)
+- **Step 4b** — Reconcile the feature spec if findings exist (`ai/prompts/feature-spec-reconciler.md`)
+- **Step 5** — Decompose the slice (`plan-decomposer` skill → `ai-parts/<slice-id>/OVERVIEW.md` + `ai-parts/<slice-id>/PXX-*.md`)
+- **Step 6** — Execute one Part at a time with strict TDD (`part-executor-tdd` skill; every Part ends with a Part Quality Report → `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`)
+- **Step 6a** — Part Code Review — **mandatory per Part** (`ai/prompts/code-quality-reviewer.md` → `ai-parts/<slice-id>/reviews/<part-id>-review.md`; verdict `APPROVED` / `APPROVED WITH NOTES` / `REJECTED — MUST FIX`; the next Part starts only after approval)
+- **Step 6b** — Integrated Slice Verification — **mandatory for UI slices** (checklist → `architecture/slice-verification/<slice-id>-<slice-name>.md`)
+- **Step 7** — Specialist agents as needed
+- **Step 8** — Repeat per slice
 
-For projects with human-facing UI:
+To prepare a slice end-to-end (Steps 2–5) in one agent run, use `ai/prompts/slice-preparation-runner.md`.
 
-- **Greenfield:** Follow `ai/workflows/ui-foundation-workflow.md` to create a design system after architecture finalization, before delivery planning.
-- **Retrofit:** Follow `ai/workflows/ui-retrofit-workflow.md` to inventory existing UI, derive a design system, and migrate slices.
-- **Remediation:** Follow `ai/workflows/ui-remediation-workflow.md` to revalidate and fix slices completed under an older toolkit version that lacked mandatory browser-based UI verification.
-- Treat `architecture/design-system.md` as authoritative for UI decisions once it exists.
+**Phases** (infrastructure bootstrap, hardening) are not slices but use the same machinery: phase spec via the feature spec template with §5b/§11b/§12b marked N/A, compliance check, decomposition, TDD execution — no UI gates.
+
+## UI workflows
+
+- **Greenfield:** `ai/workflows/ui-foundation-workflow.md` — create `architecture/design-system.md` after architecture finalization, before delivery planning.
+- **Retrofit:** `ai/workflows/ui-retrofit-workflow.md` — inventory existing UI, derive a design system, migrate slices behavior-preservingly.
+- **Remediation:** `ai/workflows/ui-remediation-workflow.md` — revalidate and fix slices completed without browser-based verification.
+- `architecture/design-system.md` is authoritative for UI decisions once it exists.
 
 ## Specialist agents
 
-When working on implementation, adopt the relevant persona from `ai/agents/`:
+Adopt the relevant persona from `ai/agents/` during execution:
 
 | Agent | File | Use when |
 | --- | --- | --- |
 | Orchestrator | `ai/agents/orchestrator-agent.md` | Coordinating multi-agent slice work |
 | Backend | `ai/agents/backend-agent.md` | Backend/domain/API implementation |
-| Frontend | `ai/agents/frontend-agent.md` | Frontend implementation (mandatory for UI slices) |
+| Frontend | `ai/agents/frontend-agent.md` | Frontend implementation (**mandatory for UI slices**) |
 | AI Agent | `ai/agents/ai-agent.md` | AI/ML feature implementation |
 | QA | `ai/agents/qa-agent.md` | Testing strategy and execution |
 | AI Testing | `ai/agents/ai-testing-agent.md` | AI-specific testing (golden datasets) |
 | DevOps | `ai/agents/devops-agent.md` | CI/CD, containers, infrastructure |
+| Code Reviewer | `ai/agents/code-reviewer-agent.md` | Per-Part code review (**mandatory** — Step 6a) |
 | Integration Reviewer | `ai/agents/integration-reviewer.md` | Cross-slice contract verification |
 
-Also see `.github/agents/expert-dotnet-software-engineer.agent.md` for the .NET expert engineering persona (SOLID, TDD, clean code).
+Copilot-format personas live in `.github/agents/` (`expert-dotnet-software-engineer`, `backend-agent`, `devops-docker-traefik`). The backend and .NET personas assume the toolkit's default .NET stack; adapt persona headers when a project uses a different stack.
+
+## Agent behavior rules
+
+- **Ask before proceeding** when: the entry mode is ambiguous, a required input file is missing (see each workflow's "missing inputs" instructions), sources of truth conflict and the priority order does not resolve it, or a decision would change architecture, ADRs, scope, or contracts.
+- **Proceed with best effort, stating assumptions,** when: the gap is an implementation detail inside approved boundaries, or the workflow explicitly defines a fallback (e.g., reduced UI compliance check when no design system exists).
+- **Never invent:** architecture decisions, ADR content, project context, contracts, design tokens/components, acceptance criteria, or "done" claims without running the defined verification.
+- **Before claiming any work finished:** run the verification the workflow defines for that step (verify commands, checklists, browser verification for UI), and report pass/fail per criterion — not a summary impression.
 
 ## Code conventions
 
-Before writing any code, read the full guidance in `.github/instructions/`. Key rules:
+Before writing any code, read the full guidance in `.github/instructions/`. These apply to the MCP server here and to any .NET project using the toolkit. Key rules:
 
 ### C# (`.github/instructions/csharp.instructions.md`)
 
@@ -118,7 +155,7 @@ Before writing any code, read the full guidance in `.github/instructions/`. Key 
 - **Secrets:** Never commit real credentials. Use placeholders and `dotnet user-secrets` or `.env`. Fail fast on missing required configuration at startup.
 - **Serilog redaction:** Use enrichers matching on property names, not CLR type names.
 - **Data access:** EF Core with repository pattern. Explain different DB options for dev/prod. Proper migrations and seeding.
-- **Validation:** Data annotations or FluentValidation. RFC 7807 problem details for error responses.
+- **Validation:** Data annotations or FluentValidation. RFC 9457 problem details (obsoletes RFC 7807) for error responses.
 
 ### Docker (`.github/instructions/dockerfile.instructions.md`)
 
@@ -144,12 +181,47 @@ Before making decisions, consult:
 - **Vertical slices:** `ai/guides/vertical-slice-definition.md` — verticality test and anti-patterns
 - **Modular monolith:** `ai/guides/modular-monolith-definition.md` — module boundaries and extraction criteria
 - **Contracts:** `ai/guides/contract-definition.md` — three contract layers, testing, versioning
+- **Code quality standard:** `ai/guides/code-quality-standard.md` — implementation-quality rules enforced per Part (read-before-write, pattern precedence, contract surfaces, test quality)
 - **Definition of Ready/Done:** `ai/guides/definition-of-ready-and-done.md`
 - **How feature specs are used:** `ai/guides/how-feature-specs-are-used.md`
 - **Operating model:** `ai/guides/operating-model.md`
+- **Toolkit map:** `ai/guides/toolkit-map.md`
 - **Slice verification checklist:** `ai/templates/slice-verification-checklist-template.md`
-- **Remediation workflow:** `ai/workflows/ui-remediation-workflow.md`
-- **Remediation spec template:** `ai/templates/remediation-spec-template.md`
 - **Design system template:** `ai/templates/design-system-template.md`
-- **UI foundation workflow:** `ai/workflows/ui-foundation-workflow.md`
-- **UI retrofit workflow:** `ai/workflows/ui-retrofit-workflow.md`
+- **Remediation spec template:** `ai/templates/remediation-spec-template.md`
+
+## Toolkit maintenance rules (context A)
+
+These rules govern changes to the toolkit itself.
+
+### Synchronization map
+
+When you change one of these, update all files in its row before finishing:
+
+| If you change… | You must also update… |
+| --- | --- |
+| Engineering workflow steps or numbering | `CLAUDE.md`, `README.md`, `.github/copilot-instructions.md`, `ai/guides/operating-model.md`, `ai/guides/quick-start.md`, `ai/guides/how-feature-specs-are-used.md`, both skills |
+| A prompt's inputs/outputs | The workflow step that invokes it, `ai/guides/toolkit-map.md`, `ai/guides/operating-model.md` |
+| A template's sections (e.g., feature spec §5b/§11b/§12b) | Every prompt, skill, and checklist that cites those section numbers |
+| Skill handoff contract (Part heading, PART_SPEC schema, output paths) | The other skill, engineering workflow Step 5/6, `README.md` usage examples |
+| Entry modes | `README.md`, `CLAUDE.md`, `ai/guides/how-to-choose-entry-mode.md`, `ai/guides/quick-start.md`, `ai/guides/toolkit-map.md`, `ai/workflows/architecture-workflow.md` |
+| Glossary terms | Any file that defines the term inline (remove the duplicate; link instead) |
+| Anything user-visible | `README.md` structure lists and `VERSION.md` |
+
+### Definition of Done for toolkit changes
+
+A toolkit change is done only when:
+
+1. Every file in the synchronization map row has been updated or confirmed unaffected.
+2. Every relative path referenced in changed files resolves to an existing file (check with a grep/glob pass — no dead links).
+3. Step numbers, section numbers (§), file naming conventions, and term usage match the canonical sources (engineering workflow, feature spec template, glossary).
+4. `README.md` accurately lists the changed/added/removed assets.
+5. `VERSION.md` is updated: bump the version and add a changelog entry; mark **breaking workflow changes** (renumbered steps, renamed outputs, changed handoff contracts) explicitly, with the migration action projects must take.
+6. Backward compatibility is preserved where possible: do not rename output paths or Part contract fields without a documented migration note; additive changes are preferred over renames.
+7. Scaffold files under `architecture/` remain placeholders (no project-specific content).
+
+### What not to do in this repo
+
+- Do not fill `ai/project-context.md` or `architecture/` outputs with real project content.
+- Do not add project-specific decisions to prompts, agents, guides, or templates — keep them project-agnostic (stack-specific defaults are allowed only in `.github/instructions/` and clearly-labeled agent personas).
+- Do not leave executed one-time plan documents in the repo — the changelog in `VERSION.md` and git history record completed work.

@@ -20,7 +20,7 @@ AI-specific model integration.
 - `architecture/adr/*.md`
 - `architecture/delivery-plan.md`
 - `architecture/feature-specs/<slice>.md`
-- Part definition from `ai-parts/PXX-*.md` (where applicable)
+- Part definition from `ai-parts/<slice-id>/PXX-*.md` (where applicable)
 
 ## Methodology
 
@@ -32,6 +32,17 @@ Read the feature spec (or Part definition). Identify:
 - which contracts are affected (new or modified)
 - which persistence changes are needed
 - which tests must be added or updated
+
+### 1b. Read the nearby code before writing any
+
+Apply `ai/guides/code-quality-standard.md` §1: open at least two comparable
+existing implementations (same layer, same artifact type) and their tests,
+and record the patterns you will follow — error handling and error
+identifiers, validation split (boundary shape checks vs. domain rules),
+logging/metrics/tracing conventions, async + cancellation propagation,
+naming, and test style. The project's existing pattern beats any generic
+pattern you would produce by default. If the pattern is unclear or two files
+conflict, stop and list the ambiguity — do not invent a third style.
 
 ### 2. Respect module boundaries
 
@@ -87,11 +98,38 @@ Before completing, verify that the implementation:
 
 Before marking work complete, verify:
 
-- [ ] all acceptance criteria from the feature spec are met
-- [ ] TDD cycle was followed for behavioral changes
+- [ ] all acceptance criteria from the feature spec are met — by criterion ID,
+      each with a test that fails if the implementation is removed
+- [ ] TDD cycle was followed for behavioral changes (red evidence recorded)
+- [ ] authorization proven from both sides: each permitted role gets access,
+      and each denied role is refused with **no side effect performed** on its
+      behalf (`SEC-nn` criteria)
+- [ ] the error contract's trace reference (e.g. problem details `traceId`)
+      survives every mapping hop and reaches the caller
+- [ ] values the server owns are served, not left to be recomputed downstream
+- [ ] caches and read models dependent on a mutation are invalidated, and the
+      refresh is observable in a test that fails without the invalidation
+- [ ] mutation-checked the triggers this Part implements (authorization guard,
+      cache invalidation, cancellation, error→message mapping) — broken,
+      observed failing, restored, recorded (code-quality standard §10)
 - [ ] contracts match the feature spec §7 (API / Contract Expectations)
 - [ ] module boundaries are respected (no cross-module data access)
-- [ ] error handling follows RFC 7807 problem details pattern
+- [ ] nearby code and tests were read first; existing patterns followed or
+      deviations justified (`ai/guides/code-quality-standard.md` §1)
+- [ ] error handling follows the project's established error flow, with
+      stable error identifiers matching existing errors (RFC 9457
+      problem details at the API boundary)
+- [ ] validation split respected: request-shape checks at the boundary,
+      business rules in the domain (code-quality standard §7)
+- [ ] cancellation is propagated through every async call chain; the
+      project's async conventions are followed (code-quality standard §9)
+- [ ] structured logging with named properties; identifiers only, no
+      PII/secrets/free text; metrics/traces follow the conventions of
+      comparable existing operations (code-quality standard §8)
+- [ ] no new libraries and no abstractions the current Part does not need
+      (code-quality standard §§3–4)
+- [ ] all four contract surfaces declared changed or unchanged in the Part
+      Quality Report §7
 - [ ] no unauthorized architecture drift introduced
 
 ## Forbidden Actions
@@ -102,9 +140,18 @@ Before marking work complete, verify:
 - do not move logic into inappropriate layers
 - do not access another module's data directly — use its public interface
 - do not introduce breaking contract changes without versioning
+- do not change any contract surface silently — declare it or escalate
+- do not add libraries, frameworks, or speculative abstractions the current
+  Part does not need
+- do not leave TODOs, placeholders, stubs, fake implementations, or dead code
+- do not swallow exceptions or add silent fallbacks — every failure must be
+  observable and mapped to the contract's documented errors
+- do not invent a new style when the existing pattern is unclear — stop and
+  list the ambiguity
 
 ## References
 
+- Code quality standard: `ai/guides/code-quality-standard.md`
 - Contract definition: `ai/guides/contract-definition.md`
 - Modular monolith boundaries: `ai/guides/modular-monolith-definition.md`
 - Definition of Ready/Done: `ai/guides/definition-of-ready-and-done.md`

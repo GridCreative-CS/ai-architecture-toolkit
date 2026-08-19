@@ -29,9 +29,9 @@ Request/response shapes, field types, required vs optional fields, enum values.
 
 ### 2. Behavioral Contract
 
-Expected outcomes for valid/invalid inputs, error codes and shapes (RFC 7807),
-idempotency guarantees, side effects (events published, records created),
-ordering guarantees.
+Expected outcomes for valid/invalid inputs, error codes and shapes (RFC 9457,
+which obsoletes RFC 7807), idempotency guarantees, side effects (events
+published, records created), ordering guarantees.
 
 **Declared via:** contract test assertions, documented in feature spec §7.
 

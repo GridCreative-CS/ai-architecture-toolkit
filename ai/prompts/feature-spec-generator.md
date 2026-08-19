@@ -15,9 +15,16 @@ Generate a feature specification for one slice or capability.
 
 ## Output
 
-Write each feature spec under:
+Write each feature spec to:
 
-- `architecture/feature-specs/`
+- `architecture/feature-specs/<slice-id>-<slice-name>.md` — slice ID from the
+  delivery plan plus the slice name in kebab-case (e.g.,
+  `S2.6-structured-mse-session-comparison.md`)
+
+Use the structure from `ai/templates/feature-spec-template.md`. For a
+**phase** (not a slice), use the same template with §5b, §11b, and §12b marked
+"N/A — phase, no human workflow surfaces" and name the file
+`phase-<id>-<name>.md`.
 
 ## Required Sections
 
@@ -77,17 +84,46 @@ surfaces per [citation]."
 
 Acceptance criteria in section 11 must be:
 
+- **Identified** — each criterion carries a stable ID (see below)
 - **Binary** — each criterion is either met or not met (no subjective judgment)
 - **Testable** — each criterion maps to at least one automated or manual test
 - **Specific** — no vague language like "should work correctly" or "handles
   errors gracefully"
+
+## Criterion IDs (required)
+
+Emit a stable ID on every rule and criterion in §6, §9, §11, and §11b:
+
+| Section | Prefix | Example |
+| --- | --- | --- |
+| §6 Domain Rules | `DR-nn` | `DR-01: A recommendation must include an explanation summary.` |
+| §9 Security / Authorization | `SEC-nn` | `SEC-02: The client issues no request to /reviews for users without the Reviewer role.` |
+| §11 Acceptance Criteria | `AC-nn` | `AC-04: Unauthorized users receive 403.` |
+| §11b UI/UX Acceptance Criteria | `UIAC-nn` | `UIAC-03: The list renders its own loading state independently of the detail panel.` |
+
+Number from `01` within each section. These IDs are the keys of the Part
+Quality Report requirement coverage matrix (§3b of
+`ai/templates/code-quality-checklist-template.md`) and of the decomposer's
+Requirement Coverage Map — a criterion without an ID cannot be traced to its
+implementation, tests, and evidence.
+
+IDs are **append-only**: assigned once, never renumbered, never reused.
+Rewording keeps the ID. A dropped criterion stays in place marked
+`WITHDRAWN — <reason>`.
+
+Write criteria as behavior that can fail, including the negative case where
+one exists — "no request is issued", "the action is unavailable while the
+required data is pending", "the display name is rendered rather than the
+domain code". A criterion that only asserts something exists cannot be proven
+by a test that fails when the implementation is removed
+(`ai/guides/code-quality-standard.md` §10).
 
 ## Decomposition Readiness
 
 A feature spec is decomposition-ready when (see `ai/guides/glossary.md`):
 
 - scope is bounded (Scope In / Scope Out are explicit)
-- acceptance criteria are binary
+- acceptance criteria are binary and carry stable IDs (§6/§9/§11/§11b)
 - target files or modules are identifiable from the spec
 - no unresolved architectural unknowns remain in Open Questions
 - a verification strategy is clear from Test Implications

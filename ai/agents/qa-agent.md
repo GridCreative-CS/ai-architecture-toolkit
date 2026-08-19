@@ -32,6 +32,45 @@ Before adding tests, understand what already exists:
 - which acceptance criteria from the feature spec have tests
 - which critical business rules are untested
 - which contracts lack contract tests
+- what the project's test conventions are — read comparable existing tests
+  first and follow their naming style, fixture setup, and assertion style
+  (`ai/guides/code-quality-standard.md` §1, §10)
+
+### 1b. Demand meaningful tests
+
+Apply the test-quality rules from `ai/guides/code-quality-standard.md` §10:
+
+- test names state behavior: what is exercised, under which condition, with
+  which observable outcome — in the project's existing naming style
+- tests assert observable behavior (outputs, state transitions, persisted
+  effects, contract responses) — a test that only verifies a mock was called,
+  mirrors implementation steps, or would pass with the production logic
+  deleted is a fake and must be rejected
+- decision tables and scoring rules get parameterized truth-table tests
+  covering every row, the boundary values, and invalid-input behavior
+  (including expected error types)
+- contract tests lock the full observable surface: every documented status
+  code, response shape, and stable error identifier
+- existing tests are never weakened, deleted, or skipped to make new code
+  pass without recorded justification
+- **structural assertions do not count as coverage**: "the component / query /
+  key / guard exists" proves nothing. Ask of every test, "what failure would
+  this produce if the implementation were removed?" — if you cannot name one,
+  the criterion is untested. The recurring offenders are role restrictions
+  (assert the denied role issues **no request**, not that a guard exists),
+  display mapping of domain values (assert the rendered value per locale, not
+  catalogue-key parity), cancellation (supersede, clear/reset, and unmount as
+  three cases), and cache refresh (assert the observed refetch, not the
+  presence of an invalidation call)
+- **mutation-check the four triggers**: where a slice implements an
+  authorization guard, cache invalidation/refetch, cancellation/supersession,
+  or error→message mapping, break it, confirm the test fails, restore, and
+  record it (`ai/guides/code-quality-standard.md` §10). A test that stays
+  green with the behavior removed is the defect
+- **every criterion needs its negative case**: for each `AC-nn`/`UIAC-nn`/
+  `SEC-nn`/`DR-nn`, plan the edge and failure test alongside the happy path —
+  this is what the Part Quality Report §3b matrix records, and what the Step
+  6a coverage audit checks
 
 ### 2. Apply the test pyramid
 
@@ -117,6 +156,13 @@ Before marking work complete, verify:
 - [ ] critical business rules have comprehensive edge-case coverage
 - [ ] API contracts have schema and behavioral contract tests
 - [ ] no tests depend on implementation details (test observable behavior)
+- [ ] no test passes purely by verifying mocks were called
+- [ ] test names describe behavior, condition, and outcome in the project's
+      existing naming style
+- [ ] decision tables / scoring rules have truth-table coverage including
+      boundaries and invalid inputs
+- [ ] no existing test was weakened, deleted, or skipped without recorded
+      justification
 - [ ] all tests can run in CI without manual setup
 - [ ] regression risk is documented and mitigated
 - [ ] slices with UI have at least one E2E browser test for the primary flow
@@ -135,6 +181,7 @@ Before marking work complete, verify:
 
 ## References
 
+- Code quality standard (test quality: §10): `ai/guides/code-quality-standard.md`
 - Contract definition: `ai/guides/contract-definition.md`
 - Definition of Ready/Done: `ai/guides/definition-of-ready-and-done.md`
 - Glossary (golden dataset, TDD): `ai/guides/glossary.md`

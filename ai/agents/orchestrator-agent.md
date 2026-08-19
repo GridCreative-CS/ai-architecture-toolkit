@@ -106,7 +106,16 @@ Before handing off to specialist agents, verify:
 | AI agent | AI integration points are identified |
 | QA agent | Implementation is ready for test strategy |
 | DevOps agent | Infrastructure or deployment changes are needed |
+| Code reviewer | After every executed Part (mandatory — Step 6a) |
 | Integration reviewer | Cross-slice boundaries are touched |
+
+### Step 6a — Part Code Review
+
+After each Part's quality report is delivered, the orchestrator must ensure
+the Part code review (`ai/prompts/code-quality-reviewer.md`, persona
+`ai/agents/code-reviewer-agent.md`) runs before the next Part starts. A Part
+with a `REJECTED — MUST FIX` verdict returns to the executor and may not be
+marked DONE until re-review approves.
 
 ### Step 6b — Integrated Slice Verification
 

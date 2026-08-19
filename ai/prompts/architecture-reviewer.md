@@ -23,6 +23,24 @@ Evaluate the architecture across:
 - observability — are logging, metrics, and tracing sufficient?
 - data architecture — is data ownership clear? Are migrations planned?
 - AI governance and explainability (when relevant)
+- **completeness and specificity against the quality gate** — the final
+  document produced from this blueprint must pass
+  `ai/prompts/architecture-final-quality-gate.md`. Check the blueprint
+  against that gate's checks now and file a finding for each gap, so the
+  reconciler can fix it before the gate rejects the document. In particular
+  flag:
+  - vague quality terms ("scalable", "robust", "secure", "production-ready",
+    ...) with no stated mechanism and verification
+  - unquantified scale/load context (users, concurrency, data volume,
+    latency targets) not covered by an explicit assumption
+  - capabilities described anywhere in the document but assigned to no
+    module (orphan capabilities)
+  - module boundaries without explicit forbidden dependencies or without a
+    named enforcement mechanism
+  - external dependencies without a defined failure behavior
+  - claims that no analysis input, project context, or recorded assumption
+    supports
+  - template sections filled with generic content that would fit any project
 
 ## Severity Classification
 

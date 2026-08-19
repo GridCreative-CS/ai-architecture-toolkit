@@ -75,7 +75,7 @@ Use:
 Inputs:
 
 - `architecture/remediation-audit.md`
-- `architecture/feature-specs/<slice-name>.md`
+- `architecture/feature-specs/<slice-id>-<slice-name>.md`
 - the checklist results for this slice
 
 Write:

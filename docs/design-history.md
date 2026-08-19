@@ -1,4 +1,8 @@
-# Conversation Summary
+# Design History
+
+Historical rationale for the AI Architecture Toolkit — the conversation
+conclusions that shaped its process. Background reading for toolkit
+maintainers, not an operational guide.
 
 ## Main problem
 

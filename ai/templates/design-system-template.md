@@ -149,7 +149,7 @@
 
 ### 5c. Error State
 
-<!-- How errors are communicated. Map to RFC 7807 problem details where          -->
+<!-- How errors are communicated. Map to RFC 9457 problem details where          -->
 <!-- applicable. Inline vs. toast vs. page-level errors.                          -->
 
 ### 5d. Empty State

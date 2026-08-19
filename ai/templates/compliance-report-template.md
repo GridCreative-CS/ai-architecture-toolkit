@@ -9,10 +9,12 @@
 - **Review target:** <!-- What is being reviewed (feature spec, PR, etc.) -->
 - **Review date:**
 - **Reviewer:**
+- **Level:** Full / Lightweight <!-- per the six trigger questions in engineering workflow Step 4 -->
+- **Trigger answers:** <!-- 1..6: yes/no. Lightweight is permitted only when all six are "no". -->
 - **Inputs reviewed:**
   - <!-- List each input document reviewed (architecture, ADRs, specs) -->
 - **Related ADRs:** <!-- ADR numbers that apply to this review -->
-- **Related feature or slice:** <!-- Slice name from the delivery plan -->
+- **Related feature or slice:** <!-- Slice ID + name from the delivery plan -->
 
 ## 2. Compliance Summary
 
@@ -37,7 +39,7 @@
 <!-- - Warning: deviates from intent but not a hard constraint — should fix    -->
 <!-- - Info: minor inconsistency — fix if convenient                           -->
 
-- **Identifier:** <!-- e.g., AC-001 -->
+- **Identifier:** <!-- e.g., CV-001 — compliance violation. Do not use the AC- prefix: that namespace belongs to feature spec §11 acceptance criteria. -->
 - **Description:**
 - **Violated source:** <!-- Which architecture section or ADR? -->
 - **Severity:** Critical / Warning / Info
