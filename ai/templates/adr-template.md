@@ -54,7 +54,7 @@ Proposed | Accepted | Deprecated | Superseded
 ## Cross-References
 
 <!-- Link to related ADRs, architecture sections, or feature specs.           -->
-<!-- Example: "Depends on [ADR-001](adr-001-modular-monolith.md)"             -->
+<!-- Example: "Depends on [ADR-001](ADR-001-modular-monolith.md)"             -->
 <!-- Remove this section if no cross-references exist.                         -->
 
 ## Implementation Notes
