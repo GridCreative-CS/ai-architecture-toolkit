@@ -2,6 +2,8 @@
 
 Get from zero to your first vertical slice in 15 minutes. This guide walks you through the minimum viable path — fill in context, design architecture, plan delivery, and execute with TDD.
 
+The step numbers below are this guide's own sequence. The canonical step numbers are the ones in `ai/workflows/engineering-workflow.md` (Steps 0b–8) — where this guide cites those, it names the workflow explicitly ("engineering workflow Step 6a").
+
 ## Before you begin
 
 You need:
@@ -68,9 +70,9 @@ The feature spec makes one slice precise enough to decompose and implement.
 2. **Execute** — use `.github/skills/part-executor-tdd` to implement one Part at a time with strict red-green-refactor TDD, following `ai/guides/code-quality-standard.md` (read nearby code first, follow existing patterns). Every Part ends with a Part Quality Report → `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`
 3. **Review** — run the Part code review (engineering workflow Step 6a, `ai/prompts/code-quality-reviewer.md`) against a frozen snapshot, running all twelve checks including the dimension audit and the requirement coverage audit → `ai-parts/<slice-id>/reviews/<part-id>-review.md`. Start the next Part only after an `APPROVED` or `APPROVED WITH NOTES` verdict
 
-Implementation starts at **Step 6.2** — when you execute a specific Part file.
-Approving the delivery plan alone does not start implementation; it only tells
-you which slice to prepare next.
+Implementation starts at **item 2 above** — when you execute a specific Part
+file (engineering workflow Step 6). Approving the delivery plan alone does not
+start implementation; it only tells you which slice to prepare next.
 
 Repeat steps 5–6 for each slice in the delivery plan.
 
