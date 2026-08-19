@@ -14,7 +14,7 @@ public sealed class ToolkitTools
     /// <summary>
     /// Lists all available toolkit files grouped by category with file counts.
     /// </summary>
-    [McpServerTool, Description("Lists all available toolkit files by category (guides, prompts, templates, workflows, agents, examples, instructions, github-agents). Returns category names with their file lists.")]
+    [McpServerTool, Description("Lists all available toolkit files by category (guides, prompts, templates, workflows, agents, examples, instructions, github-agents, skills). Returns category names with their file lists. Markdown files are listed without their extension; JSON assets keep theirs.")]
     public static string ListToolkitContent(ToolkitContentService toolkitService)
     {
         var content = toolkitService.ListAllContent();
@@ -29,7 +29,7 @@ public sealed class ToolkitTools
     /// <summary>
     /// Full-text search across all toolkit markdown files.
     /// </summary>
-    [McpServerTool, Description("Searches all toolkit markdown files for a query string (case-insensitive). Returns matching file names with context snippets showing where the match was found.")]
+    [McpServerTool, Description("Searches all toolkit files — markdown and JSON, including the execution skills — for a query string (case-insensitive). Returns matching file names with context snippets showing where the match was found.")]
     public static string SearchToolkit(
         ToolkitContentService toolkitService,
         [Description("The text to search for across all toolkit files")] string query)
@@ -71,11 +71,11 @@ public sealed class ToolkitTools
     /// <summary>
     /// Gets the content of a specific toolkit file by category and name.
     /// </summary>
-    [McpServerTool, Description("Gets the full content of a specific toolkit file. Category is one of: prompts, templates, guides, workflows, agents, examples, instructions, github-agents. Name is the file name without .md extension.")]
+    [McpServerTool, Description("Gets the full content of a specific toolkit file. Category is one of: prompts, templates, guides, workflows, agents, examples, instructions, github-agents, skills. Name is the file name as returned by list_toolkit_content — without the extension for markdown, with it for JSON assets. For skills, the name is the skill folder (e.g. plan-decomposer), which resolves to .github/skills/<name>/SKILL.md.")]
     public static string GetToolkitFile(
         ToolkitContentService toolkitService,
-        [Description("Category: prompts, templates, guides, workflows, agents, examples, instructions, or github-agents")] string category,
-        [Description("File name without .md extension (e.g., 'glossary', 'delivery-planner', 'feature-spec-template')")] string name)
+        [Description("Category: prompts, templates, guides, workflows, agents, examples, instructions, github-agents, or skills")] string category,
+        [Description("File name as listed (e.g., 'glossary', 'delivery-planner', 'example-golden-dataset-case.json', 'plan-decomposer')")] string name)
     {
         var content = toolkitService.GetContent(category, name);
         return content ?? $"File '{name}' not found in category '{category}'.";

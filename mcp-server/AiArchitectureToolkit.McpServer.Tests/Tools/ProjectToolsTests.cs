@@ -30,6 +30,14 @@ public sealed class ProjectToolsTests : IDisposable
         CreateFile(aiDir, "prompts", "prototype-analyzer.md", "# Prototype Analyzer\n\nExtract behavior.");
         CreateFile(aiDir, "prompts", "prototype-architecture-alignment.md", "# Alignment Prompt\n\nCompare prototype with architecture.");
         CreateFile(aiDir, "prompts", "ui-compliance-check.md", "# UI Compliance Check\n\nVerify UI compliance.");
+        CreateFile(aiDir, "prompts", "legacy-system-analyzer.md", "# Legacy System Analyzer\n\nAnalyze the legacy system.");
+        CreateFile(aiDir, "prompts", "golden-dataset-generator.md", "# Golden Dataset Generator\n\nBuild the golden dataset.");
+        CreateFile(aiDir, "prompts", "slice-preparation-runner.md", "# Slice Preparation Runner\n\nRun Steps 2-5.");
+        CreateFile(aiDir, "prompts", "architecture-final-quality-gate.md", "# Architecture Final Quality Gate\n\nRun 16 checks.");
+        CreateFile(aiDir, "prompts", "code-quality-reviewer.md", "# Code Quality Reviewer\n\nRun twelve checks.");
+        CreateFile(aiDir, "templates", "golden-dataset-template.md", "# Golden Dataset Template");
+        CreateFile(aiDir, "templates", "code-quality-checklist-template.md", "# Code Quality Checklist Template");
+        CreateFile(aiDir, "guides", "code-quality-standard.md", "# Code Quality Standard\n\nImplementation quality rules.");
         CreateFile(aiDir, "templates", "feature-spec-template.md", "# Feature Spec Template");
         CreateFile(aiDir, "templates", "compliance-report-template.md", "# Compliance Report Template");
         CreateFile(aiDir, "templates", "architecture-blueprint-template.md", "# Blueprint Template");
@@ -57,8 +65,20 @@ public sealed class ProjectToolsTests : IDisposable
         CreateFile(_tempDir, "architecture", "prototype-architecture-alignment.md", "# Alignment\n\nGaps.");
         CreateFile(_tempDir, "architecture", "delivery-plan.md", "# Delivery Plan\n\nSlice: user-registration.");
         CreateFile(_tempDir, "architecture/adr", "ADR-001.md", "# ADR-001\n\nDecision.");
-        CreateFile(_tempDir, "architecture/feature-specs", "user-registration.md", "# User Registration Spec");
+        CreateFile(_tempDir, "architecture/feature-specs", "user-registration.md",
+            "# User Registration Spec\n\n- DR-01: A user has one email.\n- SEC-01: Anonymous callers get 401.\n- AC-01: Returns 201 on success.\n- UIAC-01: The form shows a pending spinner.");
         CreateFile(_tempDir, "architecture", "design-system.md", "# Design System\n\nToken definitions.");
+        CreateFile(_tempDir, "architecture", "legacy-system-analysis.md", "# Legacy System Analysis\n\nLegacy constraints.");
+        CreateFile(_tempDir, "architecture", "architecture-final-gate.md", "# Gate Report\n\nGate verdict recorded.");
+        CreateFile(_tempDir, "architecture/compliance-reports", "user-registration.md", "# Compliance\n\nArchitecture compliance findings.");
+        CreateFile(_tempDir, "architecture/compliance-reports", "user-registration-ui.md", "# UI Compliance\n\nUI compliance findings.");
+        CreateFile(_tempDir, "architecture/slice-verification", "user-registration.md", "# Slice Verification\n\nBrowser evidence recorded.");
+        CreateFile(_tempDir, "ai-parts/user-registration", "OVERVIEW.md",
+            "# AI Parts Overview\n\n## Requirement Coverage Map\n\n| AC-01 | P01 |\n\n## Parts Index");
+        CreateFile(_tempDir, "ai-parts/user-registration", "P01-domain.md",
+            "# Part P01 — Domain\nStatus: DONE\n\n## PART_SPEC\n\n```json\n{ \"part_id\": \"P01\", \"part_type\": \"backend\", \"criteria_covered\": [\"AC-01\"] }\n```");
+        CreateFile(_tempDir, "ai-parts/user-registration/reviews", "P01-review.md",
+            "# Part Code Review — P01\n\n## Verdict\n\n`APPROVED` — no findings.");
 
         var options = Options.Create(new ServerOptions
         {
@@ -224,10 +244,180 @@ public sealed class ProjectToolsTests : IDisposable
         Assert.Contains("no feature spec found", result);
     }
 
+    [Fact]
+    public void GetWorkflowContext_LegacySystemAnalysis_ReturnsPromptAndProjectContext()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "legacy-system-analysis");
+
+        Assert.Contains("Legacy System Analyzer", result);
+        Assert.Contains("Legacy constraints", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_GoldenDataset_ReturnsPromptAndTemplate()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "golden-dataset");
+
+        Assert.Contains("Golden Dataset Generator", result);
+        Assert.Contains("Golden Dataset Template", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_GoldenDataset_WithSliceName_IncludesFeatureSpec()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "golden-dataset", "user-registration");
+
+        Assert.Contains("User Registration Spec", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_SlicePreparation_ReturnsRunnerPromptAndContext()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "slice-preparation");
+
+        Assert.Contains("Slice Preparation Runner", result);
+        Assert.Contains("Modular monolith", result);
+        Assert.Contains("Slice: user-registration", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_ArchitectureFinalGate_ReturnsGatePromptAndArchitecture()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "architecture-final-gate");
+
+        Assert.Contains("Architecture Final Quality Gate", result);
+        Assert.Contains("Modular monolith", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_PartCodeReview_BundlesPromptTemplateGuideAndSliceContext()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "part-code-review", "user-registration");
+
+        Assert.Contains("Code Quality Reviewer", result);
+        Assert.Contains("Code Quality Checklist Template", result);
+        Assert.Contains("Implementation quality rules", result);
+        Assert.Contains("User Registration Spec", result);
+        Assert.Contains("Modular monolith", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_Decomposition_ServesThePlanDecomposerSkill()
+    {
+        CreateSkill("plan-decomposer", "# Plan Decomposer\n\nEmit a PART_SPEC per Part.");
+
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "decomposition");
+
+        Assert.Contains("Plan Decomposer", result);
+        Assert.Contains("PART_SPEC", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_SliceVerification_ReportsWhetherEvidenceExists()
+    {
+        var withEvidence = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "slice-verification", "user-registration");
+        var withoutEvidence = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "slice-verification", "unverified-slice");
+
+        Assert.Contains("Browser evidence recorded", withEvidence);
+        Assert.Contains("no slice verification evidence", withoutEvidence, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_UnknownStep_ListsTheNewSteps()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "unknown-step");
+
+        Assert.Contains("legacy-system-analysis", result);
+        Assert.Contains("golden-dataset", result);
+        Assert.Contains("slice-preparation", result);
+        Assert.Contains("architecture-final-gate", result);
+        Assert.Contains("part-code-review", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_ValidStepList_PlacesTheGateBetweenReconciliationAndAdrGeneration()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "unknown-step");
+
+        var reconciliation = result.IndexOf("architecture-reconciliation", StringComparison.Ordinal);
+        var gate = result.IndexOf("architecture-final-gate", StringComparison.Ordinal);
+        var adr = result.IndexOf("adr-generation", StringComparison.Ordinal);
+
+        Assert.True(reconciliation < gate, "the gate must be listed after architecture-reconciliation");
+        Assert.True(gate < adr, "the gate must be listed before adr-generation");
+    }
+
+    [Fact]
+    public void GetSliceContext_IncludesBothComplianceReports()
+    {
+        var result = ProjectTools.GetSliceContext(_projectService, "user-registration");
+
+        Assert.Contains("Architecture compliance findings", result);
+        Assert.Contains("UI compliance findings", result);
+    }
+
+    [Fact]
+    public void GetSliceContext_ListsFeatureSpecCriterionIds()
+    {
+        var result = ProjectTools.GetSliceContext(_projectService, "user-registration");
+
+        Assert.Contains("DR-01", result);
+        Assert.Contains("SEC-01", result);
+        Assert.Contains("AC-01", result);
+        Assert.Contains("UIAC-01", result);
+    }
+
+    [Fact]
+    public void GetSliceContext_IncludesDecompositionStatusAndReviewVerdict()
+    {
+        var result = ProjectTools.GetSliceContext(_projectService, "user-registration");
+
+        Assert.Contains("P01", result);
+        Assert.Contains("DONE", result);
+        Assert.Contains("APPROVED", result);
+    }
+
+    [Fact]
+    public void GetSliceContext_FindsTheDecompositionWhenTheSpecIsNamedSliceIdAndSliceName()
+    {
+        // The real toolkit shape: the feature spec is '<slice-id>-<slice-name>.md'
+        // while the decomposition folder is '<slice-id>' alone.
+        CreateFile(_tempDir, "architecture/feature-specs", "S2.6-inspection-history.md", "# Inspection History Spec\n\n- AC-01: Shows history.");
+        CreateFile(_tempDir, "ai-parts/S2.6", "OVERVIEW.md", "# AI Parts Overview\n\n## Requirement Coverage Map\n\n| AC-01 | P01 |");
+        CreateFile(_tempDir, "ai-parts/S2.6", "P01-history.md",
+            "# Part P01 — History\nStatus: IN_PROGRESS\n\n## PART_SPEC\n\n```json\n{ \"part_id\": \"P01\", \"part_type\": \"frontend\", \"criteria_covered\": [\"AC-01\"] }\n```");
+
+        var result = ProjectTools.GetSliceContext(_projectService, "S2.6-inspection-history");
+
+        Assert.Contains("Decomposition (ai-parts)", result);
+        Assert.Contains("IN_PROGRESS", result);
+        Assert.Contains("frontend", result);
+    }
+
+    [Fact]
+    public void ListProjectArtifacts_IncludesAiPartsAndSliceVerification()
+    {
+        var result = ProjectTools.ListProjectArtifacts(_projectService);
+
+        Assert.Contains("ai-parts", result);
+        Assert.Contains("slice-verification", result);
+        Assert.Contains("ui-compliance-reports", result);
+        Assert.Contains("architecture-final-gate", result);
+        Assert.Contains("legacy-system-analysis", result);
+        Assert.Contains("user-registration", result);
+    }
+
     public void Dispose()
     {
         try { Directory.Delete(_tempDir, recursive: true); }
         catch { /* best effort cleanup */ }
+    }
+
+    private void CreateSkill(string skillName, string content)
+    {
+        var dir = Path.Combine(_tempDir, ".github", "skills", skillName);
+        Directory.CreateDirectory(dir);
+        File.WriteAllText(Path.Combine(dir, "SKILL.md"), content);
     }
 
     private static void CreateFile(string baseDir, string subDir, string fileName, string content)

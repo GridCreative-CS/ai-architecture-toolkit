@@ -16,14 +16,18 @@ builder.Logging.AddConsole(options =>
 // Resolve configuration paths
 var serverBinaryDir = AppContext.BaseDirectory;
 
+// The toolkit tree this server ships with — found by walking up from the
+// binary, since the build output depth varies by configuration and TFM.
+var shippedToolkitRoot = ToolkitPaths.FindToolkitRoot(serverBinaryDir);
+
 var toolkitRoot = Environment.GetEnvironmentVariable("TOOLKIT_ROOT")
-    ?? Path.GetFullPath(Path.Combine(serverBinaryDir, "..", "..", "..", "..", "ai"));
+    ?? Path.Combine(shippedToolkitRoot ?? serverBinaryDir, "ai");
 
 var workspaceRoot = Environment.GetEnvironmentVariable("WORKSPACE_ROOT")
     ?? Directory.GetCurrentDirectory();
 
 var githubRoot = Environment.GetEnvironmentVariable("GITHUB_ROOT")
-    ?? Path.GetFullPath(Path.Combine(serverBinaryDir, "..", "..", "..", "..", ".github"));
+    ?? Path.Combine(shippedToolkitRoot ?? serverBinaryDir, ".github");
 
 builder.Services.Configure<ServerOptions>(options =>
 {

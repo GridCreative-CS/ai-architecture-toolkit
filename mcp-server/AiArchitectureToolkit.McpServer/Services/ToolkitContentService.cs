@@ -11,6 +11,22 @@ public sealed class ToolkitContentService
     private static readonly string[] ToolkitCategories =
         ["prompts", "templates", "guides", "workflows", "agents", "examples"];
 
+    /// <summary>
+    /// Extensions served from the toolkit categories. <c>.json</c> is included
+    /// because <c>ai/examples/example-golden-dataset-case.json</c> and
+    /// <c>ai/templates/golden-dataset-json-template.json</c> are load-bearing
+    /// for the <c>golden-dataset</c> workflow step.
+    /// </summary>
+    private static readonly string[] ContentExtensions = [".md", ".json"];
+
+    /// <summary>
+    /// The execution skills live at <c>.github/skills/&lt;name&gt;/SKILL.md</c> —
+    /// a nested layout, unlike every other category.
+    /// </summary>
+    private const string SkillsCategory = "skills";
+
+    private const string SkillFileName = "SKILL.md";
+
     private readonly string _toolkitRoot;
     private readonly string _githubRoot;
 
@@ -32,16 +48,39 @@ public sealed class ToolkitContentService
         foreach (var category in ToolkitCategories)
         {
             var dir = Path.Combine(_toolkitRoot, category);
-            result[category] = ListMarkdownFiles(dir);
+            result[category] = ListContentFiles(dir);
         }
 
         var instructionsDir = Path.Combine(_githubRoot, "instructions");
-        result["instructions"] = ListMarkdownFiles(instructionsDir);
+        result["instructions"] = ListContentFiles(instructionsDir);
 
         var agentsDir = Path.Combine(_githubRoot, "agents");
-        result["github-agents"] = ListMarkdownFiles(agentsDir);
+        result["github-agents"] = ListContentFiles(agentsDir);
+
+        result[SkillsCategory] = ListSkills();
 
         return result;
+    }
+
+    /// <summary>
+    /// Lists the execution skills — the subdirectories of <c>.github/skills/</c>
+    /// that contain a <c>SKILL.md</c>.
+    /// </summary>
+    private List<string> ListSkills()
+    {
+        var skillsDir = Path.Combine(_githubRoot, SkillsCategory);
+        if (!Directory.Exists(skillsDir))
+        {
+            return [];
+        }
+
+        return Directory.GetDirectories(skillsDir)
+            .Where(d => File.Exists(Path.Combine(d, SkillFileName)))
+            .Select(Path.GetFileName)
+            .Where(n => !string.IsNullOrEmpty(n))
+            .Cast<string>()
+            .Order(StringComparer.Ordinal)
+            .ToList();
     }
 
     /// <summary>
@@ -77,8 +116,32 @@ public sealed class ToolkitContentService
 
         SearchDirectory(Path.Combine(_githubRoot, "instructions"), "instructions", query, results);
         SearchDirectory(Path.Combine(_githubRoot, "agents"), "github-agents", query, results);
+        SearchSkills(query, results);
 
         return results;
+    }
+
+    private void SearchSkills(string query, List<SearchResult> results)
+    {
+        foreach (var skill in ListSkills())
+        {
+            var content = GetContent(SkillsCategory, skill);
+            if (content is null)
+            {
+                continue;
+            }
+
+            var snippet = BuildSnippet(content, query);
+            if (snippet is not null)
+            {
+                results.Add(new SearchResult
+                {
+                    Category = SkillsCategory,
+                    FileName = skill,
+                    Snippet = snippet
+                });
+            }
+        }
     }
 
     /// <summary>
@@ -103,7 +166,16 @@ public sealed class ToolkitContentService
             return null;
         }
 
-        if (!sanitizedName.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+        if (category == SkillsCategory)
+        {
+            return ResolveWithinBase(
+                Path.Combine(_githubRoot, SkillsCategory),
+                Path.Combine(sanitizedName, SkillFileName));
+        }
+
+        // Names are listed without their extension for markdown, and with it for
+        // every other served extension — so a listed name always resolves back.
+        if (!ContentExtensions.Any(e => sanitizedName.EndsWith(e, StringComparison.OrdinalIgnoreCase)))
         {
             sanitizedName += ".md";
         }
@@ -115,9 +187,17 @@ public sealed class ToolkitContentService
             _ => Path.Combine(_toolkitRoot, category)
         };
 
-        var fullPath = Path.GetFullPath(Path.Combine(baseDir, sanitizedName));
+        return ResolveWithinBase(baseDir, sanitizedName);
+    }
 
-        // Path sandboxing: ensure the resolved path is within the expected directory
+    /// <summary>
+    /// Combines a base directory with a relative path and rejects the result if
+    /// it escapes that base.
+    /// </summary>
+    private static string? ResolveWithinBase(string baseDir, string relativePath)
+    {
+        var fullPath = Path.GetFullPath(Path.Combine(baseDir, relativePath));
+
         if (!fullPath.StartsWith(Path.GetFullPath(baseDir), StringComparison.OrdinalIgnoreCase))
         {
             return null;
@@ -143,20 +223,30 @@ public sealed class ToolkitContentService
         return name;
     }
 
-    private static List<string> ListMarkdownFiles(string directory)
+    /// <summary>
+    /// Lists the served files in a directory. Markdown files are listed without
+    /// their extension (the long-standing convention); other served extensions
+    /// keep theirs, so every listed name resolves back to its file.
+    /// </summary>
+    private static List<string> ListContentFiles(string directory)
     {
         if (!Directory.Exists(directory))
         {
             return [];
         }
 
-        return Directory.GetFiles(directory, "*.md")
-            .Select(Path.GetFileNameWithoutExtension)
-            .Where(n => n is not null)
+        return EnumerateContentFiles(directory)
+            .Select(f => f.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
+                ? Path.GetFileNameWithoutExtension(f)
+                : Path.GetFileName(f))
+            .Where(n => !string.IsNullOrEmpty(n))
             .Cast<string>()
             .Order()
             .ToList();
     }
+
+    private static IEnumerable<string> EnumerateContentFiles(string directory) =>
+        ContentExtensions.SelectMany(e => Directory.GetFiles(directory, $"*{e}"));
 
     private static void SearchDirectory(string directory, string category, string query, List<SearchResult> results)
     {
@@ -165,26 +255,40 @@ public sealed class ToolkitContentService
             return;
         }
 
-        foreach (var file in Directory.GetFiles(directory, "*.md"))
+        foreach (var file in EnumerateContentFiles(directory))
         {
-            var content = File.ReadAllText(file);
-            var index = content.IndexOf(query, StringComparison.OrdinalIgnoreCase);
-            if (index < 0)
+            var snippet = BuildSnippet(File.ReadAllText(file), query);
+            if (snippet is null)
             {
                 continue;
             }
 
-            var snippetStart = Math.Max(0, index - 100);
-            var snippetEnd = Math.Min(content.Length, index + query.Length + 100);
-            var snippet = content[snippetStart..snippetEnd].ReplaceLineEndings(" ");
-
             results.Add(new SearchResult
             {
                 Category = category,
-                FileName = Path.GetFileNameWithoutExtension(file) ?? file,
+                FileName = file.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
+                    ? Path.GetFileNameWithoutExtension(file) ?? file
+                    : Path.GetFileName(file),
                 Snippet = snippet
             });
         }
+    }
+
+    /// <summary>
+    /// Returns a context snippet around the first match, or
+    /// <see langword="null"/> when the content does not match.
+    /// </summary>
+    private static string? BuildSnippet(string content, string query)
+    {
+        var index = content.IndexOf(query, StringComparison.OrdinalIgnoreCase);
+        if (index < 0)
+        {
+            return null;
+        }
+
+        var snippetStart = Math.Max(0, index - 100);
+        var snippetEnd = Math.Min(content.Length, index + query.Length + 100);
+        return content[snippetStart..snippetEnd].ReplaceLineEndings(" ");
     }
 
     private static Dictionary<string, string> ParseByHeadings(string content)
