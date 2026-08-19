@@ -89,6 +89,13 @@ public sealed class ProjectResources
             ?? "design-system.md not found in this workspace.";
     }
 
+    [McpServerResource(UriTemplate = "project://ui-inventory"), Description("The UI inventory (UI retrofit workflow Step 1) — the input the design system is derived from on the retrofit path")]
+    public static string GetUiInventory(ProjectContentService service)
+    {
+        return service.GetUiInventory()
+            ?? "ui-inventory.md not found in this workspace.";
+    }
+
     [McpServerResource(UriTemplate = "project://remediation-audit"), Description("The UI remediation audit results")]
     public static string GetRemediationAudit(ProjectContentService service)
     {

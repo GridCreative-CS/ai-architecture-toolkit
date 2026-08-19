@@ -20,7 +20,8 @@ public sealed class ProjectTools
     private const string ValidSteps =
         "delivery-planning, feature-spec, golden-dataset, compliance-check, ui-compliance, " +
         "feature-spec-reconciliation, decomposition, part-code-review, slice-verification, " +
-        "slice-preparation, ui-remediation, architecture-design, architecture-blueprint-review, " +
+        "slice-preparation, ui-foundation, ui-inventory, design-system-from-inventory, " +
+        "ui-remediation, architecture-design, architecture-blueprint-review, " +
         "architecture-reconciliation, architecture-final-gate, adr-generation, architecture-review, " +
         "existing-architecture-review, architecture-gap-reconciliation, prototype-analysis, " +
         "prototype-architecture-alignment, legacy-system-analysis";
@@ -28,7 +29,7 @@ public sealed class ProjectTools
     /// <summary>
     /// Lists all project-specific artifacts with their existence status.
     /// </summary>
-    [McpServerTool, Description("Lists all project-specific artifacts (architecture, architecture-final gate report, ADRs, delivery plan, feature specs, architecture and UI compliance reports, golden datasets, slice verification evidence, ai-parts decomposition slices, design system, project context) and whether each exists in the current workspace.")]
+    [McpServerTool, Description("Lists all project-specific artifacts (architecture, architecture-final gate report, ADRs, delivery plan, feature specs, architecture and UI compliance reports, golden datasets, slice verification evidence, ai-parts decomposition slices, design system, UI inventory, project context) and whether each exists in the current workspace.")]
     public static string ListProjectArtifacts(ProjectContentService projectService)
     {
         var artifacts = projectService.ListArtifacts();
@@ -141,6 +142,32 @@ public sealed class ProjectTools
                 (string?)null,
                 (string?)null,
                 new[] { ("Design System", projectService.GetDesignSystem()), ("Feature Spec", featureSpec) }
+            ),
+            // UI foundation workflow Step 1 (greenfield) — engineering
+            // workflow Step 0b. Produces architecture/design-system.md.
+            "ui-foundation" => (
+                "design-system-generator",
+                (string?)"design-system-template",
+                (string?)null,
+                (string?)null,
+                new[] { ("Architecture", projectService.GetArchitecture()), ("ADRs", projectService.GetAllAdrs()), ("Project Context", projectService.GetProjectContext()), ("Existing Design System", projectService.GetDesignSystem()) }
+            ),
+            // UI retrofit workflow Step 1 — produces architecture/ui-inventory.md.
+            "ui-inventory" => (
+                "ui-inventory",
+                (string?)"ui-inventory-template",
+                (string?)null,
+                (string?)null,
+                new[] { ("Architecture", projectService.GetArchitecture()), ("Project Context", projectService.GetProjectContext()), ("Existing UI Inventory", projectService.GetUiInventory()) }
+            ),
+            // UI retrofit workflow Step 2 — derives the design system from the
+            // inventory produced by the ui-inventory step.
+            "design-system-from-inventory" => (
+                "design-system-from-inventory",
+                (string?)"design-system-template",
+                (string?)null,
+                (string?)null,
+                new[] { ("UI Inventory", projectService.GetUiInventory()), ("Architecture", projectService.GetArchitecture()), ("ADRs", projectService.GetAllAdrs()), ("Project Context", projectService.GetProjectContext()) }
             ),
             "ui-remediation" => (
                 "ui-compliance-check",

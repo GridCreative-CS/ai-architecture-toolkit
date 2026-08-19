@@ -43,6 +43,7 @@ public sealed partial class ProjectContentService
         result["prototype-architecture-alignment"] = [CheckFile("architecture/prototype-architecture-alignment.md")];
         result["delivery-plan"] = [CheckFile("architecture/delivery-plan.md")];
         result["design-system"] = [CheckFile("architecture/design-system.md")];
+        result["ui-inventory"] = [CheckFile("architecture/ui-inventory.md")];
         result["project-context"] = [CheckFile("ai/project-context.md")];
         result["remediation-audit"] = [CheckFile("architecture/remediation-audit.md")];
         result["legacy-system-analysis"] = [CheckFile("architecture/legacy-system-analysis.md")];
@@ -137,6 +138,12 @@ public sealed partial class ProjectContentService
     /// Gets the design system content.
     /// </summary>
     public string? GetDesignSystem() => ReadSafe("architecture/design-system.md");
+
+    /// <summary>
+    /// Gets the UI inventory content (UI retrofit workflow Step 1) — the input
+    /// the design system is derived from on the retrofit path.
+    /// </summary>
+    public string? GetUiInventory() => ReadSafe("architecture/ui-inventory.md");
 
     /// <summary>
     /// Gets the remediation audit content.

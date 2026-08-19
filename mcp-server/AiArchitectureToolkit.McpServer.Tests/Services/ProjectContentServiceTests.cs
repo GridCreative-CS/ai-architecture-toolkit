@@ -31,6 +31,7 @@ public sealed class ProjectContentServiceTests : IDisposable
         CreateFile("architecture/compliance-reports", "user-registration.md", "# Compliance\n\nArchitecture compliance findings.");
         CreateFile("architecture/compliance-reports", "user-registration-ui.md", "# UI Compliance\n\nUI compliance findings.");
         CreateFile("architecture/slice-verification", "user-registration.md", "# Slice Verification\n\nBrowser evidence.");
+        CreateFile("architecture", "ui-inventory.md", "# UI Inventory\n\nCatalogued screens and components.");
 
         // Don't create design-system.md (to test missing file behavior)
 
@@ -125,6 +126,15 @@ public sealed class ProjectContentServiceTests : IDisposable
     }
 
     [Fact]
+    public void GetUiInventory_ReturnsContent()
+    {
+        var content = _service.GetUiInventory();
+
+        Assert.NotNull(content);
+        Assert.Contains("Catalogued screens and components", content);
+    }
+
+    [Fact]
     public void GetAllAdrs_ReturnsConcatenated()
     {
         var content = _service.GetAllAdrs();
@@ -148,6 +158,7 @@ public sealed class ProjectContentServiceTests : IDisposable
         Assert.True(artifacts["prototype-architecture-alignment"][0].Exists);
         Assert.True(artifacts["delivery-plan"][0].Exists);
         Assert.False(artifacts["design-system"][0].Exists);
+        Assert.True(artifacts["ui-inventory"][0].Exists);
         Assert.Equal(2, artifacts["adrs"].Count);
         Assert.Single(artifacts["feature-specs"]);
     }

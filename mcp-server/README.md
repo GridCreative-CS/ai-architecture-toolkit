@@ -33,6 +33,7 @@ This MCP server makes the toolkit **project-aware** — it serves both static to
 | `project://slice-verification/{name}` | Integrated Slice Verification evidence (engineering workflow Step 6b) |
 | `project://project-context` | Project context |
 | `project://design-system` | Design system document |
+| `project://ui-inventory` | UI inventory (UI retrofit workflow Step 1) — the input the design system is derived from on the retrofit path |
 | `project://remediation-audit` | UI remediation audit results |
 
 ### MCP Tools
@@ -43,7 +44,7 @@ This MCP server makes the toolkit **project-aware** — it serves both static to
 | `search_toolkit` | Full-text search across all toolkit markdown and JSON files, including the execution skills |
 | `get_glossary_term` | Looks up a term from the glossary |
 | `get_toolkit_file` | Gets full content of a specific toolkit file by category and name |
-| `list_project_artifacts` | Lists project artifacts with existence status, including `ai-parts` slice folders, `slice-verification` evidence, and architecture vs UI compliance reports separately |
+| `list_project_artifacts` | Lists project artifacts with existence status, including `ai-parts` slice folders, `slice-verification` evidence, the UI inventory, and architecture vs UI compliance reports separately |
 | `get_workspace_structure` | Scans workspace for .NET solutions, projects, and dependencies |
 | `get_workflow_context` | **Key tool** — returns everything needed for a workflow step (prompt + template + guide + skill + project artifacts). Takes an optional `sliceName` for the slice-scoped steps |
 | `get_slice_context` | Returns all context for a specific slice: feature spec and its criterion IDs, both compliance reports, decomposition status from `ai-parts/`, verification evidence, ADRs, delivery plan |
@@ -63,6 +64,9 @@ This MCP server makes the toolkit **project-aware** — it serves both static to
 | `part-code-review` | `code-quality-reviewer` + `code-quality-checklist-template` + `code-quality-standard` | Engineering Step 6a |
 | `slice-verification` | Checklist template + reports whether Step 6b evidence exists for the slice | Engineering Step 6b |
 | `slice-preparation` | `slice-preparation-runner` | Engineering Steps 2–5 |
+| `ui-foundation` | `design-system-generator` + `design-system-template` | UI foundation (greenfield) Step 1 / Engineering Step 0b |
+| `ui-inventory` | `ui-inventory` + `ui-inventory-template` | UI retrofit Step 1 |
+| `design-system-from-inventory` | `design-system-from-inventory` + `design-system-template` + the UI inventory | UI retrofit Step 2 |
 | `ui-remediation` | `ui-compliance-check` + `remediation-spec-template` | UI remediation |
 | `architecture-design` | `architecture-designer` + blueprint template | Architecture Modes A/B |
 | `architecture-blueprint-review` | `architecture-reviewer` | Architecture Modes A/B |

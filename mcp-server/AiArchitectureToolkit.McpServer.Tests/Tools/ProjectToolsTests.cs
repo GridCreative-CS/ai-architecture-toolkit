@@ -35,6 +35,11 @@ public sealed class ProjectToolsTests : IDisposable
         CreateFile(aiDir, "prompts", "slice-preparation-runner.md", "# Slice Preparation Runner\n\nRun Steps 2-5.");
         CreateFile(aiDir, "prompts", "architecture-final-quality-gate.md", "# Architecture Final Quality Gate\n\nRun 16 checks.");
         CreateFile(aiDir, "prompts", "code-quality-reviewer.md", "# Code Quality Reviewer\n\nRun twelve checks.");
+        CreateFile(aiDir, "prompts", "design-system-generator.md", "# Design System Generator\n\nDerive the design system.");
+        CreateFile(aiDir, "prompts", "ui-inventory.md", "# UI Inventory\n\nInventory the existing UI.");
+        CreateFile(aiDir, "prompts", "design-system-from-inventory.md", "# Design System From Inventory\n\nDerive from the inventory.");
+        CreateFile(aiDir, "templates", "design-system-template.md", "# Design System Template");
+        CreateFile(aiDir, "templates", "ui-inventory-template.md", "# UI Inventory Template");
         CreateFile(aiDir, "templates", "golden-dataset-template.md", "# Golden Dataset Template");
         CreateFile(aiDir, "templates", "code-quality-checklist-template.md", "# Code Quality Checklist Template");
         CreateFile(aiDir, "guides", "code-quality-standard.md", "# Code Quality Standard\n\nImplementation quality rules.");
@@ -68,6 +73,7 @@ public sealed class ProjectToolsTests : IDisposable
         CreateFile(_tempDir, "architecture/feature-specs", "user-registration.md",
             "# User Registration Spec\n\n- DR-01: A user has one email.\n- SEC-01: Anonymous callers get 401.\n- AC-01: Returns 201 on success.\n- UIAC-01: The form shows a pending spinner.");
         CreateFile(_tempDir, "architecture", "design-system.md", "# Design System\n\nToken definitions.");
+        CreateFile(_tempDir, "architecture", "ui-inventory.md", "# UI Inventory\n\nCatalogued screens and components.");
         CreateFile(_tempDir, "architecture", "legacy-system-analysis.md", "# Legacy System Analysis\n\nLegacy constraints.");
         CreateFile(_tempDir, "architecture", "architecture-final-gate.md", "# Gate Report\n\nGate verdict recorded.");
         CreateFile(_tempDir, "architecture/compliance-reports", "user-registration.md", "# Compliance\n\nArchitecture compliance findings.");
@@ -203,6 +209,37 @@ public sealed class ProjectToolsTests : IDisposable
         Assert.Contains("Alignment Prompt", result);
         Assert.Contains("Behavior", result);
         Assert.Contains("Modular monolith", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_UiFoundation_ReturnsDesignSystemGeneratorAndTemplate()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "ui-foundation");
+
+        Assert.Contains("Design System Generator", result);
+        Assert.Contains("Design System Template", result);
+        Assert.Contains("Modular monolith", result);
+        Assert.Contains("ADR-001", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_UiInventory_ReturnsInventoryPromptAndTemplate()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "ui-inventory");
+
+        Assert.Contains("Inventory the existing UI", result);
+        Assert.Contains("UI Inventory Template", result);
+        Assert.Contains("Modular monolith", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_DesignSystemFromInventory_IncludesTheInventory()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "design-system-from-inventory");
+
+        Assert.Contains("Derive from the inventory", result);
+        Assert.Contains("Design System Template", result);
+        Assert.Contains("Catalogued screens and components", result);
     }
 
     [Fact]

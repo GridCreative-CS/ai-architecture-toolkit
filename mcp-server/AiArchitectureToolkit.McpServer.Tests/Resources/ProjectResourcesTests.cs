@@ -27,6 +27,7 @@ public sealed class ProjectResourcesTests : IDisposable
         CreateFile("architecture", "architecture-final-gate.md", "# Gate Report\n\nVerdict: APPROVED.");
         CreateFile("architecture/slice-verification", "user-registration.md", "# Slice Verification\n\nBrowser evidence recorded.");
         CreateFile("ai", "project-context.md", "# Project Context\n\nA project.");
+        CreateFile("architecture", "ui-inventory.md", "# UI Inventory\n\nCatalogued screens and components.");
         CreateFile("ai-parts/user-registration", "OVERVIEW.md",
             "# AI Parts Overview\n\n## Requirement Coverage Map\n\n| AC-01 | P01 |\n\n## Parts Index");
         CreateFile("ai-parts/user-registration", "P01-domain.md",
@@ -58,6 +59,12 @@ public sealed class ProjectResourcesTests : IDisposable
     public void GetArchitectureFinalGate_ReturnsContent()
     {
         Assert.Contains("Verdict: APPROVED", ProjectResources.GetArchitectureFinalGate(_projectService));
+    }
+
+    [Fact]
+    public void GetUiInventory_ReturnsContent()
+    {
+        Assert.Contains("Catalogued screens and components", ProjectResources.GetUiInventory(_projectService));
     }
 
     [Fact]
