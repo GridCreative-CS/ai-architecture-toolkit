@@ -5,7 +5,7 @@ license: MIT
 compatibility: Designed for skills-compatible coding agents, including Claude Code and GitHub Copilot (VS Code). Assumes write access to the repository workspace and ability to run tests/build commands.
 metadata:
   author: Gridcreative Holding B.V.  by Jursley Koots
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # Part Executor (TDD)
@@ -14,12 +14,14 @@ metadata:
 ## What this skill does
 Given exactly **one Part** in the **Part Handoff Contract** format, you will:
 - confirm preconditions
+- record the review snapshot the Part starts from
 - read the nearby existing code and tests before writing anything
 - implement the part using **mandatory TDD**, following the project's
   existing patterns (`ai/guides/code-quality-standard.md`)
 - keep the repo green
 - deliver a **Part Quality Report** with verification commands, TDD evidence,
-  and an explicit contract-surface declaration
+  a slice-wide **requirement coverage matrix**, and an explicit
+  contract-surface declaration
   (`ai/templates/code-quality-checklist-template.md`)
 
 
@@ -98,6 +100,13 @@ If a relevant feature spec is available, use it to interpret the Part safely.
 - **No silent contract changes**: any change to a public API, database schema,
   event, or UI contract surface must be declared in the quality report §7 and
   covered by the feature spec (code-quality standard §12).
+- **Every criterion is accounted for**: the quality report §3b matrix covers
+  the whole slice's criteria, and no criterion is marked covered without a
+  test that fails when the implementation is removed.
+- **Mutation-check the four triggers**: authorization guards, cache
+  invalidation/refetch, cancellation/supersession, and error→message mapping
+  are proven load-bearing before the Part is reported (code-quality standard
+  §10). The mutation is never committed.
 - No scope creep: if the Part is unclear, list assumptions and implement the smallest safe choice.
 
 ---
@@ -122,6 +131,28 @@ If a relevant feature spec is available, use it to interpret the Part safely.
 - Ensure baseline build/tests are green.
 - If baseline is broken, stop and propose **a Baseline Fix Part** (do not proceed).
 - If a relevant feature spec exists, verify the Part still fits the intended slice scope.
+- **Record the review snapshot** for the quality report's snapshot block: the
+  base commit this Part starts from, the diff command that will reproduce the
+  change, and (at report time) the uncommitted worktree files and any
+  generated/untracked files belonging to the Part. Step 6a reviews this exact
+  snapshot; generated files that sit outside the diff must still be named.
+
+### 2b) Build the requirement coverage baseline (required)
+Before implementing, collect the criteria this slice must satisfy:
+- every §6 (`DR-nn`), §9 (`SEC-nn`), §11 (`AC-nn`), and §11b (`UIAC-nn`)
+  criterion from the feature spec — the **whole slice**, not only this Part's
+- this Part's PART_SPEC `acceptance_criteria`
+- the owning Part for each criterion, from the **Requirement Coverage Map** in
+  `ai-parts/<slice-id>/OVERVIEW.md`
+
+If the slice was decomposed before that map existed, derive it once from the
+feature spec now and write it into the existing `OVERVIEW.md` — do not guess
+owners row by row, and do not leave a criterion unowned. If the feature spec
+predates criterion IDs, key rows as `§<section> "<verbatim text>"`.
+
+This baseline becomes quality report §3b. Building it before implementing is
+the point: it tells you which negative and edge cases this Part owes tests
+for, instead of that being discovered two reviews later.
 
 ### 3) Read before write (required)
 Before writing any test or production code:
@@ -150,6 +181,21 @@ Before writing any test or production code:
 3) **Refactor**
    - Improve structure while staying green
    - Re-run tests
+4) **Mutation check** (required when this Part implements an authorization
+   guard, cache invalidation/refetch, cancellation/supersession, or
+   error→message mapping — `ai/guides/code-quality-standard.md` §10)
+   - Temporarily break the implementation, observe the test fail, restore it,
+     re-run to green
+   - Record the mutation (`file:line` + what changed), the failing test, the
+     observed failure, and the restore confirmation in quality report §3
+   - Never commit the mutation
+
+Write tests that prove behavior, not structure: a test that would still pass
+with the production logic removed does not cover its criterion
+(`ai/guides/code-quality-standard.md` §10). Cover the negative and edge case
+for every criterion this Part owns — denied roles issuing no request, each
+async state per source, supersede/clear/unmount as separate cases, rendered
+display values per locale, observable refetch after mutation.
 
 ### If tests are not feasible
 You must justify why and use the best alternative verification:
@@ -173,8 +219,20 @@ A Part is “Done” only if:
   bodies, or fake implementations in production paths; no dead/unused code;
   no suppressed warnings without recorded justification
 - tests prove behavior, not implementation: no test passes purely by
-  verifying mocks were called or by mirroring internal steps; TDD claims are
-  backed by recorded red evidence (command + observed failure)
+  verifying mocks were called, by mirroring internal steps, or by asserting
+  that something merely exists; TDD claims are backed by recorded red
+  evidence (command + observed failure)
+- the requirement coverage matrix (quality report §3b) is complete: every
+  slice criterion has a row, no blank cells, every `COVERED-*` row cites a
+  test that fails when the implementation is removed, every `NOT-YET` /
+  `DEFERRED` names an owner (and a workflow step), and — for the **final Part
+  of a slice** — zero rows remain `NOT-YET`
+- a mutation check is recorded for every triggering behavior this Part
+  implements (authorization guard, cache invalidation/refetch,
+  cancellation/supersession, error→message mapping), with the worktree
+  restored and the suite green
+- the review snapshot block is filled (base commit, diff command, uncommitted
+  worktree files, generated/untracked Part files)
 - no existing test was weakened, deleted, or skipped to get to green (a
   legitimately obsolete test is removed with justification in the quality
   report)
@@ -220,7 +278,12 @@ The report must contain (see the template for the full structure):
 1. **Part executed** — what was implemented
 2. **Files changed** — every file, with change type and purpose
 3. **Tests added or updated** — plus TDD evidence: red observed (command +
-   exact failure) and green achieved (command + result)
+   exact failure), green achieved (command + result), and the mutation
+   checks for any triggering behavior
+3b. **Requirement coverage matrix** — every criterion of the whole slice
+   (§6/§9/§11/§11b plus this Part's PART_SPEC criteria) with implementation
+   location, positive test, negative/edge test, verification evidence, and a
+   status from the fixed vocabulary
 4. **Checks run** — every command actually executed (`verify`, `e2e_verify`,
    build, linters) with its real result — not intentions
 5. **Architecture rules verified** — boundaries touched, dependency direction,
@@ -233,6 +296,9 @@ The report must contain (see the template for the full structure):
 8. **Dependencies** — new libraries added: NONE or name + justification
 9. **Deviations from existing patterns** — each with the reason, or "none"
 10. **Remaining risks** — or "none" only if true
+10b. **Remediation log** — on a re-run after `REJECTED — MUST FIX` only: per
+   finding, the fix, the test re-run with result, the branches touched, and
+   explicit confirmation that no prior assertion was weakened
 11. **Prohibited-output check** — PASS/FAIL lines per code-quality standard §11
 12. **Verdict** — explicit **Part status: DONE / NOT DONE** statement
 
@@ -251,6 +317,35 @@ After delivering the report, the Part goes to the Part code review
 review **must run in a fresh agent session/subagent — never in this
 session**; do not review your own Part. Do not start the next Part until the
 review verdict is `APPROVED` or `APPROVED WITH NOTES`.
+
+A filled example report is `ai/examples/example-part-quality-report.md`.
+
+---
+
+## Remediation protocol (after `REJECTED — MUST FIX`)
+
+Remediation stays inside the same Part and keeps TDD discipline. Required:
+
+1. Set the Part's Status back to `IN_PROGRESS`.
+2. For each finding: write or adjust the failing test first, then fix.
+3. **Never weaken an assertion to make a fix pass** — no loosened matcher, no
+   widened tolerance, no removed case, no newly skipped test, no assertion
+   moved behind a condition. If an existing test is genuinely wrong, say so
+   explicitly in §10b with the reason; silently relaxing it is a Blocker at
+   re-review.
+4. Re-run **every previous finding's test**, not only the suite.
+5. Check the sibling branches of every path you touched (error, empty,
+   cancelled, denied-role) — a fix to one branch commonly leaves the others
+   inconsistent.
+6. Update §3b for anything the remediation changed.
+7. Write §10b: per finding, the fix (`file:line`), the test re-run and its
+   result, the branches touched, the shared surfaces touched, and the
+   no-weakened-assertion confirmation.
+8. Record a **new review snapshot** — the re-review reviews the remediation
+   diff separately, so it needs the post-review base.
+
+Then hand back for re-review. The Part is `DONE` only after an `APPROVED` or
+`APPROVED WITH NOTES` verdict.
 
 ---
 

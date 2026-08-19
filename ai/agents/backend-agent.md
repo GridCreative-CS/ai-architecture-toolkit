@@ -98,8 +98,20 @@ Before completing, verify that the implementation:
 
 Before marking work complete, verify:
 
-- [ ] all acceptance criteria from the feature spec are met
+- [ ] all acceptance criteria from the feature spec are met — by criterion ID,
+      each with a test that fails if the implementation is removed
 - [ ] TDD cycle was followed for behavioral changes (red evidence recorded)
+- [ ] authorization proven from both sides: each permitted role gets access,
+      and each denied role is refused with **no side effect performed** on its
+      behalf (`SEC-nn` criteria)
+- [ ] the error contract's trace reference (e.g. problem details `traceId`)
+      survives every mapping hop and reaches the caller
+- [ ] values the server owns are served, not left to be recomputed downstream
+- [ ] caches and read models dependent on a mutation are invalidated, and the
+      refresh is observable in a test that fails without the invalidation
+- [ ] mutation-checked the triggers this Part implements (authorization guard,
+      cache invalidation, cancellation, error→message mapping) — broken,
+      observed failing, restored, recorded (code-quality standard §10)
 - [ ] contracts match the feature spec §7 (API / Contract Expectations)
 - [ ] module boundaries are respected (no cross-module data access)
 - [ ] nearby code and tests were read first; existing patterns followed or

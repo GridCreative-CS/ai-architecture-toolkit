@@ -39,7 +39,7 @@
 <!-- - Warning: deviates from intent but not a hard constraint — should fix    -->
 <!-- - Info: minor inconsistency — fix if convenient                           -->
 
-- **Identifier:** <!-- e.g., AC-001 -->
+- **Identifier:** <!-- e.g., CV-001 — compliance violation. Do not use the AC- prefix: that namespace belongs to feature spec §11 acceptance criteria. -->
 - **Description:**
 - **Violated source:** <!-- Which architecture section or ADR? -->
 - **Severity:** Critical / Warning / Info

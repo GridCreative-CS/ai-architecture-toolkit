@@ -74,7 +74,9 @@ Prompts:
 Skills:
 
 - `.github/skills/plan-decomposer/SKILL.md` →
-  `ai-parts/<slice-id>/OVERVIEW.md` + `ai-parts/<slice-id>/PXX-*.md` (Step 5)
+  `ai-parts/<slice-id>/OVERVIEW.md` (incl. the Requirement Coverage Map:
+  every feature spec criterion → owning Part) + `ai-parts/<slice-id>/PXX-*.md`
+  (Step 5)
 - `.github/skills/part-executor-tdd/SKILL.md` — one Part at a time, strict TDD
   (Step 6); every Part ends with a Part Quality Report →
   `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`
@@ -84,7 +86,9 @@ Verification:
 
 - Part Code Review → `ai-parts/<slice-id>/reviews/<part-id>-review.md`
   (mandatory per Part — Step 6a, using `ai/prompts/code-quality-reviewer.md`;
-  the next Part starts only after `APPROVED` / `APPROVED WITH NOTES`)
+  twelve checks against a frozen snapshot, including the nine-dimension audit
+  and the requirement coverage audit; the next Part starts only after
+  `APPROVED` / `APPROVED WITH NOTES`)
 - Integrated Slice Verification →
   `architecture/slice-verification/<slice-id>-<slice-name>.md`
   (mandatory for UI slices — Step 6b, using

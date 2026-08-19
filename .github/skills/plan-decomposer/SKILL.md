@@ -6,7 +6,7 @@ license: MIT
 compatibility: Designed for skills-compatible coding agents, including Claude Code and GitHub Copilot (VS Code). Assumes read/write access to the repository workspace.
 metadata:
   author: Gridcreative Holding B.V. by Jursley Koots
-  version: "2.3.0"
+  version: "2.4.0"
 ---
 
 # Plan Decomposer
@@ -58,13 +58,13 @@ Apply the architectural, testing, and system-design principles of the
 
 Scope the agent’s influence carefully:
 
-- **Backend / Domain / API / Data / Infrastructure**
+- **`backend` and `infrastructure` Parts (domain, API, data, infra)**
   - Apply the agent fully (SOLID, TDD, boundaries, contracts, risks).
 
-- **Shared / Contract Parts (DTOs, API schemas, auth flows)**
+- **`shared-contract` Parts (DTOs, API schemas, auth flows)**
   - Apply the agent fully for correctness, validation, and versioning.
 
-- **Frontend (Next.js / React) Parts**
+- **`frontend` Parts (e.g. Next.js / React)**
   - Apply the agent *only* at the architectural level:
     - data boundaries
     - API contracts
@@ -72,13 +72,16 @@ Scope the agent’s influence carefully:
     - testability
   - Do **NOT** impose .NET patterns or backend abstractions on frontend implementation details.
 
-For each Part, implicitly classify it as:
-- Backend
-- Frontend
-- Shared / Contract
-- Infrastructure
+For each Part, classify it as one of:
+- `backend`
+- `frontend`
+- `shared-contract`
+- `infrastructure`
 
-And apply the agent according to the rules above.
+Apply the agent according to the rules above, and **record the classification
+explicitly** — in the PART_SPEC `part_type` field and the Parts Index Type
+column. Step 6a uses it to decide which review dimensions apply to the Part,
+so leaving the classification implicit pushes a guess onto the reviewer.
 
 ---
 
@@ -91,6 +94,11 @@ And apply the agent according to the rules above.
   - rollback steps
 - Parts must be **small** and **ordered**.
 - If a feature spec exists for the selected slice, use it to tighten decomposition scope.
+- **Every feature spec criterion gets an owning Part.** Build the Requirement
+  Coverage Map and check it before finishing: a criterion (§6 `DR-nn`, §9
+  `SEC-nn`, §11 `AC-nn`, §11b `UIAC-nn`) that no Part owns is a decomposition
+  defect, not an open question. Decomposition is not complete until the map
+  has no unowned criterion.
 - No scope creep: unclear items go under **Open Questions / Assumptions** in the overview.
 
 ---
@@ -106,8 +114,8 @@ Write all decomposition outputs into a per-slice folder:
 Never mix Parts from two slices in one folder — one slice = one folder.
 If the folder does not exist, create it.
 
-Within the skill text below, `./ai-parts/<slice-id>/` is abbreviated as
-`./ai-parts/`.
+Every path below is written out in full. There is no `./ai-parts/<file>`
+shorthand: a path without `<slice-id>` is wrong.
 
 ---
 
@@ -136,7 +144,7 @@ Before writing any Part files:
    the same thing, record that as an open question — do not pick silently.
 
 Then write preflight results into:
-- `./ai-parts/OVERVIEW.md` (in the Preflight section, including a
+- `./ai-parts/<slice-id>/OVERVIEW.md` (in the Preflight section, including a
   `### Pattern Inventory` subsection)
 
 ---
@@ -145,10 +153,12 @@ Then write preflight results into:
 The decomposition MUST be represented by files so that an executor can consume them without ambiguity.
 
 ## Required files
-1) `./ai-parts/OVERVIEW.md`
+All decomposition output lives in a **per-slice folder**,
+`./ai-parts/<slice-id>/` (see Output location):
+1) `./ai-parts/<slice-id>/OVERVIEW.md`
 2) One file per part:
-   - `./ai-parts/P01-<slug>.md`
-   - `./ai-parts/P02-<slug>.md`
+   - `./ai-parts/<slice-id>/P01-<slug>.md`
+   - `./ai-parts/<slice-id>/P02-<slug>.md`
    - ...
 
 ## Required Part Status line (new requirement)
@@ -192,6 +202,16 @@ OPTIONAL fields:
 - `risks` (array of strings)
 - `notes` (array of strings)
 - `definition_of_done` (array of strings)
+- `part_type` (string; one of `backend`, `frontend`, `shared-contract`,
+  `infrastructure` — the classification from **Reasoning Mode & Agent Scope**,
+  made explicit. Step 6a uses it to decide which review dimensions apply, so
+  the reviewer does not have to guess. **Emit it on every Part.** When absent,
+  the reviewer classifies from `file_touch_points` and records what it used.)
+- `criteria_covered` (array of criterion IDs from the feature spec —
+  `AC-nn`, `UIAC-nn`, `SEC-nn`, `DR-nn` — that this Part is responsible for
+  satisfying. Must agree with the OVERVIEW Requirement Coverage Map. The
+  executor's quality report §3b marks these `COVERED-THIS-PART` or explains
+  why not.)
 - `e2e_verify` (array of strings; browser-based verification commands — e.g.,
   Playwright test commands, Cypress commands, or documented manual browser
   walkthrough steps. **Required for the final Part of any UI slice.**)
@@ -206,30 +226,58 @@ OPTIONAL fields:
 ---
 
 ## Required structure: OVERVIEW.md
-`./ai-parts/OVERVIEW.md` MUST include:
+`./ai-parts/<slice-id>/OVERVIEW.md` MUST include:
 
 1) `# AI Parts Overview`
-2) `## Preflight` (Plan summary, repo reality check, risks, open questions)
-3) `## Parts Index` (a table listing all parts)
-4) `## Execution Order` (ordered list of part IDs)
-5) `## How to Execute` (instructions to feed this overview to the executor skill)
+2) `## Preflight` (Plan summary, repo reality check, risks, open questions,
+   `### Pattern Inventory`)
+3) `## Requirement Coverage Map` (every feature spec criterion → owning Part)
+4) `## Parts Index` (a table listing all parts)
+5) `## Execution Order` (ordered list of part IDs)
+6) `## How to Execute` (instructions to feed this overview to the executor skill)
 
 ### Parts Index table columns (required)
 - Part ID
 - Title
 - File
+- Type (backend | frontend | shared-contract | infrastructure)
 - Dependencies
 - Status
 
 Status values:
 - TODO | IN_PROGRESS | DONE | BLOCKED
 
+### Requirement Coverage Map (required when a feature spec exists)
+
+One row per criterion in the slice's feature spec — every §6 (`DR-nn`), §9
+(`SEC-nn`), §11 (`AC-nn`), and §11b (`UIAC-nn`) entry:
+
+| Criterion | Text (short) | Owning Part(s) | Verified at |
+| --- | --- | --- | --- |
+| AC-01 | … | P03 | P03 tests |
+| UIAC-04 | … | P07 | Step 6b browser verification |
+
+Rules:
+
+- **Every criterion has an owner.** A criterion no Part owns is a
+  decomposition defect — fix the decomposition; do not write "TBD". Step 5 is
+  not complete while any criterion is unowned.
+- `Verified at` names where the proof lands: a Part's tests, or a named later
+  step (Step 6b) for what only browser verification can show.
+- The map is what the executor's quality report §3b fills its owner column
+  from, and what the Step 6a reviewer audits statuses against.
+- If the feature spec predates criterion IDs, key rows as
+  `§<section> "<verbatim text>"`.
+
+Keep the map current: if a Part is inserted (`P09b`) or re-scoped, update the
+owning Part here in the same pass.
+
 ---
 
 ## Writing the decomposition files (required procedure)
 
 ### 1) Create OVERVIEW.md skeleton first
-Write `./ai-parts/OVERVIEW.md` with:
+Write `./ai-parts/<slice-id>/OVERVIEW.md` with:
 - Preflight section filled out
 - Parts Index table header
 - Execution Order list (initially can be empty if you still need to write parts)
@@ -238,7 +286,7 @@ Write `./ai-parts/OVERVIEW.md` with:
 For each Part:
 - Choose `part_id`: P01..PNN
 - Choose a short slug for filename
-- Write file: `./ai-parts/P<NN>-<slug>.md`
+- Write file: `./ai-parts/<slice-id>/P<NN>-<slug>.md`
 
 If a Part must be **inserted later** between existing Parts (discovered scope
 that cannot wait), suffix a letter instead of renumbering: `P09b-<slug>.md`
@@ -255,9 +303,17 @@ Each Part file MUST include:
 
 ### 3) Populate OVERVIEW.md index
 After creating Part files:
-- Fill Parts Index table rows with correct file paths
+- Fill Parts Index table rows with correct file paths and each Part's Type
 - Fill Execution Order list in correct order
 - Ensure Status column matches each Part file’s Status (initially TODO)
+
+### 4) Fill and check the Requirement Coverage Map
+- One row per feature spec criterion (§6 `DR-nn`, §9 `SEC-nn`, §11 `AC-nn`,
+  §11b `UIAC-nn`), with its owning Part and where it will be verified
+- Cross-check both directions: every criterion has an owner, and every Part's
+  `criteria_covered` appears in the map
+- **A criterion with no owner blocks completion** — add or re-scope a Part.
+  Do not hand the gap to the executor to discover
 
 ---
 
@@ -269,13 +325,16 @@ Status: TODO
 
 ## Summary
 - Goal:
+- Type: backend | frontend | shared-contract | infrastructure
+- Criteria covered: <criterion IDs from the feature spec, e.g. AC-03, SEC-01>
 - Scope In:
 - Scope Out:
 - Expected file touch points:
 
 ## Tests First (TDD: Red)
 - Test files:
-- Test cases:
+- Test cases: <include the negative/edge case for each criterion this Part
+  owns, not only the happy path>
 - Expected Red (what fails and why):
 
 ## ProjectReference Checklist (required for test project parts — .NET default; substitute the project's stack equivalent)
@@ -321,7 +380,7 @@ This Part's PART_SPEC must include:
 ---
 
 ## Overview file template (required)
-Use this exact structure in `./ai-parts/OVERVIEW.md`:
+Use this exact structure in `./ai-parts/<slice-id>/OVERVIEW.md`:
 
 # AI Parts Overview
 
@@ -342,10 +401,19 @@ Use this exact structure in `./ai-parts/OVERVIEW.md`:
 ### Open Questions / Assumptions
 - ...
 
+## Requirement Coverage Map
+| Criterion | Text (short) | Owning Part(s) | Verified at |
+|---|---|---|---|
+| AC-01 | ... | P01 | P01 tests |
+| UIAC-01 | ... | P04 | Step 6b browser verification |
+
+(Every §6/§9/§11/§11b criterion of the feature spec appears here. No criterion
+may be left without an owner.)
+
 ## Parts Index
-| Part ID | Title | File | Dependencies | Status |
-|---|---|---|---|---|
-| P01 | ... | ./ai-parts/P01-....md | (none) | TODO |
+| Part ID | Title | File | Type | Dependencies | Status |
+|---|---|---|---|---|---|
+| P01 | ... | ./ai-parts/<slice-id>/P01-....md | backend | (none) | TODO |
 
 ## Execution Order
 1. P01
@@ -380,7 +448,16 @@ If a slice-level feature spec is provided, the decomposition must reflect it.
 
 ### Required behavior
 - Decompose only the selected slice described by the feature spec.
-- Use feature-spec acceptance criteria to shape Part acceptance criteria.
+- Use feature-spec acceptance criteria to shape Part acceptance criteria, and
+  record which criterion IDs each Part owns in `criteria_covered`.
+- Build the **Requirement Coverage Map** in OVERVIEW.md from §6/§9/§11/§11b —
+  every criterion owned by exactly one Part (or explicitly by a later
+  verification step). This map is what the executor's quality report §3b and
+  the Step 6a coverage audit are checked against.
+- Give the **negative and edge cases** their own `test_cases` entries where a
+  criterion has one — a denied role issuing no request, an async source
+  failing independently, a reset or unmount path, a locale-specific rendering.
+  A Part whose tests only cover the happy path leaves its criterion unproven.
 - Use feature-spec test implications to strengthen `tests_first`.
 - Use feature-spec API, data, security, and observability notes to avoid vague Parts.
 - Keep Parts aligned with both the feature spec and the broader architecture.

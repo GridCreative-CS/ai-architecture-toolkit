@@ -130,7 +130,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `design-system-from-inventory` | UI Foundation | Derive a design system from an existing UI inventory (retrofit) |
 | `ui-inventory` | UI Foundation | Inventory existing UI surfaces, components, and tokens |
 | `ui-compliance-check` | Compliance | Verify UI implementation conforms to the design system |
-| `code-quality-reviewer` | Execution | Per-Part code review against the code quality standard (Step 6a) |
+| `code-quality-reviewer` | Execution | Per-Part code review — twelve checks incl. dimension audit and requirement coverage audit (Step 6a) |
 | `toolkit-sync-upgrade` | Maintenance | Upgrade a project repo's embedded toolkit copy to a newer toolkit version |
 
 ### Templates — `ai/templates/`
@@ -149,7 +149,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `retrofit-spec-template` | Used for retrofit migration slices |
 | `remediation-spec-template` | Used for remediation slices (`ui-remediation-workflow`) |
 | `slice-verification-checklist-template` | Integrated Slice Verification (engineering workflow Step 6b) |
-| `code-quality-checklist-template` | Part Quality Report emitted by `part-executor-tdd` per Part (Step 6) |
+| `code-quality-checklist-template` | Part Quality Report emitted by `part-executor-tdd` per Part, incl. the §3b requirement coverage matrix (Step 6) |
 | `project-claude-template` | Copied to a project repo as its root `CLAUDE.md` |
 
 ### Agents — `ai/agents/`

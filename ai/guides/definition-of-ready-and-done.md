@@ -88,6 +88,14 @@ A slice, feature, or part is done when all of the following are true:
   stubs, fake implementations, dead/unused code, or commented-out code.
 - Tests prove observable behavior — no test passes purely by verifying mocks
   or implementation details; TDD claims are backed by recorded red evidence.
+- Tests are behavioral, not structural: each would fail if the implementation
+  it covers were removed. Where the slice implements an authorization guard,
+  cache invalidation, cancellation, or error→message mapping, a mutation
+  check proves it (code-quality standard §10).
+- Every acceptance criterion is traced in the Part Quality Report §3b
+  requirement coverage matrix — implementation location, positive test,
+  negative/edge test, verification evidence, and status. No criterion is
+  marked covered on implementation inspection alone.
 - All four contract surfaces (public API, database/schema, events/messages,
   UI behavior) are explicitly declared changed or unchanged — no silent
   contract changes.
@@ -121,9 +129,16 @@ A slice, feature, or part is done when all of the following are true:
   `ai/templates/code-quality-checklist-template.md`) ending in an explicit
   DONE / NOT DONE statement.
 - Every executed Part has a Part code review (engineering workflow Step 6a,
-  `ai/prompts/code-quality-reviewer.md`) with a verdict of `APPROVED` or
-  `APPROVED WITH NOTES`. A Part with `REJECTED — MUST FIX` is not done until
-  the required fixes are applied and re-review approves.
+  `ai/prompts/code-quality-reviewer.md`) covering all twelve checks — the ten
+  defect checks plus the dimension audit and the requirement coverage audit —
+  with a verdict of `APPROVED` or `APPROVED WITH NOTES`. A Part with
+  `REJECTED — MUST FIX` is not done until the required fixes are applied and
+  re-review approves.
+- The review and the quality report describe the same frozen snapshot (base
+  commit, committed diff, worktree diff, generated/untracked Part files).
+- Every criterion in the slice's feature spec has an owning Part in
+  `ai-parts/<slice-id>/OVERVIEW.md`, and no criterion remains `NOT-YET` after
+  the slice's final Part.
 - Integration review is completed where cross-slice interaction exists.
 - Outstanding issues are either fixed or explicitly accepted.
 - Architecture-sourced doc comments and test descriptions cite the specific

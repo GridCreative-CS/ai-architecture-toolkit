@@ -53,6 +53,24 @@ Apply the test-quality rules from `ai/guides/code-quality-standard.md` §10:
   code, response shape, and stable error identifier
 - existing tests are never weakened, deleted, or skipped to make new code
   pass without recorded justification
+- **structural assertions do not count as coverage**: "the component / query /
+  key / guard exists" proves nothing. Ask of every test, "what failure would
+  this produce if the implementation were removed?" — if you cannot name one,
+  the criterion is untested. The recurring offenders are role restrictions
+  (assert the denied role issues **no request**, not that a guard exists),
+  display mapping of domain values (assert the rendered value per locale, not
+  catalogue-key parity), cancellation (supersede, clear/reset, and unmount as
+  three cases), and cache refresh (assert the observed refetch, not the
+  presence of an invalidation call)
+- **mutation-check the four triggers**: where a slice implements an
+  authorization guard, cache invalidation/refetch, cancellation/supersession,
+  or error→message mapping, break it, confirm the test fails, restore, and
+  record it (`ai/guides/code-quality-standard.md` §10). A test that stays
+  green with the behavior removed is the defect
+- **every criterion needs its negative case**: for each `AC-nn`/`UIAC-nn`/
+  `SEC-nn`/`DR-nn`, plan the edge and failure test alongside the happy path —
+  this is what the Part Quality Report §3b matrix records, and what the Step
+  6a coverage audit checks
 
 ### 2. Apply the test pyramid
 

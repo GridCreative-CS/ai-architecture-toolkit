@@ -178,6 +178,35 @@ and do not "fix" the old code inside an unrelated Part.
   a mock was called, mirrors the implementation's internal steps, or would
   pass with the production logic deleted is not a test — it is a fake. Assert
   on outputs, state transitions, persisted effects, and contract responses.
+- **Structural is not behavioral.** "The component / query / key / guard
+  exists" is a structural assertion. The test must **fail when the
+  implementation is removed or broken**. If you cannot describe the failure
+  the test would produce, it does not prove the behavior. Concretely:
+
+  | Requirement | Structural (insufficient) | Behavioral (required) |
+  | --- | --- | --- |
+  | Role restriction | The guard is present; the hook receives the role | The denied role receives no data **and** issues no request |
+  | Display mapping of domain values | Locale catalogues have matching keys | The rendered output asserted in each supported locale, not the stable domain code |
+  | Cancellation | An abort signal is passed; one test named "cancels" | Supersede, clear/reset, and unmount each exercised as their own case |
+  | Cache refresh | An invalidation call appears in the code | The dependent read observably refetches after the mutation |
+  | Gating on required data | The disabled prop is wired up | The action is proven unavailable while the required data is pending, and again while it is failed |
+  | Error mapping | The mapping function is unit-tested in isolation | The identifier and its trace reference survive to the surface that reports them |
+
+- **Mutation check (mandatory on named triggers).** When a Part implements an
+  **authorization guard**, **cache invalidation/refetch**,
+  **cancellation/supersession**, or **error→message mapping**, prove the test
+  is load-bearing: temporarily break that implementation, observe the test
+  fail, restore it, and re-run to green. Record in the Part Quality Report
+  §3 the mutation (`file:line` + what was changed), the test that failed, the
+  observed failure, and the restore-and-green confirmation — in enough detail
+  for the reviewer to re-run it. **The mutation is never committed.** These
+  four are named explicitly because they are the behaviors whose tests most
+  often pass with the implementation removed.
+- **Claims require evidence.** "Localization complete", "cancellation
+  covered", "refresh verified" are conclusions, not evidence. A completeness
+  claim in a quality report must name the test and the observed result behind
+  it. Catalogue parity, the presence of a call, and implementation inspection
+  never substitute for an executed assertion.
 - **Rule matrices get truth-table tests.** When the spec defines a decision
   table or scoring rule, cover every row with parameterized tests plus the
   boundary values and the invalid-input behavior (including expected error
@@ -253,5 +282,7 @@ and other load-bearing terms, see `ai/guides/glossary.md`.
 - Part Quality Report template: `ai/templates/code-quality-checklist-template.md`
 - Part code review (Step 6a): `ai/prompts/code-quality-reviewer.md`
 - Code reviewer persona: `ai/agents/code-reviewer-agent.md`
+- Worked examples: `ai/examples/example-part-quality-report.md`,
+  `ai/examples/example-part-review.md`
 - Definition of Ready/Done: `ai/guides/definition-of-ready-and-done.md`
 - Contract definition: `ai/guides/contract-definition.md`

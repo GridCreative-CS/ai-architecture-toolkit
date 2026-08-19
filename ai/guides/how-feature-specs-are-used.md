@@ -57,7 +57,7 @@ for that slice.
 4. Run architecture compliance — every slice (Step 4); UI compliance for UI
    slices (Step 4a).
 5. Reconcile the feature spec if compliance findings require changes (Step 4b).
-6. Decompose that slice into Parts (Step 5).
+6. Decompose that slice into Parts (Step 5), mapping every criterion ID (§6 `DR-nn`, §9 `SEC-nn`, §11 `AC-nn`, §11b `UIAC-nn`) to an owning Part in the OVERVIEW Requirement Coverage Map.
 7. Execute Parts with TDD (Step 6), each ending in a Part Quality Report;
    review each Part before the next one starts (Step 6a); Integrated Slice
    Verification for UI slices (Step 6b).

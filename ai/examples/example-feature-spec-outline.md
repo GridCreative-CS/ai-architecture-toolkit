@@ -29,8 +29,8 @@ Generate and expose recommendations for a validated decision workflow.
 
 ## 6. Domain Rules
 
-- recommendation must include explanation summary
-- unsupported states must return a domain-safe error
+- DR-01: recommendation must include an explanation summary
+- DR-02: unsupported states must return a domain-safe error
 
 ## 7. API / Contract Expectations
 
@@ -44,7 +44,8 @@ Generate and expose recommendations for a validated decision workflow.
 
 ## 9. Security / Authorization Constraints
 
-- only authorized roles may access the endpoint
+- SEC-01: only authorized roles may access the endpoint
+- SEC-02: denied roles receive 403 and no audit event is written on their behalf
 
 ## 10. Observability Requirements
 
@@ -54,9 +55,9 @@ Generate and expose recommendations for a validated decision workflow.
 
 ## 11. Acceptance Criteria
 
-- endpoint returns approved contract
-- explanation summary is present
-- unauthorized users are blocked
+- AC-01: endpoint returns 200 with the approved contract shape for valid input
+- AC-02: the explanation summary is present in every successful response
+- AC-03: unauthorized users receive 403 and no recommendation is produced
 
 ## 12. Test Implications
 

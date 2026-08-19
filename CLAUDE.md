@@ -64,6 +64,7 @@ The canonical numbered rules live in `.github/copilot-instructions.md` and apply
 14. For slices with human workflow surfaces, the UI compliance check (engineering workflow Step 4a), Integrated Slice Verification (Step 6b), and the Frontend Agent are **mandatory**.
 15. For projects with UI slices completed under an older toolkit version, run `ai/workflows/ui-remediation-workflow.md` before resuming new slices.
 16. All implementation code follows `ai/guides/code-quality-standard.md`: read nearby code and tests before writing, follow existing project patterns over model defaults, no new libraries or speculative abstractions without justification, no silent contract changes, no TODOs/placeholders/fake implementations. Every Part ends with a Part Quality Report and passes the Part code review (engineering workflow Step 6a) before the next Part starts.
+17. Every acceptance criterion is traceable end to end: each feature spec criterion (§6 `DR-nn`, §9 `SEC-nn`, §11 `AC-nn`, §11b `UIAC-nn`) gets an owning Part in the decomposition's Requirement Coverage Map, a row in the Part Quality Report §3b matrix, and an audit at Step 6a. A criterion counts as covered only when a test fails if the implementation is removed — proven by a mutation check for authorization guards, cache invalidation, cancellation/supersession, and error→message mapping.
 
 ## Entry modes (architecture phase)
 

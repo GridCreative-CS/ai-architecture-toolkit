@@ -66,7 +66,7 @@ The feature spec makes one slice precise enough to decompose and implement.
 
 1. **Decompose** — use `.github/skills/plan-decomposer` to break the slice into independently verifiable Parts → `ai-parts/<slice-id>/OVERVIEW.md` and `ai-parts/<slice-id>/PXX-*.md`
 2. **Execute** — use `.github/skills/part-executor-tdd` to implement one Part at a time with strict red-green-refactor TDD, following `ai/guides/code-quality-standard.md` (read nearby code first, follow existing patterns). Every Part ends with a Part Quality Report → `ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`
-3. **Review** — run the Part code review (engineering workflow Step 6a, `ai/prompts/code-quality-reviewer.md`) → `ai-parts/<slice-id>/reviews/<part-id>-review.md`. Start the next Part only after an `APPROVED` or `APPROVED WITH NOTES` verdict
+3. **Review** — run the Part code review (engineering workflow Step 6a, `ai/prompts/code-quality-reviewer.md`) against a frozen snapshot, running all twelve checks including the dimension audit and the requirement coverage audit → `ai-parts/<slice-id>/reviews/<part-id>-review.md`. Start the next Part only after an `APPROVED` or `APPROVED WITH NOTES` verdict
 
 Implementation starts at **Step 6.2** — when you execute a specific Part file.
 Approving the delivery plan alone does not start implementation; it only tells

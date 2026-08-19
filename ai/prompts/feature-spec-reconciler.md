@@ -96,6 +96,15 @@ List:
 - Do not widen scope unless explicitly required.
 - Prefer narrowing and clarifying over expanding.
 - Do not rewrite unrelated sections.
+- **Never renumber a criterion ID.** The IDs in §6 (`DR-nn`), §9 (`SEC-nn`),
+  §11 (`AC-nn`), and §11b (`UIAC-nn`) are append-only keys used by the Part
+  Quality Report coverage matrix and the decomposer's Requirement Coverage
+  Map. Rewording a criterion keeps its ID; a new criterion takes the next
+  free number in its section; a criterion that must go stays in place marked
+  `WITHDRAWN — <reason>` so its number is never reused. Renumbering silently
+  breaks the traceability of every Part already executed against this spec.
+- If the spec predates criterion IDs, assign them in document order as part
+  of this reconciliation and say so in the corrections summary.
 - Keep the output suitable for the next step: updated decomposition for this
   slice.
 

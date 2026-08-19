@@ -42,7 +42,7 @@ The shortest path from prototype to implementation. Each step means prompting yo
 8. Prompt with `ai/prompts/delivery-planner.md` → `architecture/delivery-plan.md`
 9. Prompt with `ai/prompts/feature-spec-generator.md` → `architecture/feature-specs/<slice-id>-<slice-name>.md`
 10. Use `.github/skills/plan-decomposer` → `ai-parts/<slice-id>/OVERVIEW.md` and `ai-parts/<slice-id>/PXX-*.md`
-11. Use `.github/skills/part-executor-tdd` → execute one Part at a time with strict TDD; each Part ends with a Part Quality Report and a code review (`ai/prompts/code-quality-reviewer.md`) before the next Part starts
+11. Use `.github/skills/part-executor-tdd` → execute one Part at a time with strict TDD; each Part ends with a Part Quality Report (including the requirement coverage matrix) and a twelve-check code review (`ai/prompts/code-quality-reviewer.md`) before the next Part starts
 
 Implementation begins at **step 11**, after you have both the selected slice
 feature spec and `ai-parts/<slice-id>/OVERVIEW.md` plus the specific
@@ -217,7 +217,7 @@ Structured prompts for each workflow step:
 | `design-system-from-inventory` | Derive a design system from an existing UI inventory |
 | `ui-inventory` | Inventory existing UI surfaces, components, and tokens |
 | `ui-compliance-check` | Verify UI implementation conforms to the design system |
-| `code-quality-reviewer` | Per-Part code review against the code quality standard (engineering workflow Step 6a) |
+| `code-quality-reviewer` | Per-Part code review against the code quality standard — twelve checks incl. dimension audit and requirement coverage audit (engineering workflow Step 6a) |
 | `toolkit-sync-upgrade` | Upgrade a project repo's embedded toolkit copy to a newer toolkit version |
 
 ### Agents — `ai/agents/`
@@ -356,14 +356,16 @@ Continue through the workflow steps. For execution, use:
 ```text
 Use .github/skills/plan-decomposer/SKILL.md.
 Inputs: architecture/delivery-plan.md and architecture/feature-specs/<slice-id>-<slice-name>.md
-Output: ai-parts/<slice-id>/OVERVIEW.md and ai-parts/<slice-id>/PXX-*.md
+Output: ai-parts/<slice-id>/OVERVIEW.md (including the Requirement Coverage Map:
+every feature spec criterion mapped to an owning Part) and ai-parts/<slice-id>/PXX-*.md
 ```
 
 ```text
 Use .github/skills/part-executor-tdd/SKILL.md.
 Execute exactly one Part from ai-parts/<slice-id>/.
 Follow strict TDD and ai/guides/code-quality-standard.md.
-End with the Part Quality Report (ai-parts/<slice-id>/reviews/<part-id>-quality-report.md).
+End with the Part Quality Report (ai-parts/<slice-id>/reviews/<part-id>-quality-report.md),
+including the §3b requirement coverage matrix for the whole slice.
 ```
 
 After each Part, run the review — **mandatory, and in a fresh session/subagent** (never the session that executed the Part):
@@ -371,6 +373,7 @@ After each Part, run the review — **mandatory, and in a fresh session/subagent
 ```text
 Use ai/prompts/code-quality-reviewer.md.
 Review the executed Part <part-id> of slice <slice-id> against its quality report and diff.
+Run all twelve checks, including the dimension audit and the requirement coverage audit.
 Output: ai-parts/<slice-id>/reviews/<part-id>-review.md with a verdict.
 ```
 
@@ -480,6 +483,8 @@ For projects that already have UI slices implemented without browser-based verif
 - `example-adr-prototype-interpretation.md` — Sample ADR (prototype as reference behavior)
 - `example-compliance-report.md` — Sample compliance report
 - `example-architecture-final-gate-report.md` — Sample architecture-final quality gate report
+- `example-part-quality-report.md` — Sample Part Quality Report (filled §3b coverage matrix, mutation checks, review snapshot)
+- `example-part-review.md` — Sample Part code review (dimension audit, coverage audit, `REJECTED — MUST FIX` verdict)
 - `example-feature-spec-outline.md` — Sample feature spec outline
 - `example-golden-dataset-case.json` — Sample golden dataset case
 
@@ -492,6 +497,7 @@ For projects that already have UI slices implemented without browser-based verif
 - **Architecture compliance** — Continuous verification against approved architecture and ADRs
 - **Design system** — Shared visual vocabulary for UI-inclusive projects; optional for non-UI projects
 - **Browser-based verification** — Mandatory confirmation that UI slices work in the running application, not just in tests
+- **Requirement traceability** — Every acceptance criterion carries a stable ID, an owning Part, a row in the Part Quality Report coverage matrix, and a test that fails if the implementation is removed
 - **Architecture first, planning second, implementation third, review throughout**
 
 ## Contributing

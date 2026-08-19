@@ -20,6 +20,11 @@ tells you where to look — it is evidence to verify, not a source of truth.
   Quality Report produced by the executor
   (`ai/templates/code-quality-checklist-template.md` format)
 - The actual changed files / diff for the Part
+- `ai-parts/<slice-id>/OVERVIEW.md` — for the Requirement Coverage Map
+- The quality reports of **earlier Parts in this slice** (their §3b matrices
+  at minimum) — check 12 cannot verify cross-Part status consistency without
+  them
+- The previous review file(s) for this Part when this is a re-review
 - `architecture/feature-specs/<slice-id>-<slice-name>.md`
 - `architecture/architecture-final.md` and `architecture/adr/*.md`
 - `architecture/design-system.md` (when the Part touches UI)
@@ -30,7 +35,29 @@ tells you where to look — it is evidence to verify, not a source of truth.
 If the Part file, the quality report, or the diff is missing, stop and request
 it — do not review from a narrative summary.
 
+## Review snapshot (freeze the target)
+
+Before reviewing anything, fix the target and state it. The reviewed snapshot
+is:
+
+- the **base commit** the Part started from
+- the **committed diff** from that base to HEAD
+- the **uncommitted worktree diff**
+- the **generated or untracked files** belonging to the Part
+
+Restate all four in the review output and confirm they match the quality
+report's Review snapshot block. If they disagree, that is a finding — the
+report describes a different target than the one you can see.
+
+**If any production file changes after the review begins, the review restarts
+against the new snapshot.** A review whose findings span two snapshots is
+void: half its line references are stale and its verdict covers code nobody
+read. Discard the partial review and start again rather than patching it.
+
 ## Review checks (all required)
+
+Twelve checks, all required. Checks 1–10 are defect categories; check 11 is
+the dimension audit and check 12 is the requirement coverage audit.
 
 1. **Architecture alignment** — boundaries and dependency direction respected;
    ADRs followed; no undeclared new module/cross-module dependency; new
@@ -62,6 +89,64 @@ it — do not review from a narrative summary.
     command actually ran and passed; claimed checks are reproducible; UI-
     affecting Parts have browser-based evidence where the Part or Step 6b
     requires it.
+11. **Dimension audit** — sweep every applicable surface below, explicitly.
+    See the table.
+12. **Requirement coverage audit** — verify quality report §3b independently.
+    See below.
+
+### Check 11 — Dimension audit
+
+Checks 1–10 ask "is there a defect of this kind?". This check asks "did
+anyone look at this surface at all?" — it is the sweep that stops a criterion
+being missed for three rounds because no check happened to point at it.
+
+Report **every** dimension with `PASS` / `FAIL` / `DEFERRED (owner)` /
+`N/A — <reason>` plus the evidence you based it on. A bare `N/A` with no
+reason, or a `DEFERRED` with no owner, is itself a Major finding — that is
+how this table gets hollowed out.
+
+Applicability follows the Part's classification, taken from PART_SPEC
+`part_type`. **If `part_type` is absent** (any slice decomposed before the
+field existed), classify the Part yourself from its `file_touch_points` and
+**state the classification you used** in the audit header, so the `N/A` rows
+stay auditable.
+
+| # | Dimension | What must be shown | Applies to |
+| --- | --- | --- | --- |
+| D1 | Role and authorization behavior | Each permitted role gets the specified access; each denied role is refused **and** no request or side effect is issued on its behalf where the design says none should be | backend, frontend, shared-contract |
+| D2 | Loading, success, empty, and error states | All four states exist and are driven **independently per async source** — one source failing or pending does not silently present another source's state | frontend |
+| D3 | Async lifecycle | Initial request, supersession by a newer request, clear/reset, unmount/teardown, and failure — each exercised as its own case, not collapsed into one "cancellation works" claim | frontend, backend |
+| D4 | Error mapping and diagnostics | Errors map to the project's stable identifiers; the error contract's trace reference (e.g. Problem Details `traceId`) survives every mapping hop and reaches the surface that reports it | backend, shared-contract |
+| D5 | Presentation of domain values | Every user-visible domain code, enum, or key is rendered through its display mapping, in every supported locale — never as the raw stable value | frontend |
+| D6 | Accessibility and design system | The design system's state patterns, visible labels, focus handling, and accessibility baseline are met for what this Part renders | frontend |
+| D7 | Cache and state invalidation | After a mutation, dependent reads observably refresh — proven by observed refresh, not by the presence of an invalidation call | frontend, backend |
+| D8 | Server-derived vs client-calculated values | Values the server owns are read from the server rather than recomputed client-side (and the reverse where the design says so) | all |
+| D9 | Shared-component and public-contract changes | Every consumer of a touched shared component, hook, or public contract is identified and accounted for | all |
+
+A `FAIL` in any dimension is a finding in the findings table, with a severity
+from the scale below — the dimension row is the sweep, not the report.
+
+### Check 12 — Requirement coverage audit
+
+Verify quality report §3b yourself against the feature spec, the OVERVIEW
+Requirement Coverage Map, and the earlier Parts' reports:
+
+- **Completeness** — every §6 `DR-nn`, §9 `SEC-nn`, §11 `AC-nn`, and §11b
+  `UIAC-nn` in the spec has a row, plus every PART_SPEC acceptance criterion.
+  A missing row is a Major finding; a criterion no Part owns is a Blocker
+  (nothing will ever implement it).
+- **Evidence** — every `COVERED-*` row names a test that fails if the
+  implementation is removed. Open the cited tests. A row backed by a test that
+  only asserts existence, mirrors the implementation, or checks catalogue
+  parity is a `COVERED` claim without proof: Blocker.
+- **Consistency** — statuses agree with the coverage map and with earlier
+  Parts' matrices. A criterion sitting at `NOT-YET (owner Pxx)` whose owner
+  `Pxx` is already `DONE` is a Blocker: it was dropped, and this is the
+  review that catches it.
+- **Deferrals** — every `DEFERRED` names a real workflow step and an owner.
+  "Deferred" with no destination is an omission wearing a label.
+- **Final Part** — if this is the slice's last Part, zero `NOT-YET` rows may
+  remain.
 
 ## Severity scale
 
@@ -70,6 +155,68 @@ it — do not review from a narrative summary.
 | **Blocker** | Wrong behavior, contract broken or silently changed, architecture violation, fake test/implementation, missing or false verification |
 | **Major** | Pattern deviation without justification, missing test coverage for a spec rule, unjustified dependency/abstraction, observability gap |
 | **Minor** | Naming/style inconsistency, doc-comment gap, improvement opportunity |
+
+## Evidence rules for claims
+
+A completeness claim in the quality report is a finding unless the report
+names the evidence for it. Judge the evidence, never the adjective:
+
+| Claim | Not evidence | Evidence |
+| --- | --- | --- |
+| "Localization complete" | Catalogue/key parity between locale files | The rendered value asserted in each supported locale |
+| "Cancellation covered" | One test named for cancellation; an abort signal being passed | Each lifecycle branch (supersede, clear/reset, unmount) exercised as its own case |
+| "History refreshes" | An invalidation call present in the code | The refetch observed after the mutation — and the test fails when invalidation is removed |
+| "Role restrictions enforced" | A guard visible in the implementation | The denied role asserted to receive no data **and** to issue no request |
+| "States handled" | The state components existing | Each state rendered under its own condition, per async source |
+
+The same rule applies to your own review: do not write that a check passed
+without naming what you read or ran.
+
+**When you cannot verify something yourself** — the toolchain is unavailable
+in your environment, the application cannot be started, a command will not
+run — say so explicitly and mark the affected dimension or coverage row
+`DEFERRED` with the reason and the owner. Do not mark it `PASS` on the
+strength of the executor's report: an unverifiable claim is not a verified
+one, and silently upgrading it to PASS is how a whole class of findings
+survives a review. Static evidence you *can* read (the diff, the test bodies,
+the assertions) still supports findings — a test whose assertions do not
+prove the behavior is a finding whether or not you can execute it.
+
+## Reviewing a mutation check
+
+Where the quality report records a mutation check (mandatory when the Part
+implements an authorization guard, cache invalidation/refetch,
+cancellation/supersession, or error→message mapping — code-quality standard
+§10), verify it is real: the mutation is specific enough to re-run
+(`file:line` + what changed), the named test is the one that failed, and the
+worktree was restored with the suite green. A missing mutation check for a
+triggering behavior is a Major finding; a fabricated one is a Blocker. Re-run
+it yourself when the cost is low.
+
+## Re-review after `REJECTED — MUST FIX`
+
+A re-review is not a fresh review of the whole Part, and it is not a check
+that the listed fixes were typed in. Remediation is where regressions enter,
+and where assertions get quietly loosened to make a fix pass. Required:
+
+1. **Re-run every previous finding's test** — each one, by name, with its
+   result. A finding whose test you did not run is not closed.
+2. **Verify no assertion was weakened** — diff the test files against the
+   pre-remediation snapshot. A loosened matcher, a widened tolerance, a
+   removed case, a newly skipped test, or an assertion moved behind a
+   condition is a Blocker even when every test is green.
+3. **Review the remediation diff separately** from the original Part diff,
+   with its own snapshot. Findings in remediation code are new findings, not
+   continuations.
+4. **Check every branch the remediation touches** — a fix to one path
+   frequently leaves its sibling paths (error, empty, cancelled, denied-role)
+   unchanged and now inconsistent.
+5. **Confirm §3b was updated** and that no row regressed from `COVERED-*`
+   back to an unproven state.
+
+Pay particular attention when the remediation touched a **shared API,
+design-system component, or shared hook**: re-run check 11 D9 for the
+remediation diff on its own, and name every consumer.
 
 ## Output
 
@@ -83,9 +230,17 @@ using this structure:
 # Part Code Review — <part-id>: <part-title>
 
 - Slice: <slice-id>
-- Reviewed diff/files: <list>
 - Date:
 - Reviewer: <agent/model>
+- Review round: <n> (round 1 = first review of this Part)
+
+## Review snapshot
+
+- Base commit:
+- Committed diff reviewed: <command + SHA range>
+- Uncommitted worktree diff reviewed: <files, or "none">
+- Generated/untracked Part files reviewed: <list, or "none">
+- Matches quality report snapshot: YES / NO — <difference>
 
 ## Findings
 
@@ -95,9 +250,47 @@ using this structure:
 (Write "No findings." when clean. Every Blocker/Major finding must name a
 concrete required fix — not "improve quality".)
 
+## Dimension audit (check 11)
+
+Part classification used: <backend / frontend / shared-contract /
+infrastructure> — <from PART_SPEC `part_type`, or derived from
+file_touch_points>
+
+| # | Dimension | Result | Evidence |
+|---|---|---|---|
+| D1 | Role and authorization behavior | PASS / FAIL / DEFERRED (owner) / N/A — reason | |
+| D2 | Loading, success, empty, error states | | |
+| D3 | Async lifecycle | | |
+| D4 | Error mapping and diagnostics | | |
+| D5 | Presentation of domain values | | |
+| D6 | Accessibility and design system | | |
+| D7 | Cache and state invalidation | | |
+| D8 | Server-derived vs client-calculated | | |
+| D9 | Shared-component / public-contract changes | | |
+
+## Requirement coverage audit (check 12)
+
+- Criteria in spec: <n> — rows in §3b: <n> — missing: <list, or "none">
+- `COVERED-*` rows whose cited test does not prove the behavior: <list, or "none">
+- Status inconsistencies against the coverage map / earlier Parts: <list, or "none">
+- `DEFERRED` rows without a named step and owner: <list, or "none">
+- Final Part of slice: YES/NO — if YES, `NOT-YET` rows remaining: <n>
+
+## Remediation closure (re-reviews only)
+
+Write "N/A — round 1" on a first review.
+
+- Previous findings re-run: <n of n> — failures: <list, or "none">
+- Assertions weakened, loosened, removed, or skipped since the last review:
+  <list, or "none">
+- Remediation diff reviewed separately: YES/NO — <command>
+- Branches affected by the remediation and checked: <list>
+- §3b updated for the remediation: YES/NO
+- Shared API / design-system / shared-hook surfaces touched: <list, or "none">
+
 ## Checks with no findings
 
-<List the checks (1–10) that passed cleanly, so absence of findings is
+<List the checks (1–12) that passed cleanly, so absence of findings is
 distinguishable from absence of review.>
 
 ## Verdict
@@ -121,3 +314,17 @@ Never soften a Blocker to a note because fixing it is inconvenient. Never
 reject for style preferences that no project source establishes — tie every
 finding to the standard, the architecture, the spec, or observed project
 patterns.
+
+A worked example of a completed review — including a dimension audit with a
+`FAIL` and a justified `N/A`, and a coverage audit that catches a stale
+`NOT-YET` — is `ai/examples/example-part-review.md`. Its matching quality
+report is `ai/examples/example-part-quality-report.md`.
+
+## Why this review is heavier than a checklist
+
+Checks 11 and 12 — the dimension sweep and the criterion-by-criterion audit —
+cost more per review than the ten defect checks did alone. That is the trade:
+reviews that find everything in round 1 instead of rediscovering the same
+original defects in rounds 2 and 3. Do not shorten the sweep to save time — a
+dimension left unswept is exactly the finding that comes back two rounds
+later.

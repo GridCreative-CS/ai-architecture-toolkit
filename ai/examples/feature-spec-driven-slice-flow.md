@@ -54,8 +54,11 @@ Inputs:
 
 Write:
 
-- `ai-parts/S3.1/OVERVIEW.md`
-- `ai-parts/S3.1/P01-*.md` … `PXX-*.md`
+- `ai-parts/S3.1/OVERVIEW.md` — including the Requirement Coverage Map, which
+  maps every criterion of the spec (`DR-nn`, `SEC-nn`, `AC-nn`, `UIAC-nn`) to
+  its owning Part. A criterion with no owner blocks this step.
+- `ai-parts/S3.1/P01-*.md` … `PXX-*.md` — each with its `part_type` and the
+  criterion IDs it covers
 
 ## Step 4 — Execute (engineering workflow Step 6)
 
@@ -63,7 +66,10 @@ Use:
 
 - `.github/skills/part-executor-tdd/SKILL.md`
 
-Execute one generated Part at a time. Because the slice has a human workflow
+Execute one generated Part at a time. Each Part ends with a Part Quality
+Report whose §3b matrix traces every criterion of the slice to its
+implementation, its positive and negative/edge tests, and its evidence — and
+is audited by the Step 6a review. Because the slice has a human workflow
 surface, the final Part is a Terminal Verification Part, and Integrated Slice
 Verification (Step 6b) writes its evidence to
 `architecture/slice-verification/S3.1-recommendation-retrieval.md`.

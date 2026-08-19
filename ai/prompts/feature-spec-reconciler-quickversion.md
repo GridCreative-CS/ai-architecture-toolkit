@@ -30,6 +30,12 @@ When sources conflict, resolve in this order:
 - fix only what the compliance report requires — do not rewrite unrelated
   sections
 - preserve valid existing content
+- **never renumber criterion IDs** (`DR-nn` §6, `SEC-nn` §9, `AC-nn` §11,
+  `UIAC-nn` §11b) — they are append-only keys for the Part Quality Report
+  coverage matrix; rewording keeps the ID, a new criterion takes the next
+  free number, and a dropped criterion stays marked `WITHDRAWN — <reason>`
+- if the spec predates criterion IDs, assign them in document order and note
+  it in the corrections summary
 - narrow scope if the compliance report shows the slice is too broad
 - add missing constraints where the compliance report identifies gaps:
   API/contract expectations, security/authorization, observability,

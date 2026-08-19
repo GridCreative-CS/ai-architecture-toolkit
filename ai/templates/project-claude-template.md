@@ -54,10 +54,18 @@ load-bearing ones:
   `ai/guides/code-quality-standard.md`: read nearby code and tests before
   writing, follow existing project patterns, no new libraries or speculative
   abstractions without justification, no silent contract changes.
-- Every Part ends with a Part Quality Report and the Part code review
-  (engineering workflow Step 6a). **The review must run in a fresh agent
-  session/subagent** — never in the session that executed the Part. The next
-  Part starts only after an `APPROVED` or `APPROVED WITH NOTES` verdict.
+- Every Part ends with a Part Quality Report — including the §3b requirement
+  coverage matrix covering every criterion of the slice — and the Part code
+  review (engineering workflow Step 6a). **The review must run in a fresh
+  agent session/subagent** — never in the session that executed the Part. It
+  runs twelve checks against a frozen snapshot, including the nine-dimension
+  audit and the requirement coverage audit. The next Part starts only after an
+  `APPROVED` or `APPROVED WITH NOTES` verdict.
+- Every acceptance criterion carries a stable ID (§6 `DR-nn`, §9 `SEC-nn`,
+  §11 `AC-nn`, §11b `UIAC-nn`), an owning Part in the decomposition's
+  Requirement Coverage Map, and a test that fails if the implementation is
+  removed. Authorization guards, cache invalidation, cancellation, and error
+  mapping are proven with a mutation check.
 - For slices with human workflow surfaces: UI compliance check (Step 4a),
   Integrated Slice Verification (Step 6b), and the Frontend Agent are
   **mandatory**. `architecture/design-system.md` is authoritative for UI.

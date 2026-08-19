@@ -94,6 +94,12 @@ spec as primary input.
 
 Write `ai-parts/<slice-id>/OVERVIEW.md` and `ai-parts/<slice-id>/PXX-*.md`.
 
+The OVERVIEW must include the **Requirement Coverage Map** — every feature
+spec criterion (§6 `DR-nn`, §9 `SEC-nn`, §11 `AC-nn`, §11b `UIAC-nn`) mapped
+to its owning Part and to where it will be verified. A criterion with no owner
+blocks completion of this step: fix the decomposition rather than recording it
+as an open question.
+
 For a UI slice, the final Part must be the Terminal Verification Part required
 by the skill.
 
@@ -108,6 +114,9 @@ Do not execute any Part. End the run with the summary below.
 - **Artifacts produced:** every file written, with its path
 - **Compliance status:** approval status of each report; Critical findings and
   how the spec was reconciled
+- **Requirement coverage:** total criteria in the spec, and confirmation that
+  every one has an owning Part — name any criterion whose owner needed a Part
+  to be added or re-scoped
 - **Open questions:** anything that blocks execution readiness
 - **Next action:** "Execute `ai-parts/<slice-id>/P01-*.md` with
   `part-executor-tdd`" (or the blocking question to resolve first)

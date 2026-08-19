@@ -5,6 +5,22 @@
 <!-- Reference: ai/guides/glossary.md for term definitions.                    -->
 <!-- Reference: ai/guides/how-feature-specs-are-used.md for the workflow.      -->
 
+<!-- CRITERION IDs (required)                                                  -->
+<!-- Every rule and criterion in §6, §9, §11, and §11b carries a stable ID:    -->
+<!--   DR-nn   — §6  domain rules                                              -->
+<!--   SEC-nn  — §9  security / authorization constraints                      -->
+<!--   AC-nn   — §11 acceptance criteria                                       -->
+<!--   UIAC-nn — §11b UI/UX acceptance criteria                                -->
+<!-- These IDs are the keys of the Part Quality Report requirement coverage    -->
+<!-- matrix (§3b of ai/templates/code-quality-checklist-template.md) and of    -->
+<!-- the decomposer's Requirement Coverage Map. Rules:                         -->
+<!-- - IDs are assigned once and are APPEND-ONLY. Never renumber, never reuse. -->
+<!-- - Rewording a criterion keeps its ID; reconciliation (Step 4b) may change -->
+<!--   the text but never the ID.                                              -->
+<!-- - A criterion that is dropped stays in place, marked                      -->
+<!--   "WITHDRAWN — <reason>", so its number is never handed to another rule.  -->
+<!-- - Number within each section from 01: DR-01, DR-02, …; AC-01, AC-02, …    -->
+
 ## 1. Feature Name
 
 <!-- Short name matching the slice name in the delivery plan. -->
@@ -42,7 +58,9 @@
 ## 6. Domain Rules
 
 <!-- List business rules that this slice must enforce. Each rule should be     -->
-<!-- testable. Example: "Recommendation must include an explanation summary."  -->
+<!-- testable, and each carries a stable ID (see CRITERION IDs above).         -->
+<!-- Example:                                                                  -->
+<!-- - DR-01: Recommendation must include an explanation summary.              -->
 
 ## 7. API / Contract Expectations
 
@@ -59,7 +77,12 @@
 ## 9. Security / Authorization Constraints
 
 <!-- Who can access this capability? What roles or policies apply? How are    -->
-<!-- secrets managed?                                                          -->
+<!-- secrets managed? Each constraint carries a stable ID (see CRITERION IDs   -->
+<!-- above) and must be stated as testable behavior — including what must NOT  -->
+<!-- happen for a denied role (no data returned, and no request issued at all  -->
+<!-- where the UI is expected to suppress it). Example:                        -->
+<!-- - SEC-01: Users without the Reviewer role receive 403 from GET /x.        -->
+<!-- - SEC-02: The client issues no request to /x for users without Reviewer.  -->
 
 ## 10. Observability Requirements
 
@@ -69,11 +92,14 @@
 ## 11. Acceptance Criteria
 
 <!-- Each criterion must be:                                                   -->
+<!-- - Identified: a stable AC-nn ID (see CRITERION IDs above)                 -->
 <!-- - Binary: met or not met (no subjective judgment)                        -->
 <!-- - Testable: maps to at least one automated or manual test                -->
 <!-- - Specific: no vague language ("should work correctly")                   -->
-<!-- Example: "Endpoint returns 200 with approved contract shape for valid    -->
-<!-- input." "Unauthorized users receive 403."                                 -->
+<!-- Example:                                                                  -->
+<!-- - AC-01: Endpoint returns 200 with approved contract shape for valid      -->
+<!--   input.                                                                  -->
+<!-- - AC-02: Unauthorized users receive 403.                                  -->
 
 ## 11b. UI/UX Acceptance Criteria
 
@@ -99,8 +125,14 @@
 <!-- architecture citation), state:                                             -->
 <!-- "N/A — this slice has no human workflow surfaces per [citation]."          -->
 <!--                                                                           -->
-<!-- Each criterion must be binary, testable, and specific — same rules as     -->
-<!-- §11.                                                                       -->
+<!-- Each criterion must be identified (UIAC-nn), binary, testable, and         -->
+<!-- specific — same rules as §11.                                              -->
+<!--                                                                            -->
+<!-- A design-system rule gets no ID of its own: it enters the Part Quality     -->
+<!-- Report coverage matrix through the UIAC-nn criterion that cites it, so     -->
+<!-- write the citation into the criterion text                                 -->
+<!-- (e.g. "UIAC-03: The submit control uses the design system's Button/       -->
+<!-- primary with a visible label per design-system §4.2.").                    -->
 <!-- Reference: architecture/design-system.md                                  -->
 <!-- Reference: ai/templates/design-system-template.md                         -->
 

@@ -26,6 +26,9 @@ does not satisfy engineering workflow Step 6a.
 - the Part Quality Report (`ai/templates/code-quality-checklist-template.md`
   format)
 - the actual diff / changed files
+- `ai-parts/<slice-id>/OVERVIEW.md` (Requirement Coverage Map) and earlier
+  Parts' quality reports — check 12 needs both
+- the previous review file(s) when this is a re-review
 - `architecture/architecture-final.md`, `architecture/adr/*.md`
 - `architecture/feature-specs/<slice-id>-<slice-name>.md`
 - `architecture/design-system.md` (UI Parts)
@@ -34,17 +37,31 @@ does not satisfy engineering workflow Step 6a.
 
 ## Methodology
 
-Follow `ai/prompts/code-quality-reviewer.md` exactly: run all ten checks
-(architecture alignment, feature spec alignment, Part scope, code quality,
-test quality, integration risks, overengineering, shortcut implementations,
-hidden contract changes, missing verification), classify findings by severity
-(Blocker / Major / Minor), and emit exactly one verdict.
+Follow `ai/prompts/code-quality-reviewer.md` exactly: freeze the review
+snapshot, run all twelve checks (architecture alignment, feature spec
+alignment, Part scope, code quality, test quality, integration risks,
+overengineering, shortcut implementations, hidden contract changes, missing
+verification, **dimension audit**, **requirement coverage audit**), classify
+findings by severity (Blocker / Major / Minor), and emit exactly one verdict.
 
 Key stances:
 
 - **Verify, don't trust.** The quality report's claims (TDD evidence, checks
   run, "unchanged" contract surfaces) are checked against the diff and by
   re-running verification commands where feasible.
+- **Sweep, don't sample.** The dimension audit (check 11) exists because
+  checks 1–10 only find what they are pointed at. Report all nine dimensions —
+  a bare `N/A` without a reason, or a `DEFERRED` without an owner, is itself a
+  Major finding.
+- **A criterion is covered when a test proves it.** In check 12, open the
+  cited tests. A test that asserts something exists, mirrors the
+  implementation, or checks catalogue parity does not cover its criterion —
+  a `COVERED` claim resting on one is a Blocker.
+- **The target is frozen.** Review one snapshot. If production files change
+  mid-review, restart against the new snapshot rather than patching findings.
+- **Remediation is where regressions hide.** On a re-review, re-run every
+  previous finding's test and diff the test files for weakened assertions
+  before looking at anything else.
 - **Hidden contract changes are automatic rejections.** Diff every public API,
   schema/migration, event, and UI contract surface against quality report §7.
 - **Fake work is a Blocker.** Tests that only verify mocks, implementations
@@ -68,11 +85,17 @@ verdict:
 
 Before delivering the review, verify:
 
+- [ ] the review snapshot is stated and matches the quality report's
 - [ ] the actual diff was read (not just the quality report)
 - [ ] comparable nearby project code was read
-- [ ] all ten checks were performed and reported (passed checks listed too)
+- [ ] all twelve checks were performed and reported (passed checks listed too)
+- [ ] all nine dimensions are reported, each with evidence or a reasoned N/A
+- [ ] the §3b matrix was audited against the spec and the coverage map, with
+      the cited tests opened
 - [ ] every Blocker/Major finding names a concrete required fix
 - [ ] contract surfaces were independently diffed against quality report §7
+- [ ] on a re-review: every previous finding's test re-run, and test files
+      diffed for weakened assertions
 - [ ] exactly one verdict is stated
 
 ## Forbidden Actions
@@ -81,6 +104,10 @@ Before delivering the review, verify:
 - do not fix the code yourself — report findings for the executor
 - do not approve a Part whose quality report is missing or incomplete
 - do not accept claimed verification without evidence (commands + results)
+- do not approve a Part whose §3b matrix is incomplete, or whose `COVERED-*`
+  rows rest on tests that would still pass with the implementation removed
+- do not skip or collapse dimension rows to shorten the review
+- do not continue a review across a changed snapshot — restart it
 - do not downgrade a Blocker because fixing it is expensive
 - do not raise findings that no project source (standard, architecture, spec,
   nearby code) supports

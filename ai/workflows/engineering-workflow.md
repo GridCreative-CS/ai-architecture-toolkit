@@ -233,8 +233,17 @@ the high-level delivery plan.
 
 Write:
 
-- `ai-parts/<slice-id>/OVERVIEW.md`
-- `ai-parts/<slice-id>/PXX-*.md`
+- `ai-parts/<slice-id>/OVERVIEW.md` — including the **Requirement Coverage
+  Map**: every feature spec criterion (§6 `DR-nn`, §9 `SEC-nn`, §11 `AC-nn`,
+  §11b `UIAC-nn`) mapped to its owning Part and to where it will be verified
+- `ai-parts/<slice-id>/PXX-*.md` — each with its `part_type` and the criterion
+  IDs it owns (`criteria_covered`)
+
+**A criterion that no Part owns is a decomposition defect, not an open
+question.** Step 5 is not complete until the coverage map has no unowned
+criterion — this is what stops a requirement being discovered as missing three
+reviews later. The map is the source the Part Quality Report's coverage matrix
+(§3b) and the Step 6a coverage audit are checked against.
 
 Implementation does **not** start from `architecture/delivery-plan.md` alone.
 Execution starts only after the selected slice has a concrete implementation
@@ -272,6 +281,21 @@ Every Part execution ends with a **Part Quality Report**
 explicit **DONE / NOT DONE** verdict. A Part without a completed quality
 report is not done.
 
+The report must include:
+
+- the **review snapshot** — base commit, diff command, uncommitted worktree
+  files, and any generated/untracked files belonging to the Part (§ Review
+  snapshot). Step 6a reviews exactly this snapshot.
+- the **requirement coverage matrix** (§3b) — every criterion of the whole
+  slice, not just this Part's, each with its implementation location,
+  positive test, negative/edge test, verification evidence, and status. A
+  criterion may be marked covered only when a test proves the behavior, or
+  when the row explicitly defers verification to a named later step.
+- **mutation checks** for any authorization guard, cache invalidation/refetch,
+  cancellation/supersession, or error→message mapping this Part implements —
+  break it, watch the test fail, restore, re-run green, record it
+  (`ai/guides/code-quality-standard.md` §10).
+
 **If implementation reality conflicts with the architecture or the feature
 spec** (a boundary cannot be respected, a contract cannot be implemented as
 specified), stop the Part, report the conflict as a compliance finding or open
@@ -294,6 +318,8 @@ Inputs:
 - the executed Part file and its quality report
   (`ai-parts/<slice-id>/reviews/<part-id>-quality-report.md`)
 - the actual diff / changed files
+- `ai-parts/<slice-id>/OVERVIEW.md` (Requirement Coverage Map) and the
+  quality reports of earlier Parts in this slice
 - `architecture/architecture-final.md`, `architecture/adr/*.md`
 - `architecture/feature-specs/<slice-id>-<slice-name>.md`
 - `ai/guides/code-quality-standard.md`
@@ -302,6 +328,22 @@ Inputs:
 subagent), not in the session that executed the Part — the reviewer judges
 the code and diff, not the execution narrative. A review produced by the
 executing session does not satisfy this step.
+
+**Freeze the reviewed target.** The review names the snapshot it covers — base
+commit, committed diff, uncommitted worktree diff, and the generated or
+untracked files belonging to the Part — and confirms it matches the quality
+report's snapshot block. If a production file changes after the review begins,
+the review **restarts** against the new snapshot; a review spanning two
+snapshots is void.
+
+The review runs **twelve required checks**: the ten defect-category checks,
+plus check 11 (**dimension audit** — a nine-row sweep of role/authorization
+behavior, per-source states, async lifecycle, error mapping and trace
+references, presentation of domain values, accessibility and design system,
+cache invalidation, server-derived vs client-calculated values, and shared
+contract changes, with applicability taken from the Part's `part_type`) and
+check 12 (**requirement coverage audit** — quality report §3b verified
+independently against the spec, the coverage map, and earlier Parts).
 
 Write:
 
@@ -312,6 +354,14 @@ The review ends in exactly one verdict: `APPROVED`, `APPROVED WITH NOTES`, or
 the review's concrete required fixes; the Part's Status returns to
 `IN_PROGRESS` and it may not be marked `DONE` (and the next Part may not
 start) until a re-review returns `APPROVED` or `APPROVED WITH NOTES`.
+
+**Re-review after a rejection is not a shorter review.** It additionally
+requires: re-running every previous finding's test; confirming no assertion
+was weakened, loosened, removed, or skipped; reviewing the remediation diff
+separately from the original; checking every branch the remediation touches;
+and confirming §3b was updated. This matters most when the remediation touched
+a shared API, design-system component, or shared hook — re-run dimension D9
+against the remediation diff on its own.
 
 ## Step 6b — Integrated Slice Verification (Mandatory for UI Slices)
 
@@ -332,8 +382,13 @@ Procedure:
    in a browser (or via browser-based E2E tests).
 3. Walk through the Slice Completion Verification Checklist.
 4. Verify all acceptance criteria from §11 and §11b against the running
-   application.
-5. Check that previously completed slices still render and function correctly.
+   application, by criterion ID.
+5. **Roll up the requirement coverage matrices.** Take the last Part's
+   quality report §3b and confirm: zero rows remain `NOT-YET`, and every row
+   marked `DEFERRED (Step 6b, …)` is verified here and now. A criterion that
+   reaches this step still unowned or unproven is a slice failure, not a
+   note.
+6. Check that previously completed slices still render and function correctly.
 
 If any checklist item fails, the slice is **not done**. Fix the issue and
 re-verify before proceeding.
