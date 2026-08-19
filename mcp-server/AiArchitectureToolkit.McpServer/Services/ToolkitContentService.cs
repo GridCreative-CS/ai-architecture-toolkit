@@ -211,7 +211,10 @@ public sealed class ToolkitContentService
 
         // The trailing separator keeps a sibling directory whose name merely
         // starts with the base directory's name from passing as "inside" it.
-        if (!fullPath.StartsWith(fullBase, StringComparison.OrdinalIgnoreCase))
+        // Ordinal, not OrdinalIgnoreCase: both operands derive from the same
+        // baseDir string, so an exact prefix is the strictest correct test and
+        // never depends on guessing whether the filesystem folds case.
+        if (!fullPath.StartsWith(fullBase, StringComparison.Ordinal))
         {
             return null;
         }

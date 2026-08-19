@@ -642,8 +642,16 @@ public sealed partial class ProjectContentService
 
         var fullPath = Path.GetFullPath(Path.Combine(_workspaceRoot, relativePath));
 
-        // Path sandboxing
-        if (!fullPath.StartsWith(_workspaceRoot, StringComparison.OrdinalIgnoreCase))
+        // Path sandboxing. The trailing separator keeps a sibling directory
+        // whose name merely starts with the workspace root's name from passing
+        // as "inside" it; Ordinal because both operands derive from the same
+        // _workspaceRoot string, so an exact prefix is the strictest correct
+        // test. Matches ToolkitContentService.ResolveWithinBase.
+        var rootPrefix = _workspaceRoot.EndsWith(Path.DirectorySeparatorChar)
+            ? _workspaceRoot
+            : _workspaceRoot + Path.DirectorySeparatorChar;
+
+        if (!fullPath.StartsWith(rootPrefix, StringComparison.Ordinal))
         {
             return null;
         }
