@@ -113,6 +113,51 @@ public sealed class ToolkitContentServiceTests : IDisposable
         Assert.Null(content);
     }
 
+    [Theory]
+    [InlineData("guides", "glossary")]
+    [InlineData("prompts", "delivery-planner")]
+    [InlineData("templates", "feature-spec-template")]
+    [InlineData("workflows", "engineering-workflow")]
+    [InlineData("agents", "backend-agent")]
+    [InlineData("examples", "contract-patterns")]
+    [InlineData("instructions", "csharp.instructions")]
+    [InlineData("github-agents", "expert.agent")]
+    public void GetContent_EveryServedCategory_ReturnsFileContent(string category, string name)
+    {
+        Assert.NotNull(_service.GetContent(category, name));
+    }
+
+    [Fact]
+    public void GetContent_AbsoluteCategory_ReturnsNull()
+    {
+        var outsideDir = CreateOutsideFile();
+
+        var content = _service.GetContent(outsideDir, "secret");
+
+        Assert.Null(content);
+    }
+
+    [Fact]
+    public void GetContent_TraversingCategory_ReturnsNull()
+    {
+        CreateOutsideFile();
+
+        // Relative to the toolkit root (<temp>/ai), this resolves to <temp>/outside.
+        var content = _service.GetContent("../outside", "secret");
+
+        Assert.Null(content);
+    }
+
+    [Fact]
+    public void GetContent_NameWithDirectorySeparator_ReturnsNull()
+    {
+        CreateFile(Path.Combine(_tempDir, "ai"), Path.Combine("guides", "nested"), "secret.md", "nested secret");
+
+        var content = _service.GetContent("guides", "nested/secret");
+
+        Assert.Null(content);
+    }
+
     [Fact]
     public void Search_FindsMatchingContent()
     {
@@ -171,6 +216,17 @@ public sealed class ToolkitContentServiceTests : IDisposable
     {
         try { Directory.Delete(_tempDir, recursive: true); }
         catch { /* best effort cleanup */ }
+    }
+
+    /// <summary>
+    /// Writes a readable file outside both served roots and returns its directory.
+    /// </summary>
+    private string CreateOutsideFile()
+    {
+        var outsideDir = Path.Combine(_tempDir, "outside");
+        Directory.CreateDirectory(outsideDir);
+        File.WriteAllText(Path.Combine(outsideDir, "secret.md"), "outside secret");
+        return outsideDir;
     }
 
     private static void CreateFile(string baseDir, string subDir, string fileName, string content)

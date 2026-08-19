@@ -180,14 +180,20 @@ public sealed class ToolkitContentService
             sanitizedName += ".md";
         }
 
-        string baseDir = category switch
+        // The category is caller-supplied, so it is matched against the closed
+        // set of served categories rather than combined into a path directly:
+        // a rooted or traversing category would otherwise become the base
+        // directory itself and defeat the containment check below.
+        string? baseDir = category switch
         {
             "instructions" => Path.Combine(_githubRoot, "instructions"),
             "github-agents" => Path.Combine(_githubRoot, "agents"),
-            _ => Path.Combine(_toolkitRoot, category)
+            _ when ToolkitCategories.Contains(category, StringComparer.Ordinal)
+                => Path.Combine(_toolkitRoot, category),
+            _ => null
         };
 
-        return ResolveWithinBase(baseDir, sanitizedName);
+        return baseDir is null ? null : ResolveWithinBase(baseDir, sanitizedName);
     }
 
     /// <summary>
@@ -197,8 +203,15 @@ public sealed class ToolkitContentService
     private static string? ResolveWithinBase(string baseDir, string relativePath)
     {
         var fullPath = Path.GetFullPath(Path.Combine(baseDir, relativePath));
+        var fullBase = Path.GetFullPath(baseDir);
+        if (!fullBase.EndsWith(Path.DirectorySeparatorChar))
+        {
+            fullBase += Path.DirectorySeparatorChar;
+        }
 
-        if (!fullPath.StartsWith(Path.GetFullPath(baseDir), StringComparison.OrdinalIgnoreCase))
+        // The trailing separator keeps a sibling directory whose name merely
+        // starts with the base directory's name from passing as "inside" it.
+        if (!fullPath.StartsWith(fullBase, StringComparison.OrdinalIgnoreCase))
         {
             return null;
         }
@@ -213,8 +226,11 @@ public sealed class ToolkitContentService
             return null;
         }
 
-        // Reject path traversal attempts
+        // Every served name is a single segment: the files are flat within
+        // their category directory and a skill is a directory name.
         if (name.Contains("..", StringComparison.Ordinal) ||
+            name.Contains('/', StringComparison.Ordinal) ||
+            name.Contains('\\', StringComparison.Ordinal) ||
             Path.IsPathRooted(name))
         {
             return null;
