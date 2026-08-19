@@ -1,9 +1,11 @@
 # MCP Server — Toolkit v4.3.0+ Alignment Prompt
 
-<!-- One-time implementation prompt. Paste into your AI agent when you are    -->
-<!-- ready to align the MCP server with the current toolkit version. Delete   -->
-<!-- this file after the work is done (per CLAUDE.md: no executed plan        -->
-<!-- documents in the repo).                                                   -->
+<!-- STATUS: NOT YET EXECUTED — this is tracked, outstanding work, listed as  -->
+<!-- pending in VERSION.md. Do NOT delete it as a stale plan document: the    -->
+<!-- MCP server still serves the pre-4.3.0 layout. Paste it into your AI      -->
+<!-- agent when you are ready to do the alignment, and delete it only once    -->
+<!-- the Definition of done below is met (per CLAUDE.md: no *executed* plan   -->
+<!-- documents in the repo).                                                  -->
 
 Act as a **Senior .NET Backend Engineer** working on
 `mcp-server/AiArchitectureToolkit.McpServer`.
@@ -11,9 +13,9 @@ Act as a **Senior .NET Backend Engineer** working on
 ## Objective
 
 Align the MCP server with the current toolkit version (see `VERSION.md`;
-items 1–8 below cover v4.3.0, item 9 covers v4.5.0). The toolkit changed
-several output paths and added new assets; the server still serves the
-pre-4.3.0 layout. Follow strict TDD (red-green-refactor) per
+items 1–8 below cover v4.3.0, item 9 covers v4.5.0, item 10 covers v4.6.0).
+The toolkit changed several output paths and added new assets; the server
+still serves the pre-4.3.0 layout. Follow strict TDD (red-green-refactor) per
 `.github/skills/part-executor-tdd/SKILL.md` quality gates: tests first for
 every behavioral change, run `dotnet build` and `dotnet test` on
 `mcp-server/AiArchitectureToolkit.McpServer.slnx`, and follow
@@ -83,9 +85,71 @@ Work through these in order. For each, write the failing test first.
    reconcile and ADR steps in the workflow-step sequences hardcoded in
    `ProjectTools.cs` (`architecture-reconciler` → gate → `adr-generator`).
 
+10. **Requirement traceability and Part review surfaces (toolkit v4.6.0).**
+   v4.6.0 made per-Part review output and criterion traceability part of the
+   workflow; the server has no concept of either. Item 1 is a prerequisite for
+   10a and 10c.
+
+   a. **Part review artifacts.** Extend the `ai-parts/<slice-id>/` support from
+      item 1 to the `reviews/` subfolder: list and read
+      `reviews/<part-id>-quality-report.md` (Part Quality Report, Step 6) and
+      `reviews/<part-id>-review.md` (Part Code Review, Step 6a). Surface each
+      review's verdict (`APPROVED` / `APPROVED WITH NOTES` /
+      `REJECTED — MUST FIX`) alongside the Part's `Status:` line, so a client
+      can tell whether the next Part is allowed to start. A Part at `DONE`
+      with no review file, or with a `REJECTED` review, is the case that
+      matters — make sure a test covers it.
+
+   b. **`part-code-review` workflow step (Step 6a).** Add to
+      `GetWorkflowContext`, bundling `ai/prompts/code-quality-reviewer.md`
+      (prompt slot), `ai/templates/code-quality-checklist-template.md`
+      (template slot), `ai/guides/code-quality-standard.md` (guide slot), and
+      the slice's feature spec plus architecture as project artifacts. Add it
+      to the `[Description]` step list and the unknown-step error message
+      (same two places as item 5).
+
+   c. **Requirement Coverage Map and criterion IDs.** v4.6.0 requires a
+      `## Requirement Coverage Map` section in `ai-parts/<slice-id>/OVERVIEW.md`
+      and stable criterion IDs (`DR-nn`, `SEC-nn`, `AC-nn`, `UIAC-nn`) in the
+      feature spec. Surface both:
+      - report whether OVERVIEW.md has a Requirement Coverage Map; its absence
+        means a pre-v4.6 decomposition whose map the executor must derive
+      - have `get_slice_context` extract the criterion IDs present in the
+        feature spec, so a client can cross-check them against the map
+      - surface the PART_SPEC fields `part_type` and `criteria_covered`. Both
+        sit under OPTIONAL in the plan-decomposer schema, so never fail on a
+        Part file that omits them — but the skill's Required behavior section
+        obliges a v2.4.0 decomposition to emit both, so report an absent
+        `criteria_covered` as an unowned-criteria risk rather than as normal.
+        `part_type` has a defined fallback (classify from `file_touch_points`);
+        `criteria_covered` has none
+
+   d. **New v4.6.0 assets are discoverable.** Same directory-driven check as
+      item 7 — add tests proving `list_toolkit_content` and `toolkit://`
+      resources return `ai/prompts/code-quality-reviewer.md`,
+      `ai/templates/code-quality-checklist-template.md`,
+      `ai/guides/code-quality-standard.md`,
+      `ai/examples/example-part-quality-report.md`,
+      `ai/examples/example-part-review.md`, and
+      `ai/examples/example-architecture-final-gate-report.md`.
+
+   e. **Two pre-existing gaps this release exposes — decide explicitly.**
+      Neither is caused by v4.6.0, but both now hide load-bearing assets. Pick
+      a resolution and record it in `mcp-server/README.md`:
+      - `ToolkitContentService.ListMarkdownFiles` matches `*.md` only, so
+        `ai/examples/example-golden-dataset-case.json` is invisible — which
+        undercuts the `golden-dataset` step added in item 5. Either widen the
+        examples category to `.json` or document the exclusion.
+      - `.github/skills/` is not served at any category, yet
+        `plan-decomposer` (v2.4.0) and `part-executor-tdd` (v1.4.0) define the
+        Part handoff contract the `decomposition` step describes. Either add a
+        `skills` category or document why the skills stay unserved.
+
 ## Definition of done
 
 - All new behavior has tests written first (red observed, then green).
+- Coverage-map absence, missing/rejected Part reviews, and Part files without
+  the optional v4.6.0 PART_SPEC fields are each covered by a test.
 - `dotnet build` and `dotnet test` pass for the full solution.
 - `mcp-server/README.md` matches the implemented surface.
 - No references remain to deleted toolkit files.
