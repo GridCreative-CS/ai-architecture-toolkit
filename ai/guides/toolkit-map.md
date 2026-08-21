@@ -34,6 +34,8 @@ A visual reference showing how all toolkit components connect — prompts, templ
 │  ───────────                      ─────────                            │
 │  design-system-generator      →   ui-inventory              →          │
 │    → design-system.md             → ui-inventory.md                    │
+│  design-system-completeness-gate  (both tracks)                        │
+│    → design-system-gate.md ★                                           │
 │                                   design-system-from-inventory →       │
 │                                   → design-system.md                   │
 │                                                                        │
@@ -128,6 +130,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `feature-spec-reconciler-quickversion` | Compliance | Lightweight reconciliation for smaller changes |
 | `design-system-generator` | UI Foundation | Generate a design system v1 from architecture (greenfield) |
 | `design-system-from-inventory` | UI Foundation | Derive a design system from an existing UI inventory (retrofit) |
+| `design-system-completeness-gate` | UI Foundation | Gate a design system on renderability and computed contrast (Step 1b / Step 2b) |
 | `ui-inventory` | UI Foundation | Inventory existing UI surfaces, components, and tokens |
 | `ui-compliance-check` | Compliance | Verify UI implementation conforms to the design system |
 | `code-quality-reviewer` | Execution | Per-Part code review — twelve checks incl. dimension audit and requirement coverage audit (Step 6a) |
@@ -144,7 +147,7 @@ A visual reference showing how all toolkit components connect — prompts, templ
 | `golden-dataset-template` | `golden-dataset-generator` |
 | `golden-dataset-json-template.json` | `golden-dataset-generator` |
 | `project-context-template` | Filled in manually as the first step |
-| `design-system-template` | `design-system-generator`, `design-system-from-inventory` |
+| `design-system-template` | `design-system-generator`, `design-system-from-inventory`, `design-system-completeness-gate` |
 | `ui-inventory-template` | `ui-inventory` |
 | `retrofit-spec-template` | Used for retrofit migration slices |
 | `remediation-spec-template` | Used for remediation slices (`ui-remediation-workflow`) |

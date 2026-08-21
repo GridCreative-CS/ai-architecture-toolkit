@@ -59,7 +59,7 @@ The canonical numbered rules live in `.github/copilot-instructions.md` and apply
 9. If a feature spec exists for the selected slice, it is the primary input for decomposition and implementation.
 10. Use `ai/guides/glossary.md` definitions for all load-bearing terms.
 11. Do not assume project context beyond `ai/project-context.md`. Prefer asking over assuming; state any assumption you must make; for every question you ask, provide advice.
-12. Treat `architecture/design-system.md` as authoritative for UI decisions when it exists.
+12. Treat `architecture/design-system.md` as authoritative for UI decisions when it exists **and** `architecture/design-system-gate.md` records verdict `APPROVED` or `APPROVED WITH NOTES`. Until then it is a draft: delivery planning may proceed, but do not decompose or implement a UI slice against it.
 13. For UI-inclusive projects, follow `ai/workflows/ui-foundation-workflow.md` (greenfield) or `ai/workflows/ui-retrofit-workflow.md` (retrofit).
 14. For slices with human workflow surfaces, the UI compliance check (engineering workflow Step 4a), Integrated Slice Verification (Step 6b), and the Frontend Agent are **mandatory**.
 15. For projects with UI slices completed under an older toolkit version, run `ai/workflows/ui-remediation-workflow.md` before resuming new slices.
@@ -105,10 +105,10 @@ To prepare a slice end-to-end (Steps 2–5) in one agent run, use `ai/prompts/sl
 
 ## UI workflows
 
-- **Greenfield:** `ai/workflows/ui-foundation-workflow.md` — create `architecture/design-system.md` after architecture finalization, before delivery planning.
-- **Retrofit:** `ai/workflows/ui-retrofit-workflow.md` — inventory existing UI, derive a design system, migrate slices behavior-preservingly.
+- **Greenfield:** `ai/workflows/ui-foundation-workflow.md` — create `architecture/design-system.md` after architecture finalization, before delivery planning; gate it at Step 1b (`ai/prompts/design-system-completeness-gate.md` → `architecture/design-system-gate.md`, fresh session, **mandatory**).
+- **Retrofit:** `ai/workflows/ui-retrofit-workflow.md` — inventory existing UI, derive a design system, gate it at Step 2b, migrate slices behavior-preservingly.
 - **Remediation:** `ai/workflows/ui-remediation-workflow.md` — revalidate and fix slices completed without browser-based verification.
-- `architecture/design-system.md` is authoritative for UI decisions once it exists.
+- `architecture/design-system.md` is authoritative for UI decisions once it exists and its gate report approves it. A rendered visual board is optional, derived, and carries no gate weight — where a board and the document disagree, the document wins.
 
 ## Specialist agents
 

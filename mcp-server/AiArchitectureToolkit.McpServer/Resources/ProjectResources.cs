@@ -89,6 +89,13 @@ public sealed class ProjectResources
             ?? "design-system.md not found in this workspace.";
     }
 
+    [McpServerResource(UriTemplate = "project://design-system-gate"), Description("The design system completeness gate report (UI foundation workflow Step 1b / UI retrofit workflow Step 2b) — the design system is authoritative only when this records APPROVED or APPROVED WITH NOTES")]
+    public static string GetDesignSystemGate(ProjectContentService service)
+    {
+        return service.GetDesignSystemGate()
+            ?? "design-system-gate.md not found in this workspace.";
+    }
+
     [McpServerResource(UriTemplate = "project://ui-inventory"), Description("The UI inventory (UI retrofit workflow Step 1) — the input the design system is derived from on the retrofit path")]
     public static string GetUiInventory(ProjectContentService service)
     {

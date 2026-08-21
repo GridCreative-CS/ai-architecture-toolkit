@@ -335,7 +335,32 @@ a project's UI surfaces. Documented in `architecture/design-system.md`.
 **Key distinction:** A design system is a project output, not a toolkit
 constraint. It is created per project — either greenfield
 (`ai/workflows/ui-foundation-workflow.md`) or derived from existing code
-(`ai/workflows/ui-retrofit-workflow.md`).
+(`ai/workflows/ui-retrofit-workflow.md`). It becomes authoritative only once
+it passes the **Design System Completeness Gate**.
+
+### Design System Completeness Gate
+
+The mandatory check that makes a design system authoritative — UI foundation
+workflow Step 1b (greenfield) or UI retrofit workflow Step 2b (retrofit), run
+in a fresh session via `ai/prompts/design-system-completeness-gate.md` and
+recorded in `architecture/design-system-gate.md` with verdict `APPROVED`,
+`APPROVED WITH NOTES`, or `REJECTED — MUST FIX`.
+
+It verifies two mechanical properties: **renderability** (every component
+variant in every state is specified concretely enough to draw from the
+document alone) and **computed conformance** (every colour pair meets its
+contrast floor as a calculated number). It does not judge aesthetics.
+
+**Key distinction:** the gate is enumeration and computation, not visual
+inspection. Looking at a rendering is not a substitute for sweeping the
+variant × state matrix and computing every pair.
+
+### Renderability
+
+The property that a component variant in a given state is specified to the
+point where it could be drawn from the design system alone, without any
+further decision. `background: --color-surface-subtle` is renderable; "muted
+appearance" is not. Verified by the Design System Completeness Gate.
 
 ### Design Token
 

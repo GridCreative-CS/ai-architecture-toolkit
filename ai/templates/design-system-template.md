@@ -74,11 +74,40 @@
 |------------|-------|-------|
 | | | |
 
+### 2f. Computed Contrast Verification
+
+<!-- Every foreground/background pair this design system specifies, with its     -->
+<!-- COMPUTED WCAG ratio. Include pairs that arise only inside a component        -->
+<!-- state (disabled label on a subtle surface, focus ring against a card) —     -->
+<!-- not just the §2a palette. State the tool or script used.                    -->
+<!-- Floors: 4.5:1 normal text, 3:1 large text, 3:1 non-text UI (WCAG 2.2 AA     -->
+<!-- 1.4.3 and 1.4.11). Compute composited values for any pair applied at        -->
+<!-- reduced opacity. An asserted ratio is not a verified one.                    -->
+<!-- Example:                                                                     -->
+<!-- | Foreground | Background | Context | Ratio | Floor | Result |              -->
+<!-- |------------|------------|---------|-------|-------|--------|              -->
+<!-- | --color-text-body #1A202C | --color-surface-card #FFFFFF | Body copy | 16.1:1 | 4.5:1 | PASS | -->
+
+Contrast computed with: <!-- tool or script -->
+
+| Foreground | Background | Context | Ratio | Floor | Result |
+|------------|------------|---------|-------|-------|--------|
+| | | | | | |
+
 ## 3. Component Catalog
 
 <!-- List the core UI components. For each component, describe its purpose,      -->
 <!-- variants, and which design tokens it consumes. Components listed here are    -->
 <!-- the only approved building blocks for UI surfaces.                           -->
+<!--                                                                             -->
+<!-- REQUIRED FOR EVERY COMPONENT: a variant × state matrix. One row per         -->
+<!-- variant, one column per state the component can occupy — at minimum         -->
+<!-- default, hover, focus-visible, active, disabled, plus error and loading      -->
+<!-- for anything that accepts input or displays fetched data. Every cell names   -->
+<!-- the tokens consumed in that state, or reads "N/A — <reason>". A bare N/A    -->
+<!-- is not acceptable, and prose intent ("muted") is not a specification.        -->
+<!-- Naming a variant without saying what it looks like in each state is the      -->
+<!-- most common reason a design system cannot be built from.                     -->
 
 ### 3a. Buttons
 
@@ -184,3 +213,23 @@
 <!-- to evolve. Note what would change if assumptions are wrong.                  -->
 <!-- The design system is a living document — update it as slices reveal new     -->
 <!-- patterns.                                                                    -->
+<!-- A contrast pair below its floor is NOT an open question — it is a defect    -->
+<!-- fixed before this document ships. See §2f.                                   -->
+
+## 9. Visual References (Optional)
+
+<!-- Optional. Populate only if a visual board or mockup was produced from this  -->
+<!-- document (UI foundation workflow Step 1b). Omit the section entirely when    -->
+<!-- none exists — an empty section is not a requirement to create one.          -->
+<!--                                                                             -->
+<!-- Record WHICH REVISION of this document each reference reflects. Visual       -->
+<!-- references drift from the document immediately and are not maintained in     -->
+<!-- lockstep.                                                                    -->
+<!--                                                                             -->
+<!-- PRECEDENCE: this document is authoritative. A visual reference is derived,   -->
+<!-- may lag, and no token value, variant, or state may exist only in a visual    -->
+<!-- reference. Where the two disagree, the document wins.                        -->
+
+| Reference | Location | Reflects revision | Produced by |
+|-----------|----------|-------------------|-------------|
+| | | | |

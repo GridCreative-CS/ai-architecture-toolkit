@@ -47,6 +47,13 @@ UI, or a design system already exists.
 - **Retrofit:** follow `ai/workflows/ui-retrofit-workflow.md` to inventory
   existing UI and derive a design system.
 
+Either path ends with the **design system completeness gate** (UI foundation
+Step 1b / UI retrofit Step 2b → `architecture/design-system-gate.md`). A
+design system is authoritative only once that gate records `APPROVED` or
+`APPROVED WITH NOTES`. Delivery planning (Step 1) may proceed on a rejected
+design system; **Step 5 decomposition and Step 6 execution of a UI slice may
+not**.
+
 ## Step 1 — Delivery Planning
 
 Use:
@@ -466,5 +473,10 @@ Phases (infrastructure bootstrap, production hardening — see
   feature spec alone.
 - No `architecture/design-system.md` on a UI slice → Step 4a runs in reduced
   mode; consider Step 0b before further UI slices.
+- `architecture/design-system.md` exists but no `architecture/design-system-gate.md`,
+  or its verdict is `REJECTED — MUST FIX` → the design system is not
+  authoritative. Run the completeness gate (UI foundation Step 1b / UI
+  retrofit Step 2b) before decomposing or implementing a UI slice against it.
+  A gate report that predates the design system's current content is ungated.
 - Feature spec exists but is not decomposition-ready (open architectural
   unknowns in §13) → resolve or escalate the unknowns first.

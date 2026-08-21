@@ -84,6 +84,35 @@ If the inventory contains genuinely conflicting patterns, the design system
 derivation prompt will flag them. Resolve conflicts before proceeding to
 migration planning.
 
+## Step 2b — Design System Completeness Gate
+
+**Mandatory.** A derived design system is not authoritative until it passes
+this gate — the same gate the greenfield path runs at UI foundation Step 1b.
+
+Use:
+
+- `ai/prompts/design-system-completeness-gate.md`
+
+Run it in a **fresh session**.
+
+Write:
+
+- `architecture/design-system-gate.md`
+
+Two retrofit-specific cautions:
+
+- **A token that kept its value did not keep its contrast.** When the derived
+  system re-grounds existing tokens on new surfaces, every pair drawn on or
+  against a changed surface must be recomputed. "Verified under an earlier
+  revision" is not evidence once the ground has moved.
+- **Inventory anomalies are not gate findings.** A one-off component the
+  inventory flagged for retirement is a migration target (Step 3), not a
+  completeness failure. Gate the design system, not the code it will replace.
+
+Verdict `APPROVED` or `APPROVED WITH NOTES` → proceed to migration planning.
+`REJECTED — MUST FIX` → fix and re-run. No retrofit slice may be implemented
+against a rejected design system.
+
 ## Step 3 — Plan Retrofit Migration
 
 > **Note:** `architecture/delivery-plan.md` must exist before this step.
@@ -158,6 +187,9 @@ Step 1: UI Inventory                          ← can run before delivery planni
 Step 2: Derive Design System                  ← can run before delivery planning
   → architecture/design-system.md
   ↓
+Step 2b: Design System Completeness Gate ★    ← mandatory
+  → architecture/design-system-gate.md
+  ↓
 ─── delivery-plan.md required from here ───
   ↓
 Step 3: Plan Retrofit
@@ -177,6 +209,7 @@ Continue with new slices (design system now available)
 
 - UI inventory prompt: `ai/prompts/ui-inventory.md`
 - Design system from inventory: `ai/prompts/design-system-from-inventory.md`
+- Design system completeness gate: `ai/prompts/design-system-completeness-gate.md`
 - UI compliance check: `ai/prompts/ui-compliance-check.md`
 - Retrofit spec template: `ai/templates/retrofit-spec-template.md`
 - Design system template: `ai/templates/design-system-template.md`

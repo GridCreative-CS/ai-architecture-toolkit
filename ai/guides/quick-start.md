@@ -47,7 +47,7 @@ After this step, `architecture/architecture-final.md` is your source of truth.
 If your project includes human-facing UI, create a design system before
 delivery planning:
 
-- **New project:** prompt with `ai/prompts/design-system-generator.md` → `architecture/design-system.md`
+- **New project:** prompt with `ai/prompts/design-system-generator.md` → `architecture/design-system.md`, then gate it with `ai/prompts/design-system-completeness-gate.md` → `architecture/design-system-gate.md` (fresh session; mandatory)
 - **Existing project with UI:** follow `ai/workflows/ui-retrofit-workflow.md` to inventory existing UI and derive a design system
 
 If your project has no UI, skip this step.
@@ -96,7 +96,7 @@ Use these paths as your handoff trail from planning to implementation:
 | **Feature Spec** | A detailed specification of exactly one slice — the bridge between planning and implementation |
 | **Part** | The smallest independently verifiable unit of work within a slice — the TDD execution target |
 | **Contract** | The complete testable agreement between a producer and a consumer (schema + behavior + NFRs) |
-| **Design System** | The shared visual vocabulary (tokens, components, patterns) for a project's UI — documented in `architecture/design-system.md` |
+| **Design System** | The shared visual vocabulary (tokens, components, patterns) for a project's UI — documented in `architecture/design-system.md`; authoritative once `architecture/design-system-gate.md` approves it |
 | **Verticality test** | A slice passes if it proves user value through all required layers end-to-end |
 
 See `ai/guides/glossary.md` for full definitions of all terms.
@@ -112,7 +112,7 @@ See `ai/guides/glossary.md` for full definitions of all terms.
 ## FAQ
 
 **When do I need a design system?**
-If your project has human-facing UI, create a design system after architecture finalization. For new projects, use `ai/prompts/design-system-generator.md`. For existing projects with inconsistent UI, follow `ai/workflows/ui-retrofit-workflow.md`. Projects with no UI can skip this entirely.
+If your project has human-facing UI, create a design system after architecture finalization. For new projects, use `ai/prompts/design-system-generator.md`. For existing projects with inconsistent UI, follow `ai/workflows/ui-retrofit-workflow.md`. Either way, finish by running `ai/prompts/design-system-completeness-gate.md` in a fresh session — the design system is not authoritative until that gate approves it. Projects with no UI can skip this entirely.
 
 **When do I need a compliance check?**
 For every slice: run `ai/prompts/architecture-compliance.md` before decomposition (engineering workflow Step 4). Trivial slices that pass all six trigger questions in Step 4 may use the lightweight mode (boundaries, verticality, touched contracts only). For slices with human workflow surfaces, also run `ai/prompts/ui-compliance-check.md` (Step 4a — mandatory).

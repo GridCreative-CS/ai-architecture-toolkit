@@ -17,6 +17,17 @@ adoption, use `ai/workflows/ui-retrofit-workflow.md` after remediation.
 - `architecture/architecture-final.md` exists
 - `architecture/delivery-plan.md` exists
 - `architecture/feature-specs/*.md` exist for completed slices
+- `architecture/design-system.md` has passed the **design system completeness
+  gate** (`ai/prompts/design-system-completeness-gate.md` →
+  `architecture/design-system-gate.md`, verdict `APPROVED` or `APPROVED WITH
+  NOTES`)
+
+The gate is a prerequisite rather than an afterthought here: projects reach
+remediation precisely because their UI slices were completed under an older
+toolkit version, which is the population whose design system has never been
+gated. Remediating slices against an ungated design system re-validates them
+against a specification that may itself be incomplete. Run the gate first, fix
+what it finds, then remediate.
 
 ## When to Use
 

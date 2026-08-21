@@ -64,6 +64,35 @@ Describe the minimum set of components needed for the first 2–3 slices:
 
 For each component, reference which tokens it consumes.
 
+**Emit the full variant × state matrix.** For every component, produce a table
+with one row per variant and one column per state it can occupy — at minimum
+`default`, `hover`, `focus-visible`, `active`, `disabled`, plus `error` and
+`loading` for any component that accepts input or displays fetched data. Every
+cell states the tokens that variant consumes in that state, or `N/A — <reason>`
+where the state cannot occur.
+
+The matrix is the deliverable, not a summary of it. A cell that reads "muted"
+or "de-emphasised" is not specified; `background: --color-surface-subtle;
+color: --color-text-disabled` is. Naming variants without saying what they look
+like in each state is the most common way a design system passes review and
+then cannot be built from.
+
+### 3b. Compute the contrast table
+
+Do not assert that the palette meets its accessibility baseline — **compute
+it**. Enumerate every foreground/background pair the design system specifies,
+including pairs that arise only inside a component state (a disabled label on a
+subtle surface, a focus ring against a card), and calculate each WCAG contrast
+ratio with a script or tool.
+
+Floors: 4.5:1 normal text, 3:1 large text, 3:1 non-text UI (borders, focus
+rings, icons, control boundaries). Where a token is applied at reduced opacity,
+compute against the composited colour, not the base token.
+
+Any pair below its floor is fixed **before** the design system is written out —
+by changing a token value, not by lowering the floor or by moving the pair into
+§8 as an open question. Record the resulting table in §2f.
+
 ### 4. Define layout patterns
 
 - Page shell (header, content area, sidebar, footer arrangement)
@@ -106,9 +135,24 @@ Set minimum requirements:
 - every token must have a concrete value — no abstract descriptions without
   values
 - every component must reference the tokens it consumes
+- every variant × state cell is specified or marked `N/A — <reason>`; a bare
+  `N/A` is not acceptable
+- every contrast ratio is computed and stated as a number; an asserted or
+  eyeballed ratio is not evidence
+- every token referenced in §3–§7 must be defined in §2 — a reference with a
+  hardcoded fallback (`var(--color-focus-ring, #005fcc)`) is a dangling
+  reference, not a safe default
 - do not invent requirements not present in the architecture
 - do not exceed MVP scope — the design system grows iteratively per slice
 - do not duplicate architecture decisions — reference them
+
+## After generation
+
+The design system is **not authoritative until it passes the completeness
+gate**. Run `ai/prompts/design-system-completeness-gate.md` in a fresh session
+(UI foundation workflow Step 1b) before delivery planning. The gate re-derives
+the matrix and recomputes every pair independently — writing them here is what
+makes that check cheap, not what makes it unnecessary.
 
 ## References
 

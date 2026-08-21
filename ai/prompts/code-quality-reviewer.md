@@ -32,8 +32,16 @@ tells you where to look — it is evidence to verify, not a source of truth.
 - Nearby project code comparable to the changed files (read it — you cannot
   judge "follows existing patterns" without seeing the existing patterns)
 
-If the Part file, the quality report, or the diff is missing, stop and request
-it — do not review from a narrative summary.
+If the Part file, the quality report, or the diff is missing **in a repository
+that has the toolkit artifacts**, stop and request it — do not review from a
+narrative summary.
+
+**Reviewing a change in a repository that has none of these artifacts** (an
+arbitrary PR, branch, or commit range in a repo that has never run the
+toolkit): use the **Portable mode** appendix at the end of this prompt, which
+degrades each missing input to a named substitute and inlines the rules the
+main body cites by section number. It is a degradation, not an alternative —
+when the artifacts exist, this main body applies.
 
 ## Review snapshot (freeze the target)
 
@@ -328,3 +336,173 @@ reviews that find everything in round 1 instead of rediscovering the same
 original defects in rounds 2 and 3. Do not shorten the sweep to save time — a
 dimension left unswept is exactly the finding that comes back two rounds
 later.
+
+## Appendix — Portable mode (repository without toolkit artifacts)
+
+Everything above assumes the toolkit's artifacts exist: a PART_SPEC file, a
+Part Quality Report, a feature spec, `architecture/architecture-final.md`,
+ADRs, and `ai/guides/code-quality-standard.md`. **When they exist, use the
+main body — portable mode is a degradation, not an alternative.**
+
+Use this appendix when the same review has to run against an arbitrary
+change — a PR, a branch, a commit range — in a repository that has never run
+the toolkit. The section is written to be self-contained: it inlines the
+substance of every rule the main body cites by section number, so a reviewer
+working from it alone never follows a dead reference.
+
+### What does not degrade
+
+These are load-bearing and survive unchanged:
+
+- **Fresh session.** The reviewer is not the author. If you wrote the code,
+  hand the review to a new session or subagent.
+- **You review; you do not fix.**
+- **The frozen snapshot** — four parts, restated in the output. In portable
+  mode the base commit is the PR base, the merge-base with the default
+  branch, or the explicitly named commit. If a production file changes after
+  the review begins, the review restarts.
+- **The dimension audit (check 11, D1–D9)** exactly as tabulated above.
+- **The evidence rules** — judge the evidence, never the adjective.
+- **`DEFERRED`, never `PASS`, for anything you could not verify yourself**,
+  with the reason and the owner.
+- **The severity scale and the three verdicts.**
+
+### The only mandatory input is the diff
+
+The main body's hard stop ("if the Part file, the quality report, or the diff
+is missing, stop") becomes: **stop only if you cannot see the diff.**
+Everything else degrades to a named substitute, and the substitute is
+recorded in the review header so the reader knows what the verdict rests on.
+
+| Missing artifact | Checks affected | Substitute to use |
+| --- | --- | --- |
+| PART_SPEC / Part file | 3 (scope), `part_type` | Scope = the stated task, PR description, issue, or commit range. Classify the change using check 11's absent-`part_type` fallback, reading the changed files in place of `file_touch_points`, and state the classification used. |
+| Part Quality Report | 9, 10, 12, mutation review | 9 → enumerate the contract surfaces the diff changes yourself; an undeclared change is still a finding, measured against the PR description instead of §7. 10 → run the project's own verify commands (test, lint, build, typecheck) and report what you ran. 12 → derive the criteria from the issue/PR/spec-in-lieu; if there is no stated criterion set, mark check 12 `N/A — no stated acceptance criteria` and say so in the verdict. |
+| Feature spec | 2 | The intent stated in the PR description, issue, or commit message. If intent is unstated, that is itself a Major finding — nobody can review behavior against an unstated goal. |
+| `architecture-final.md`, ADRs | 1 | Infer boundaries from observed structure: project/module references, folder layout, existing dependency rules or architecture tests, import conventions. Judge the change against the architecture the repository actually has, not one you would prefer. |
+| `design-system.md` | D6 | The project's existing UI patterns plus a generic accessibility baseline (visible labels, focus handling, keyboard reachability, state announcement). |
+| Earlier Parts' reports | 12 consistency | Prior commits in the same branch/PR series; if unavailable, mark the consistency line `DEFERRED — no prior-change record`. |
+| `code-quality-standard.md` | 4, 5, 7, 8 | The inlined quality bar below. |
+
+### Inlined quality bar
+
+The bar the changed code must meet. Q1–Q13 correspond to the standard's
+sections §§1–13; nothing here requires reading another file.
+
+- **Q1 Read before write.** The reviewer must read the neighbouring
+  production code and tests before judging "follows existing patterns". A
+  review that never opened a comparable existing file cannot make that call.
+- **Q2 Source precedence.** Existing project code and tests outrank written
+  docs, which outrank model defaults. Never reject for a style no project
+  source establishes.
+- **Q3 Dependencies.** A new runtime dependency needs a justification the
+  diff or PR states. Unjustified → Major.
+- **Q4 Abstractions.** No interface, indirection, generic parameter, or
+  configuration knob with exactly one caller and no stated second one.
+- **Q5 Boundaries.** Dependency direction respected; no new cross-module
+  dependency that the observed structure does not already sanction.
+- **Q6 Error handling.** Matches the project's existing error type and
+  identifier style. No swallowed exceptions, no bare catch that logs and
+  continues, no error path that silently returns a success-shaped value.
+- **Q7 Validation.** At the layer the project already validates at, not
+  duplicated across layers by accident and not skipped at the boundary.
+- **Q8 Logging and observability.** Present where the project logs
+  comparable operations, at the project's level conventions, with no PII or
+  secrets in the payload.
+- **Q9 Async and cancellation.** Cancellation tokens / abort signals
+  propagated to every call that accepts one; no fire-and-forget without a
+  stated reason; no blocking on async in a request path.
+- **Q10 Test quality.** Test-first evidence is real where TDD is claimed.
+  Names state behavior. Tests assert observable behavior, not mocks or
+  internal steps. **Structural is not behavioral** — a test must fail when
+  the implementation is removed:
+
+  | Requirement | Structural (insufficient) | Behavioral (required) |
+  | --- | --- | --- |
+  | Role restriction | The guard is present | The denied role receives no data **and** issues no request |
+  | Display mapping | Locale catalogues have matching keys | The rendered output asserted in each supported locale |
+  | Cancellation | An abort signal is passed | Supersede, clear/reset, and unmount each as their own case |
+  | Cache refresh | An invalidation call appears in the code | The dependent read observably refetches after the mutation |
+  | Gating on required data | The disabled prop is wired up | The action proven unavailable while required data is pending, and again while failed |
+  | Error mapping | The mapper unit-tested in isolation | The identifier and its trace reference survive to the reporting surface |
+
+  **Mutation check** — mandatory when the change implements an
+  **authorization guard**, **cache invalidation/refetch**,
+  **cancellation/supersession**, or **error→message mapping**: break the
+  implementation, observe the named test fail, restore, re-run green. In
+  portable mode the author rarely recorded one — run it yourself when the
+  cost is low, and where you cannot, mark the claim `DEFERRED` rather than
+  `PASS`. A behavior in these four categories whose test passes with the
+  implementation removed is a **Blocker**.
+- **Q11 Prohibited outputs.** TODO markers, placeholder logic, hard-coded
+  values standing in for real computation, stubbed returns, silent fallbacks,
+  and dead configuration shipped as if complete.
+- **Q12 Contract surfaces.** Every API, schema, event, or UI contract the
+  diff changes must be declared somewhere the consumer can see (PR body,
+  changelog, migration note). An undeclared contract change is a **Blocker**.
+- **Q13 Documentation in code.** Public API documentation per the project's
+  existing convention — matched to what the neighbouring code does, not to a
+  general standard.
+
+### Portable output
+
+Write to `reviews/<change-id>-review.md` (or paste into the PR), using the
+main body's structure with these substitutions:
+
+- Header: `# Code Review — <change-id>: <title>`, plus a line
+  **`Mode: portable — artifacts substituted: <list>`** naming every row of
+  the degradation ladder you used.
+- **Review snapshot** — base commit, committed diff (command + SHA range),
+  uncommitted worktree diff, untracked/generated files. The "matches quality
+  report snapshot" line becomes `N/A — no quality report`.
+- **Findings**, **Dimension audit**, **Checks with no findings**, and
+  **Verdict** are unchanged.
+- **Requirement coverage audit** — rows derived from the stated criteria; if
+  none were stated, `N/A — no stated acceptance criteria`, and say so in the
+  verdict rather than approving silently.
+- **Remediation closure** — unchanged; `N/A — round 1` on a first review.
+
+### Kickoff prompt (copy-paste into a fresh session)
+
+```text
+Act as a Principal Engineer performing a code review, following
+ai/prompts/code-quality-reviewer.md — main body if this repository has the
+toolkit artifacts (ai-parts/, architecture/feature-specs/,
+architecture/architecture-final.md), otherwise the "Portable mode" appendix.
+If neither is available in this repository, follow the review contract
+restated below.
+
+Target: <PR #n | branch <name> | commit range <base>..<head> | working tree>
+Stated intent: <link or one paragraph — what this change is supposed to do>
+Verify commands: <test / lint / build commands, or "discover them">
+
+Rules:
+- You review; you do not fix.
+- Freeze and restate the snapshot (base commit, committed diff, uncommitted
+  worktree diff, untracked/generated files) before reviewing anything. If a
+  production file changes mid-review, restart against the new snapshot.
+- Read comparable existing code before judging "follows existing patterns".
+- Run the verify commands yourself; report what you ran and what happened.
+- Mark anything you could not verify DEFERRED with a reason and an owner —
+  never PASS on the author's claim.
+- Judge evidence, not adjectives: catalogue parity, the presence of a call,
+  and implementation inspection do not prove behavior. A test that passes
+  with the implementation removed proves nothing.
+- Complete the D1–D9 dimension audit explicitly (roles/authorization; per-
+  source loading/success/empty/error states; async lifecycle incl.
+  supersession, clear/reset, unmount; error mapping and trace reference;
+  localized display of domain values; accessibility and design system;
+  observable cache invalidation; server-derived vs client-calculated values;
+  shared-component and public-contract consumers). Each row gets
+  PASS / FAIL / DEFERRED (owner) / N/A — reason, with evidence; a bare N/A
+  or an ownerless DEFERRED is itself a Major finding.
+- Severity: Blocker (wrong behavior, broken or undeclared contract,
+  architecture violation, fake test or implementation, missing/false
+  verification) / Major (unjustified pattern deviation, missing coverage for
+  a stated rule, unjustified dependency or abstraction, observability gap) /
+  Minor (naming, style, docs).
+- End with exactly one verdict: APPROVED / APPROVED WITH NOTES /
+  REJECTED — MUST FIX. Never soften a Blocker to a note.
+
+Write the review to <path>.
+```

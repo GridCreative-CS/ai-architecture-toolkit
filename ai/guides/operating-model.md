@@ -34,12 +34,14 @@ exists. Skip entirely if the project has no UI.
 
 - Prompt: `ai/prompts/design-system-generator.md`
 - Output: `architecture/design-system.md`
+- Gate: `ai/prompts/design-system-completeness-gate.md` → `architecture/design-system-gate.md` (Step 1b, mandatory, fresh session)
 - Workflow: `ai/workflows/ui-foundation-workflow.md`
 
 **Retrofit** (existing project, UI already implemented):
 
 - Prompts: `ai/prompts/ui-inventory.md`, then `ai/prompts/design-system-from-inventory.md`
 - Outputs: `architecture/ui-inventory.md`, then `architecture/design-system.md`
+- Gate: `ai/prompts/design-system-completeness-gate.md` → `architecture/design-system-gate.md` (Step 2b, mandatory, fresh session)
 - Workflow: `ai/workflows/ui-retrofit-workflow.md`
 
 ## Phase 2 — Delivery & Specification

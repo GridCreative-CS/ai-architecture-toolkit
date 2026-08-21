@@ -43,6 +43,7 @@ public sealed partial class ProjectContentService
         result["prototype-architecture-alignment"] = [CheckFile("architecture/prototype-architecture-alignment.md")];
         result["delivery-plan"] = [CheckFile("architecture/delivery-plan.md")];
         result["design-system"] = [CheckFile("architecture/design-system.md")];
+        result["design-system-gate"] = [CheckFile("architecture/design-system-gate.md")];
         result["ui-inventory"] = [CheckFile("architecture/ui-inventory.md")];
         result["project-context"] = [CheckFile("ai/project-context.md")];
         result["remediation-audit"] = [CheckFile("architecture/remediation-audit.md")];
@@ -138,6 +139,14 @@ public sealed partial class ProjectContentService
     /// Gets the design system content.
     /// </summary>
     public string? GetDesignSystem() => ReadSafe("architecture/design-system.md");
+
+    /// <summary>
+    /// Gets the design system completeness gate report (UI foundation workflow
+    /// Step 1b / UI retrofit workflow Step 2b). The design system is
+    /// authoritative only when this report records <c>APPROVED</c> or
+    /// <c>APPROVED WITH NOTES</c>.
+    /// </summary>
+    public string? GetDesignSystemGate() => ReadSafe("architecture/design-system-gate.md");
 
     /// <summary>
     /// Gets the UI inventory content (UI retrofit workflow Step 1) — the input

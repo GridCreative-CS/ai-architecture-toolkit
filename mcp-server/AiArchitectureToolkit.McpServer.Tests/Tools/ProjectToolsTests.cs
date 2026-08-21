@@ -38,6 +38,7 @@ public sealed class ProjectToolsTests : IDisposable
         CreateFile(aiDir, "prompts", "design-system-generator.md", "# Design System Generator\n\nDerive the design system.");
         CreateFile(aiDir, "prompts", "ui-inventory.md", "# UI Inventory\n\nInventory the existing UI.");
         CreateFile(aiDir, "prompts", "design-system-from-inventory.md", "# Design System From Inventory\n\nDerive from the inventory.");
+        CreateFile(aiDir, "prompts", "design-system-completeness-gate.md", "# Design System Completeness Gate\n\nVerify renderability and computed contrast.");
         CreateFile(aiDir, "templates", "design-system-template.md", "# Design System Template");
         CreateFile(aiDir, "templates", "ui-inventory-template.md", "# UI Inventory Template");
         CreateFile(aiDir, "templates", "golden-dataset-template.md", "# Golden Dataset Template");
@@ -73,6 +74,7 @@ public sealed class ProjectToolsTests : IDisposable
         CreateFile(_tempDir, "architecture/feature-specs", "user-registration.md",
             "# User Registration Spec\n\n- DR-01: A user has one email.\n- SEC-01: Anonymous callers get 401.\n- AC-01: Returns 201 on success.\n- UIAC-01: The form shows a pending spinner.");
         CreateFile(_tempDir, "architecture", "design-system.md", "# Design System\n\nToken definitions.");
+        CreateFile(_tempDir, "architecture", "design-system-gate.md", "# Design System Completeness Gate\n\nVerdict: APPROVED");
         CreateFile(_tempDir, "architecture", "ui-inventory.md", "# UI Inventory\n\nCatalogued screens and components.");
         CreateFile(_tempDir, "architecture", "legacy-system-analysis.md", "# Legacy System Analysis\n\nLegacy constraints.");
         CreateFile(_tempDir, "architecture", "architecture-final-gate.md", "# Gate Report\n\nGate verdict recorded.");
@@ -220,6 +222,16 @@ public sealed class ProjectToolsTests : IDisposable
         Assert.Contains("Design System Template", result);
         Assert.Contains("Modular monolith", result);
         Assert.Contains("ADR-001", result);
+    }
+
+    [Fact]
+    public void GetWorkflowContext_DesignSystemGate_ReturnsGatePromptAndDesignSystem()
+    {
+        var result = ProjectTools.GetWorkflowContext(_toolkitService, _projectService, "design-system-gate");
+
+        Assert.Contains("Verify renderability and computed contrast", result);
+        Assert.Contains("Token definitions", result);
+        Assert.Contains("Verdict: APPROVED", result);
     }
 
     [Fact]

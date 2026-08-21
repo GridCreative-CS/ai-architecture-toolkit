@@ -87,6 +87,30 @@ Based on the accessibility audit in the inventory, define the minimum
 requirements. Where the inventory reveals gaps, the baseline should close
 them.
 
+### 6b. Emit the matrix and compute the contrast table
+
+Two outputs are required regardless of what the inventory contained:
+
+**Variant × state matrix.** For every component in the catalog, one row per
+variant and one column per state it can occupy — at minimum `default`,
+`hover`, `focus-visible`, `active`, `disabled`, plus `error` and `loading` for
+anything that accepts input or displays fetched data. Every cell names the
+tokens consumed in that state, or `N/A — <reason>`.
+
+The inventory records what exists; existing code routinely leaves states
+unstyled or specified only by browser default. Where the inventory shows no
+treatment for a cell, the design system must **decide** one — an inherited
+gap is still a gap, and carrying it forward silently is how it survives the
+retrofit.
+
+**Computed contrast table.** Compute every foreground/background pair with a
+script or tool and record it in §2f. Retrofit makes this sharper than
+greenfield: a token that keeps its value but moves onto a new surface has a
+new contrast ratio. Recompute every pair against the derived surfaces rather
+than carrying forward ratios verified under the old ones.
+
+Any pair below its floor is fixed before the design system is written out.
+
 ### 7. Flag conflicts
 
 Where the inventory contains genuinely conflicting patterns (e.g., two
@@ -108,10 +132,25 @@ the conflict and propose a resolution:
 - flag all conflicts explicitly — do not silently choose one pattern over
   another
 - produce concrete values (hex codes, px) — not abstract descriptions
+- every variant × state cell is specified or marked `N/A — <reason>`; an
+  unstyled state in the existing code is a decision to make, not a cell to
+  leave blank
+- every contrast ratio is computed against the derived surfaces and stated as
+  a number; ratios verified under the previous palette do not carry over
+- every token referenced in §3–§7 must be defined in §2 — dangling references
+  and always-firing hardcoded fallbacks are inventory defects that must not
+  survive into the design system
+
+## After derivation
+
+The design system is **not authoritative until it passes the completeness
+gate**. Run `ai/prompts/design-system-completeness-gate.md` in a fresh session
+(UI retrofit workflow Step 2b) before migration planning.
 
 ## References
 
 - UI inventory template: `ai/templates/ui-inventory-template.md`
 - Design system template: `ai/templates/design-system-template.md`
+- Design system completeness gate: `ai/prompts/design-system-completeness-gate.md`
 - Retrofit spec template: `ai/templates/retrofit-spec-template.md`
 - Glossary: `ai/guides/glossary.md`
